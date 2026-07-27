@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { games } from "@/data/games";
 import { cheats } from "@/data/cheats";
 import { blogPosts } from "@/data/blog";
+import { products } from "@/data/products";
 import { env } from "@/env";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -14,10 +15,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/#faq",
     "/cheats/the-isle",
     "/cheats/naraka-bladepoint",
-    "/products/ugc",
-    "/products/skin-changer",
-    "/products/cloud-dma",
-    "/products/hwid-spoofer",
   ];
 
   const staticUrls = staticRoutes.map((path) => ({
@@ -25,6 +22,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
     changeFrequency: "weekly" as const,
     priority: path === "" ? 1 : 0.8,
+  }));
+
+  const productUrls = products.map((product) => ({
+    url: `${base}/products/${product.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
   }));
 
   const gameUrls = games.map((game) => ({
@@ -52,5 +56,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticUrls, ...gameUrls, ...cheatUrls, ...blogUrls];
+  return [...staticUrls, ...productUrls, ...gameUrls, ...cheatUrls, ...blogUrls];
 }

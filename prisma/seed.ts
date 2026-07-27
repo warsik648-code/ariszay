@@ -238,15 +238,23 @@ async function main() {
   ];
 
   for (const def of utilityDefs) {
+    // Utilities stay in DB for future expansion; unpublished while storefront is paused.
     const product = await prisma.product.upsert({
       where: { slug: def.slug },
-      update: { name: def.name, description: def.description },
+      update: {
+        name: def.name,
+        description: def.description,
+        published: false,
+        status: "UNAVAILABLE",
+      },
       create: {
         slug: def.slug,
         type: "UTILITY",
         name: def.name,
         description: def.description,
         longDescription: def.description,
+        published: false,
+        status: "UNAVAILABLE",
       },
     });
 

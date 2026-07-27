@@ -1,6 +1,14 @@
 import type { Product } from "@/types";
 
-export const products: Product[] = [
+/**
+ * Utility / non-game product storefront.
+ * Set to `true` to re-list Skin Changer, HWID Spoofer, UGC, Cloud DMA in nav,
+ * homepage, sitemap, and `/products/[slug]`. Catalog + Prisma models stay intact.
+ */
+export const UTILITY_STOREFRONT_ENABLED = false;
+
+/** Full utility catalog — kept for future expansion even when storefront is off. */
+export const productCatalog: Product[] = [
   {
     slug: "ugc",
     name: "UGC",
@@ -103,8 +111,19 @@ export const products: Product[] = [
   },
 ];
 
+/** Storefront-visible utilities. Empty while `UTILITY_STOREFRONT_ENABLED` is false. */
+export const products: Product[] = UTILITY_STOREFRONT_ENABLED
+  ? productCatalog
+  : [];
+
+/** Resolve a utility product for the public storefront only. */
 export function getProduct(slug: string): Product | undefined {
   return products.find((product) => product.slug === slug);
+}
+
+/** Resolve from the full catalog (admin / future re-enable paths). */
+export function getProductFromCatalog(slug: string): Product | undefined {
+  return productCatalog.find((product) => product.slug === slug);
 }
 
 export const productFeatureLists: Record<Product["slug"], string[]> = {

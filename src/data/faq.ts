@@ -26,10 +26,10 @@ export const faqs: FaqItem[] = [
       "If a product cannot be activated due to an issue on our side, contact support within 24 hours of purchase for a replacement or refund review.",
   },
   {
-    id: "hwid",
-    question: "Can I use HWID Spoofer after a ban?",
+    id: "tiers",
+    question: "What is the difference between Xray, Pro, and Private?",
     answer:
-      "Follow the post-ban checklist included with your HWID Spoofer license, then spoof and restore before launching any supported game.",
+      "Xray focuses on ESP and awareness. Pro adds aim assist tools. Private is the top tier with the strongest aimbot features and a dedicated support channel.",
   },
   {
     id: "stream",

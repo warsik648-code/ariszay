@@ -67,22 +67,24 @@ export function SiteHeader() {
               ))}
             </div>
           </div>
-          <div className="group relative flex h-full items-center">
-            <button type="button" className={navItemClass}>
-              Products
-            </button>
-            <div className="invisible absolute top-full left-0 z-50 min-w-52 border border-[rgb(242_240_235_/_0.12)] bg-[#111] pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
-              {products.map((product) => (
-                <Link
-                  key={product.slug}
-                  href={`/products/${product.slug}`}
-                  className="block border-t border-[rgb(242_240_235_/_0.06)] px-4 py-3 font-display text-sm font-semibold tracking-wide uppercase text-[#f2f0eb]/80 hover:bg-[rgb(200_255_0_/_0.06)] hover:text-primary"
-                >
-                  {product.name}
-                </Link>
-              ))}
+          {products.length > 0 ? (
+            <div className="group relative flex h-full items-center">
+              <button type="button" className={navItemClass}>
+                Products
+              </button>
+              <div className="invisible absolute top-full left-0 z-50 min-w-52 border border-[rgb(242_240_235_/_0.12)] bg-[#111] pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
+                {products.map((product) => (
+                  <Link
+                    key={product.slug}
+                    href={`/products/${product.slug}`}
+                    className="block border-t border-[rgb(242_240_235_/_0.06)] px-4 py-3 font-display text-sm font-semibold tracking-wide uppercase text-[#f2f0eb]/80 hover:bg-[rgb(200_255_0_/_0.06)] hover:text-primary"
+                  >
+                    {product.name}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          ) : null}
           <Link href="/blog" className={navItemClass}>
             Blog
           </Link>
@@ -127,17 +129,21 @@ export function SiteHeader() {
                     {game.name} Cheats
                   </Link>
                 ))}
-                <p className="tech-label mt-6 mb-2">Products</p>
-                {products.map((product) => (
-                  <Link
-                    key={product.slug}
-                    href={`/products/${product.slug}`}
-                    onClick={() => setOpen(false)}
-                    className="py-2 text-sm text-[rgb(242_240_235_/_0.7)]"
-                  >
-                    {product.name}
-                  </Link>
-                ))}
+                {products.length > 0 ? (
+                  <>
+                    <p className="tech-label mt-6 mb-2">Products</p>
+                    {products.map((product) => (
+                      <Link
+                        key={product.slug}
+                        href={`/products/${product.slug}`}
+                        onClick={() => setOpen(false)}
+                        className="py-2 text-sm text-[rgb(242_240_235_/_0.7)]"
+                      >
+                        {product.name}
+                      </Link>
+                    ))}
+                  </>
+                ) : null}
                 <div className="mt-6 flex flex-col gap-1 border-t border-[rgb(242_240_235_/_0.08)] pt-4">
                   <Link
                     href="/blog"

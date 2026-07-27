@@ -27,7 +27,7 @@ import { GameCollectionCard } from "@/components/marketplace/game-collection-car
 import { MarketplaceProductCard } from "@/components/marketplace/marketplace-product-card";
 import { ProductPricingRow } from "@/components/marketplace/product-pricing-row";
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+const utilityIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   shield: Shield,
   palette: Paintbrush,
   cloud: CloudCog,
@@ -38,7 +38,7 @@ export default function HomePage() {
   const gamesWithProducts = getAllGamesWithProducts();
   const allCheats = gamesWithProducts.flatMap((g) => g.cheats);
   const latestPosts = blogPosts.slice(0, 3);
-  const totalProducts = allCheats.length + products.length;
+  const totalProducts = allCheats.length;
 
   return (
     <>
@@ -166,81 +166,83 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Marketplace / Utility modules ─── */}
-      <section className="container-site py-24">
-        <SectionHeading
-          index="03"
-          label="Products"
-          title="Utility Tools &amp; Hacks"
-          description="Account tools, spoofers, skin changers, and DMA utilities that pair with your cheats."
-        />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product, i) => {
-            const Icon = iconMap[product.icon] ?? Shield;
-            const categories: Record<string, string> = {
-              ugc: "ACCOUNT TOOL",
-              "skin-changer": "COSMETIC",
-              "cloud-dma": "INFRASTRUCTURE",
-              "hwid-spoofer": "IDENTITY",
-            };
-            return (
-              <article
-                key={product.slug}
-                className="ind-panel ind-panel-hover group flex flex-col overflow-hidden"
-              >
-                <div className="flex items-center justify-between border-b border-[rgb(242_240_235_/_0.08)] px-4 py-2.5">
-                  <span className="font-mono text-[9px] tracking-[0.2em] text-[rgb(242_240_235_/_0.35)] uppercase">
-                    AZ-UTL-{String(i + 1).padStart(2, "0")}
-                  </span>
-                  <Icon className="size-4 text-primary" />
-                </div>
-                {product.image ? (
-                  <a
+      {/* Utility storefront — restored when UTILITY_STOREFRONT_ENABLED is true */}
+      {products.length > 0 ? (
+        <section className="container-site py-24">
+          <SectionHeading
+            index="03"
+            label="Products"
+            title="Utility Tools &amp; Hacks"
+            description="Account tools, spoofers, skin changers, and DMA utilities that pair with your cheats."
+          />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {products.map((product, i) => {
+              const Icon = utilityIconMap[product.icon] ?? Shield;
+              const categories: Record<string, string> = {
+                ugc: "ACCOUNT TOOL",
+                "skin-changer": "COSMETIC",
+                "cloud-dma": "INFRASTRUCTURE",
+                "hwid-spoofer": "IDENTITY",
+              };
+              return (
+                <article
+                  key={product.slug}
+                  className="ind-panel ind-panel-hover group flex flex-col overflow-hidden"
+                >
+                  <div className="flex items-center justify-between border-b border-[rgb(242_240_235_/_0.08)] px-4 py-2.5">
+                    <span className="font-mono text-[9px] tracking-[0.2em] text-[rgb(242_240_235_/_0.35)] uppercase">
+                      AZ-UTL-{String(i + 1).padStart(2, "0")}
+                    </span>
+                    <Icon className="size-4 text-primary" />
+                  </div>
+                  {product.image ? (
+                    <a
+                      href={`/products/${product.slug}`}
+                      className="relative block aspect-[16/9] overflow-hidden bg-black"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                    </a>
+                  ) : null}
+                  <ProductPricingRow
+                    name={product.name}
+                    category={categories[product.slug] ?? "UTILITY"}
+                    price={product.price}
                     href={`/products/${product.slug}`}
-                    className="relative block aspect-[16/9] overflow-hidden bg-black"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                    />
-                  </a>
-                ) : null}
-                <ProductPricingRow
-                  name={product.name}
-                  category={categories[product.slug] ?? "UTILITY"}
-                  price={product.price}
-                  href={`/products/${product.slug}`}
-                  channel="Stable"
-                  compatibility="Win 10/11"
-                  categoryColor="#00e5ff"
-                />
-                <div className="flex flex-1 flex-col gap-3 border-t border-[rgb(242_240_235_/_0.08)] p-5">
-                  <p className="text-sm text-[rgb(242_240_235_/_0.45)]">{product.description}</p>
-                  <ul className="mt-auto space-y-1.5">
-                    {product.highlightFeatures.slice(0, 3).map((f) => (
-                      <li
-                        key={f}
-                        className="flex items-center gap-2 font-mono text-[11px] text-[rgb(242_240_235_/_0.5)]"
-                      >
-                        <span className="size-1 bg-cyan" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      </section>
+                    channel="Stable"
+                    compatibility="Win 10/11"
+                    categoryColor="#00e5ff"
+                  />
+                  <div className="flex flex-1 flex-col gap-3 border-t border-[rgb(242_240_235_/_0.08)] p-5">
+                    <p className="text-sm text-[rgb(242_240_235_/_0.45)]">{product.description}</p>
+                    <ul className="mt-auto space-y-1.5">
+                      {product.highlightFeatures.slice(0, 3).map((f) => (
+                        <li
+                          key={f}
+                          className="flex items-center gap-2 font-mono text-[11px] text-[rgb(242_240_235_/_0.5)]"
+                        >
+                          <span className="size-1 bg-cyan" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
 
       {/* ─── Technical Specifications / How it works ─── */}
       <section className="border-y border-[rgb(242_240_235_/_0.08)] bg-[#0a0a0a] py-24">
         <div className="container-site">
           <SectionHeading
-            index="04"
+            index={products.length > 0 ? "04" : "03"}
             label="How it works"
             title="How to buy cheats"
             description="From picking your ESP or aimbot tier to launching in-game."
@@ -288,7 +290,7 @@ export default function HomePage() {
       {/* ─── Advantages ─── */}
       <section className="container-site py-24">
         <SectionHeading
-          index="05"
+          index={products.length > 0 ? "05" : "04"}
           label="Why ArisZay"
           title="Why buy cheats here"
           description="Built for players who want clear status, fast delivery, and real support."
@@ -332,7 +334,7 @@ export default function HomePage() {
         <div className="container-site">
           <div className="mb-10 flex items-end justify-between gap-4">
             <SectionHeading
-              index="06"
+              index={products.length > 0 ? "06" : "05"}
               label="Guides"
               title="Cheat guides &amp; updates"
               className="mb-0"
@@ -385,7 +387,7 @@ export default function HomePage() {
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="min-w-0 space-y-10">
             <SectionHeading
-              index="07"
+              index={products.length > 0 ? "07" : "06"}
               label="FAQ"
               title="Cheat FAQ"
               className="mb-0"

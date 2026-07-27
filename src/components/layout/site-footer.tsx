@@ -37,11 +37,6 @@ export function SiteFooter() {
               </li>
             ))}
             <li>
-              <Link href="/products/ugc" className="hover:text-primary transition-colors">
-                Utility Products
-              </Link>
-            </li>
-            <li>
               <Link href="/blog" className="hover:text-primary transition-colors">
                 Cheat Guides
               </Link>
