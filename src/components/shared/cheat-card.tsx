@@ -47,6 +47,20 @@ export function CheatCard({
         </div>
       )}
 
+      {cheat.image ? (
+        <a
+          href={cheatUrl}
+          className="relative block aspect-[16/9] overflow-hidden border-b border-[rgb(242_240_235_/_0.08)] bg-black"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={cheat.image}
+            alt={cheat.name}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        </a>
+      ) : null}
+
       <ProductPricingRow
         name={displayTierName(cheat)}
         category={cfg.subtitle}

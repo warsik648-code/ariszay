@@ -33,6 +33,8 @@ export type Cheat = {
   status: DetectionStatus;
   highlightFeatures: string[];
   featureCount: number;
+  /** Hero / card image under /public */
+  image?: string;
   systemRequirements: {
     os: string;
     cpu: string;
@@ -51,6 +53,8 @@ export type Product = {
   icon: "shield" | "palette" | "cloud" | "cpu";
   highlightFeatures: string[];
   featureCount: number;
+  /** Hero / gallery image under /public */
+  image?: string;
   systemRequirements: {
     os: string;
     cpu: string;

@@ -186,7 +186,7 @@ export default function HomePage() {
             return (
               <article
                 key={product.slug}
-                className="ind-panel ind-panel-hover flex flex-col overflow-hidden"
+                className="ind-panel ind-panel-hover group flex flex-col overflow-hidden"
               >
                 <div className="flex items-center justify-between border-b border-[rgb(242_240_235_/_0.08)] px-4 py-2.5">
                   <span className="font-mono text-[9px] tracking-[0.2em] text-[rgb(242_240_235_/_0.35)] uppercase">
@@ -194,6 +194,19 @@ export default function HomePage() {
                   </span>
                   <Icon className="size-4 text-primary" />
                 </div>
+                {product.image ? (
+                  <a
+                    href={`/products/${product.slug}`}
+                    className="relative block aspect-[16/9] overflow-hidden bg-black"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                  </a>
+                ) : null}
                 <ProductPricingRow
                   name={product.name}
                   category={categories[product.slug] ?? "UTILITY"}

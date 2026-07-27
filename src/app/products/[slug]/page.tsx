@@ -48,7 +48,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             title={product.name}
             description={product.longDescription}
           />
-          <ImageSliderPlaceholder label={product.name} />
+          <ImageSliderPlaceholder label={product.name} image={product.image} />
           <GlassCard hover={false} className="border-l-indigo border-l-4">
             <h2 className="text-lg font-semibold">About this product</h2>
             <p className="text-muted-foreground mt-3 text-sm leading-relaxed">{product.longDescription}</p>

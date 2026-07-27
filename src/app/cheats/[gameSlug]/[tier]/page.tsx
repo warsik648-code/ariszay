@@ -135,6 +135,7 @@ export default async function CheatDetailPage({ params }: PageProps) {
                 controls
                 playsInline
                 preload="metadata"
+                poster={cheat.image}
                 aria-label={`${cheat.name} gameplay preview`}
               >
                 <source src={gameplaySrc} type="video/mp4" />
@@ -146,6 +147,23 @@ export default async function CheatDetailPage({ params }: PageProps) {
                 Gameplay
               </p>
               <p className="text-xs text-white/50">{cheat.name} ESP in-game</p>
+            </div>
+          </>
+        ) : cheat.image ? (
+          <>
+            <div className="relative aspect-video bg-[#0d1117]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={cheat.image}
+                alt={`${cheat.name} preview`}
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="flex items-center justify-between gap-3 border-t border-white/10 bg-[#0d1117] px-4 py-3">
+              <p className="font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">
+                Preview
+              </p>
+              <p className="text-xs text-white/50">{cheat.name}</p>
             </div>
           </>
         ) : (

@@ -45,28 +45,42 @@ export function DetailHero({
   );
 }
 
-export function ImageSliderPlaceholder({ label }: { label: string }) {
+export function ImageSliderPlaceholder({
+  label,
+  image,
+}: {
+  label: string;
+  image?: string;
+}) {
   return (
     <div className="overflow-hidden rounded-2xl border border-white/10">
-      <div className="flex aspect-[16/10] items-center justify-center bg-[#0d1117]">
-        <div className="text-center">
-          <p className="font-mono text-xs tracking-[0.2em] text-white/30 uppercase">
-            Preview
-          </p>
-          <p className="mt-2 text-lg font-semibold text-white/60">{label}</p>
-          <p className="mt-1 text-sm text-white/30">
-            Screenshot gallery — add images in the admin panel
-          </p>
-        </div>
-      </div>
-      <div className="flex gap-2 overflow-x-auto bg-black/20 p-3">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <div
-            key={index}
-            className="h-14 w-20 shrink-0 rounded-xl border border-white/10 bg-white/5"
-            aria-hidden
+      {image ? (
+        <div className="relative aspect-[16/10] bg-[#0d1117]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={image}
+            alt={`${label} preview`}
+            className="h-full w-full object-cover"
           />
-        ))}
+        </div>
+      ) : (
+        <div className="flex aspect-[16/10] items-center justify-center bg-[#0d1117]">
+          <div className="text-center">
+            <p className="font-mono text-xs tracking-[0.2em] text-white/30 uppercase">
+              Preview
+            </p>
+            <p className="mt-2 text-lg font-semibold text-white/60">{label}</p>
+            <p className="mt-1 text-sm text-white/30">
+              Screenshot gallery — add images in the admin panel
+            </p>
+          </div>
+        </div>
+      )}
+      <div className="flex items-center justify-between gap-3 border-t border-white/10 bg-black/20 px-4 py-3">
+        <p className="font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">
+          Product visual
+        </p>
+        <p className="text-xs text-white/50">{label}</p>
       </div>
     </div>
   );

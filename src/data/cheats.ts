@@ -100,6 +100,7 @@ export const cheats: Cheat[] = gameSlugs.flatMap((game) =>
       status: "available" as const,
       highlightFeatures: tierHighlightFeatures[tier],
       featureCount: features.length,
+      image: `/products/${game}-${tier}.jpg`,
       systemRequirements: systemRequirementsByTier[game][tier],
     };
   }),

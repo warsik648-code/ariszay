@@ -29,13 +29,26 @@ export function ProductCard({
   const code = `AZ-UTL-${product.slug.slice(0, 3).toUpperCase()}-01`;
 
   return (
-    <article className="ind-panel ind-panel-hover flex flex-col overflow-hidden">
+    <article className="ind-panel ind-panel-hover group flex flex-col overflow-hidden">
       <div className="flex items-center justify-between border-b border-[rgb(242_240_235_/_0.08)] px-4 py-2.5">
         <span className="font-mono text-[9px] tracking-[0.2em] text-[rgb(242_240_235_/_0.35)] uppercase">
           {code}
         </span>
         <Icon className="size-4 text-primary" />
       </div>
+      {product.image ? (
+        <a
+          href={`/products/${product.slug}`}
+          className="relative block aspect-[16/9] overflow-hidden bg-black"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={product.image}
+            alt={product.name}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        </a>
+      ) : null}
       <ProductPricingRow
         name={product.name}
         category={utilityCategory[product.slug] ?? "UTILITY"}

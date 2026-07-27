@@ -44,7 +44,18 @@ export function MarketplaceProductCard({ cheat, game, featured = false }: Props)
         </div>
       </div>
 
-      <ModuleVisual code={productCode} accent={cfg.color} label={cfg.subtitle} />
+      {cheat.image ? (
+        <a href={detailUrl} className="relative block aspect-[16/9] overflow-hidden bg-black">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={cheat.image}
+            alt={cheat.name}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        </a>
+      ) : (
+        <ModuleVisual code={productCode} accent={cfg.color} label={cfg.subtitle} />
+      )}
 
       <ProductPricingRow
         name={displayTierName(cheat)}
