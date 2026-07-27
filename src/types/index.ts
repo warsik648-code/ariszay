@@ -70,6 +70,7 @@ export type BlogPost = {
   author: string;
   publishedAt: string;
   readTimeMinutes: number;
+  coverImage?: string;
 };
 
 export type FaqItem = {

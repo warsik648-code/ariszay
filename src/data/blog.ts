@@ -2,6 +2,97 @@ import type { BlogPost } from "@/types";
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "buy-cheats-the-isle-evrima-aimbot-wallhack",
+    title: "Buy Cheats for The Isle Evrima: Hacks with Aimbot and Wallhack!",
+    excerpt:
+      "The Isle hacks — enjoy The Isle Evrima with aimbot and ESP from ArisZay while staying undetected. Powerful The Isle cheats with aimbot, ESP/wallhack and radar hack.",
+    category: "Guide",
+    game: "isle",
+    author: "ArisZay Team",
+    publishedAt: "2026-07-27",
+    readTimeMinutes: 9,
+    coverImage: "/blog/isle-evrima-aimbot.jpg",
+    content: `## The Isle Evrima Cheats – ArisZay Aimbot & Wallhack That Just Work
+
+The Isle Evrima is all about survival and if you've played long enough, you already know it's not always fair. Whether it's a surprise attack or a long grind just to stay alive, things get difficult fast. That's exactly why ArisZay offers simple, effective, and safe The Isle cheats designed to make your experience smoother and more competitive.
+
+Our tools are made for players who want to keep their edge without breaking the game.
+
+## What You Get with ArisZay
+
+✔ The Isle Aimbot — Locks onto targets automatically. Adjust how fast or smooth it feels to match your playstyle. → Land your hits without second-guessing your aim.
+
+✔ Evrima Wallhack (ESP) — See enemies, players, animals, and items through walls or terrain. → Plan your moves before anyone else even sees you.
+
+✔ Safe to Use — All tools are updated regularly to avoid detection by anti-cheat systems. → Play confidently without risking your account.
+
+## The Isle Evrima Aimbot – Hit What You Aim At
+
+Landing your hits in The Isle can mean the difference between killing or getting killed. With our aimbot, you don't leave anything to chance. It locks on targets automatically, tracks their movement, and keeps your attacks accurate, even during fast-paced chases.
+
+![Isle Evrima aimbot cheat](/blog/isle-evrima-aimbot.jpg)
+
+The aimbot supports both rage and legit playstyles. You can go full aggressive with hard lock, or run a low FOV with smooth aiming for a cleaner, more natural feel.
+
+### Core features
+
+- Auto lock-on: Instantly snaps to the closest bone when a target is in range
+- Custom FOV and smooth: Adjust how wide and how fast the aim reacts
+- Bone selector: Choose to lock to head, chest, or custom offsets
+- Visibility check: Optional toggle to aim only when target is not obstructed
+- Distance filter: Prevents locking onto far or irrelevant targets
+- Undetected: Clean code, updated for safe use with anti-cheat
+
+Once you try it, you'll land hits way more consistently. Whether you're in a 1v1 ambush or group fight, the aimbot takes care of precision so you can focus on movement and survival.
+
+## The Isle Evrima Wallhack (ESP) – Always Know What's Around
+
+With ESP enabled, you always know what's around — even if it's hiding deep in the forest. Whether it's a player crouching in a bush or a dino stalking from behind a rock, the ESP makes sure you never get caught off guard.
+
+This is a classic wallhack setup made for The Isle Evrima. It uses clean, color-coded outlines (chams) to display other players and dinos through terrain, trees, and objects in real time. You can track targets way before they enter your line of sight.
+
+![Isle Evrima ESP wallhack](/blog/isle-evrima-esp.jpg)
+
+### What it shows
+
+- Player and dino ESP: See all targets through walls, trees, rocks
+- Name and distance: Optional overlay showing ID, species, and range
+- Resource ESP: Locate water, food spots, and potential nesting zones
+- Configurable visuals: Adjust colors, thickness, range, and filters
+- Visibility check toggle: Choose to show only visible or all targets
+
+Once you activate ESP, you're not guessing anymore. You track, avoid, ambush, and escape with full map awareness. It completely changes how you play and how hard you are to catch.
+
+## Why Use ArisZay for The Isle Evrima Cheats?
+
+You don't need gimmicks — you need cheats that work and don't get you banned. That's why players stick with ArisZay.
+
+![ArisZay The Isle setup](/blog/ariszay-isle-why.jpg)
+
+### Why it's a smarter choice
+
+- Updated often to stay ahead of game patches
+- Built for real use, not flashy distractions
+- Fast, helpful support if you ever run into issues
+- Active player community with tips and feedback
+
+Our focus is on performance, reliability, and keeping things clean and undetectable.
+
+## About Our The Isle Evrima Cheats
+
+ArisZay has been developing its own The Isle Evrima cheats in-house for several years. We are not resellers — every feature is built, tested, and maintained by our own development team, with strong backgrounds in Unreal Engine development.
+
+Through long-term hands-on experience with The Isle, we fully understand the mechanics, balance challenges, and survival dynamics of the game. This allows us to design cheats that provide only the most useful in-game information, such as growth ESP, corpse type, and environmental awareness, without unnecessary clutter.
+
+Thanks to our deep knowledge of the game and anticheat, we are able to react extremely fast after each Evrima update. Our cheats are usually updated within a few hours, ensuring continued compatibility, stability, and safe use across all supported branches, including the HORDE TESTING branch.
+
+## Play Smarter, Not Harder
+
+The Isle can be a tough game. Survival isn't just about instincts — it's also about having the right tools. With ArisZay The Isle Evrima hacks, you take the guesswork out of every encounter. Better aim. More awareness. And no more getting caught off guard.
+
+And now, ArisZay also supports the HORDE TESTING branch for The Isle.`,
+  },
+  {
     slug: "complete-isle-cheats-guide-2026",
     title: "Complete Isle Cheats Guide 2026",
     excerpt:
@@ -11,6 +102,7 @@ export const blogPosts: BlogPost[] = [
     author: "ArisZay Team",
     publishedAt: "2026-01-15",
     readTimeMinutes: 8,
+    coverImage: "/blog/isle-evrima-esp.jpg",
     content: `## Why Isle players upgrade in 2026
 
 The Isle rewards information. Knowing where players are, how far they are, and when to commit makes the difference between a clean hunt and a wasted night.
@@ -114,6 +206,7 @@ Close the game, check announcements, and open a support ticket before continuing
     author: "ArisZay Team",
     publishedAt: "2026-02-18",
     readTimeMinutes: 6,
+    coverImage: "/blog/ariszay-isle-why.jpg",
     content: `## Evrima
 
 Modern progression, updated dinosaurs, and active servers. Most competitive players are here.

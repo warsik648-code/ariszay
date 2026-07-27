@@ -1,12 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GlassCard } from "@/components/shared/glass-card";
 import { blogPosts } from "@/data/blog";
-import Link from "next/link";
 
 export function BlogListing() {
   const [query, setQuery] = useState("");
@@ -52,22 +53,33 @@ export function BlogListing() {
 
       <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => (
-          <GlassCard key={post.slug} className="flex h-full flex-col gap-3">
-            <div className="from-primary/35 via-indigo/15 flex h-40 items-end rounded-2xl bg-gradient-to-br to-transparent p-4">
-              <span className="rounded-full bg-black/40 px-2 py-1 font-mono text-[10px] tracking-wider uppercase">
+          <GlassCard key={post.slug} className="flex h-full flex-col gap-3 overflow-hidden p-0">
+            <div className="relative h-40 w-full overflow-hidden">
+              {post.coverImage ? (
+                <Image
+                  src={post.coverImage}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              ) : (
+                <div className="from-primary/35 via-indigo/15 h-full bg-gradient-to-br to-transparent" />
+              )}
+              <span className="absolute bottom-3 left-3 rounded-full bg-black/55 px-2 py-1 font-mono text-[10px] tracking-wider text-white uppercase">
                 {post.category}
               </span>
             </div>
-            <h2 className="text-lg leading-snug font-semibold">{post.title}</h2>
-            <p className="text-muted-foreground line-clamp-3 text-sm">
-              {post.excerpt}
-            </p>
-            <p className="text-muted-foreground mt-auto text-xs">
-              {post.readTimeMinutes} min read · {post.publishedAt}
-            </p>
-            <Button asChild variant="outline" className="rounded-xl">
-              <Link href={`/blog/${post.slug}`}>Read article</Link>
-            </Button>
+            <div className="flex flex-1 flex-col gap-3 p-5 pt-2">
+              <h2 className="text-lg leading-snug font-semibold">{post.title}</h2>
+              <p className="text-muted-foreground line-clamp-3 text-sm">{post.excerpt}</p>
+              <p className="text-muted-foreground mt-auto text-xs">
+                {post.readTimeMinutes} min read · {post.publishedAt}
+              </p>
+              <Button asChild variant="outline" className="rounded-xl">
+                <Link href={`/blog/${post.slug}`}>Read article</Link>
+              </Button>
+            </div>
           </GlassCard>
         ))}
       </div>
