@@ -3,7 +3,10 @@ import { ArrowUpRight } from "lucide-react";
 
 import { StatusBadge } from "@/components/shared/status-badge";
 import { cn } from "@/lib/utils";
+import { getProductCode } from "@/lib/product-code";
 import type { DetectionStatus, Pricing } from "@/types";
+
+export { getProductCode };
 
 /** Formats a starting price line: "From $14.99 / mo" or "From $49.99". */
 export function formatFromPrice(price: Pricing): string {
@@ -14,10 +17,6 @@ export function formatFromPrice(price: Pricing): string {
     return `From $${price.lifetime.toFixed(2)}`;
   }
   return "Contact for pricing";
-}
-
-export function getProductCode(gameSlug: string, tier: string): string {
-  return `AZ-${gameSlug.slice(0, 3).toUpperCase()}-${tier.slice(0, 3).toUpperCase()}-01`;
 }
 
 type ProductPricingRowProps = {

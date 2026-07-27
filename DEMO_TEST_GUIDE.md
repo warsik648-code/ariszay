@@ -49,17 +49,28 @@ To create a customer yourself: `/auth/sign-up` → then sign in at `/auth/sign-i
 
 ## 3–5. Create order + automatic ticket
 
-### Option A — UI checkout (logged in)
+### Option A — Buy Now → cart → checkout (logged in)
 
-1. Add product to cart **or** open checkout with a known DB product/plan (cart may need items from drawer if wired).
-2. Prefer: use checkout page after adding from cart drawer if available.
-3. Complete checkout while signed in as Customer A.
-4. Land on `/checkout/success?...`
+1. Stay signed in as Customer A.
+2. Open `/cheats/the-isle/xray` (or any cheat/product page).
+3. Click **Buy Now** / **Buy this cheat** / plan Select.
+4. **Expected:** product appears in header cart (Acquisition module) with code, name, game, tier, price.
+5. Checkout opens with the same line item (not empty).
+6. Agree to terms → **Complete order**.
+7. Land on `/checkout/success?...`
 
 **Expected:**
 - Success page shows order `AZ-*`
 - Message: **Your support ticket has been created** + `SUP-*`
 - Links to View order / Open ticket
+- `/account/orders` and `/account/tickets` list the new AZ/SUP records
+
+**Edge cases to spot-check:**
+- Guest checkout: works without login; no auto ticket / no Mission Control history until signed in
+- Empty cart: `/checkout` without product shows empty bay
+- Deep link: `/checkout?product=isle-xray&plan=monthly` still hydrates cart
+- Remove line in cart drawer or checkout summary
+- Already owns product: yellow warning, purchase still allowed
 
 ### Option B — automated seed of sample order/ticket
 

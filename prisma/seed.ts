@@ -209,6 +209,66 @@ async function main() {
 
   console.log("✅ Products seeded");
 
+  // ── Utility products ──────────────────────────────────────────────────────
+  const utilityDefs = [
+    {
+      slug: "ugc",
+      name: "UGC",
+      description: "Account recovery and unban tool builder.",
+      plans: [{ label: "Lifetime", durationDays: null as number | null, price: "49.99" }],
+    },
+    {
+      slug: "skin-changer",
+      name: "Skin Changer",
+      description: "Unlock all cosmetics instantly.",
+      plans: [{ label: "Lifetime", durationDays: null, price: "39.99" }],
+    },
+    {
+      slug: "cloud-dma",
+      name: "Cloud DMA",
+      description: "Single-PC cheat infrastructure.",
+      plans: [{ label: "Lifetime", durationDays: null, price: "50.00" }],
+    },
+    {
+      slug: "hwid-spoofer",
+      name: "HWID Spoofer",
+      description: "Hardware ID spoofing tool.",
+      plans: [{ label: "Lifetime", durationDays: null, price: "29.99" }],
+    },
+  ];
+
+  for (const def of utilityDefs) {
+    const product = await prisma.product.upsert({
+      where: { slug: def.slug },
+      update: { name: def.name, description: def.description },
+      create: {
+        slug: def.slug,
+        type: "UTILITY",
+        name: def.name,
+        description: def.description,
+        longDescription: def.description,
+      },
+    });
+
+    for (let i = 0; i < def.plans.length; i++) {
+      const plan = def.plans[i]!;
+      await prisma.productPlan.upsert({
+        where: { id: `${product.id}-plan-${i}` },
+        update: { price: plan.price },
+        create: {
+          id: `${product.id}-plan-${i}`,
+          productId: product.id,
+          label: plan.label,
+          durationDays: plan.durationDays,
+          price: plan.price,
+          sortOrder: i,
+        },
+      });
+    }
+  }
+
+  console.log("✅ Utility products seeded");
+
   // ── Admin account ─────────────────────────────────────────────────────────
   const adminEmail = process.env.SEED_ADMIN_EMAIL;
   const adminPassword = process.env.SEED_ADMIN_PASSWORD;

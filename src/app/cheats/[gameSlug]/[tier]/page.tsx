@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArrowRight, Shield, Zap, Headphones, Check } from "lucide-react";
+import { Shield, Zap, Headphones, Check } from "lucide-react";
 import Link from "next/link";
 
 import { FeatureComparisonTable } from "@/components/shared/feature-comparison-table";
@@ -10,6 +10,7 @@ import { CheatCard } from "@/components/shared/cheat-card";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { JsonLd, breadcrumbJsonLd, productJsonLd } from "@/components/shared/json-ld";
 import { Button } from "@/components/ui/button";
+import { BuyButton } from "@/components/shared/buy-button";
 import { getCheatByGameAndTier, getCheatsByGame, getFeaturesForCheat } from "@/data/cheats";
 import { games, getGameByCheatsSlug } from "@/data/games";
 import { gameFaqs } from "@/data/faq";
@@ -54,7 +55,8 @@ export default async function CheatDetailPage({ params }: PageProps) {
   if (!cheat) notFound();
 
   const features = getFeaturesForCheat(cheat);
-  const checkoutUrl = `/checkout?product=${cheat.game}-${cheat.tier}`;
+  const productSlug = `${cheat.game}-${cheat.tier}`;
+  const checkoutUrl = `/checkout?product=${productSlug}`;
   const price = cheat.price.monthly ?? cheat.price.lifetime ?? 0;
   const faqItems = gameFaqs.filter((f) => f.game === game.slug);
   const relatedCheats = getCheatsByGame(game.slug).filter((c) => c.tier !== cheat.tier);
@@ -101,9 +103,13 @@ export default async function CheatDetailPage({ params }: PageProps) {
         <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl mb-4">{cheat.name}</h1>
         <p className="max-w-2xl text-lg leading-relaxed text-white/60 mb-6">{cheat.description}</p>
         <div className="flex flex-wrap gap-3">
-          <Button asChild size="lg" className="rounded-xl">
-            <Link href={checkoutUrl}>Buy {cheat.name}<ArrowRight className="ml-1.5 size-4" /></Link>
-          </Button>
+          <BuyButton
+            href={checkoutUrl}
+            productSlug={productSlug}
+            plan={cheat.price.monthly != null ? "monthly" : "lifetime"}
+            label={`Buy ${cheat.name}`}
+            size="lg"
+          />
           <Button asChild variant="outline" size="lg" className="rounded-xl">
             <Link href={`/cheats/${game.cheatsSlug}`}>View All {game.shortName} Cheats</Link>
           </Button>
@@ -169,7 +175,12 @@ export default async function CheatDetailPage({ params }: PageProps) {
               <p className="text-sm text-white/50">Monthly subscription</p>
               <p className="text-3xl font-bold text-white">${cheat.price.monthly.toFixed(2)}<span className="ml-1 text-sm font-normal text-white/40">/mo</span></p>
               <p className="text-xs text-white/40">Cancel anytime</p>
-              <Button asChild className="w-full rounded-xl"><Link href={checkoutUrl}>Select monthly<ArrowRight className="ml-1.5 size-4" /></Link></Button>
+              <BuyButton
+                productSlug={productSlug}
+                plan="monthly"
+                label="Select monthly"
+                className="w-full"
+              />
             </div>
           )}
           {cheat.price.lifetime != null && (
@@ -177,7 +188,12 @@ export default async function CheatDetailPage({ params }: PageProps) {
               <p className="text-sm text-white/50">Lifetime access</p>
               <p className="text-3xl font-bold text-white">${cheat.price.lifetime.toFixed(2)}<span className="ml-1 text-sm font-normal text-white/40"> one-time</span></p>
               <p className="text-xs text-white/40">Pay once, access forever</p>
-              <Button asChild className="w-full rounded-xl"><Link href={`${checkoutUrl}&plan=lifetime`}>Select lifetime<ArrowRight className="ml-1.5 size-4" /></Link></Button>
+              <BuyButton
+                productSlug={productSlug}
+                plan="lifetime"
+                label="Select lifetime"
+                className="w-full"
+              />
             </div>
           )}
         </div>
@@ -195,7 +211,7 @@ export default async function CheatDetailPage({ params }: PageProps) {
           ))}
         </div>
         <div className="mt-5">
-          <Button asChild className="rounded-xl"><Link href={checkoutUrl}>Buy this cheat<ArrowRight className="ml-1.5 size-4" /></Link></Button>
+          <BuyButton productSlug={productSlug} plan={cheat.price.monthly != null ? "monthly" : "lifetime"} label="Buy this cheat" />
         </div>
       </section>
 
@@ -228,7 +244,7 @@ export default async function CheatDetailPage({ params }: PageProps) {
         <SectionHeading title="Compare All Tiers" description="See exactly what each tier includes." />
         <FeatureComparisonTable gameSlug={game.slug} activeColumn={cheat.tier} />
         <div className="mt-6">
-          <Button asChild className="rounded-xl"><Link href={checkoutUrl}>Buy this cheat<ArrowRight className="ml-1.5 size-4" /></Link></Button>
+          <BuyButton productSlug={productSlug} plan={cheat.price.monthly != null ? "monthly" : "lifetime"} label="Buy this cheat" />
         </div>
       </section>
 
@@ -253,9 +269,12 @@ export default async function CheatDetailPage({ params }: PageProps) {
           <p className="text-sm font-semibold text-white">
             {cheat.price.monthly != null ? `$${cheat.price.monthly.toFixed(2)}/mo` : `$${cheat.price.lifetime?.toFixed(2)}`}
           </p>
-          <Button asChild size="sm" className="rounded-xl">
-            <Link href={checkoutUrl}>Buy {tierLabels[cheat.tier as CheatTier]}<ArrowRight className="ml-1.5 size-4" /></Link>
-          </Button>
+          <BuyButton
+            productSlug={productSlug}
+            plan={cheat.price.monthly != null ? "monthly" : "lifetime"}
+            label={`Buy ${tierLabels[cheat.tier as CheatTier]}`}
+            size="sm"
+          />
         </div>
       </div>
     </div>

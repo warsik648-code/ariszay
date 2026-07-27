@@ -12,7 +12,6 @@ import {
   WhatsIncluded,
 } from "@/components/shared/detail-sections";
 import { JsonLd, breadcrumbJsonLd, productJsonLd } from "@/components/shared/json-ld";
-import { getProductReferralUrl } from "@/config/ref-links";
 import { getProduct, productFeatureLists, products } from "@/data/products";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -34,7 +33,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   if (!product) notFound();
 
   const features = productFeatureLists[product.slug];
-  const buyUrl = getProductReferralUrl(product.slug);
+  const buyUrl = `/checkout?product=${product.slug}`;
   const price = product.price.lifetime ?? product.price.monthly ?? 0;
 
   return (
@@ -56,7 +55,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </GlassCard>
           <div>
             <h2 className="mb-4 text-lg font-semibold">Pricing</h2>
-            <PricingCards price={product.price} lifetimeUrl={product.price.lifetime ? buyUrl : undefined} monthlyUrl={product.price.monthly ? buyUrl : undefined} />
+            <PricingCards
+              price={product.price}
+              lifetimeUrl={product.price.lifetime ? `${buyUrl}&plan=lifetime` : undefined}
+              monthlyUrl={product.price.monthly ? `${buyUrl}&plan=monthly` : undefined}
+            />
           </div>
         </div>
 
@@ -67,7 +70,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <StickyMobileCta href={buyUrl} label="Buy now" priceLabel={`$${price.toFixed(2)}`} />
+      <StickyMobileCta
+        href={product.price.lifetime ? `${buyUrl}&plan=lifetime` : `${buyUrl}&plan=monthly`}
+        label="Buy now"
+        priceLabel={`$${price.toFixed(2)}`}
+      />
     </div>
   );
 }

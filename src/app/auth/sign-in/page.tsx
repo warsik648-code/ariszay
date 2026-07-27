@@ -34,7 +34,13 @@ export default function SignInPage() {
       return;
     }
 
-    router.push("/account");
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get("redirect");
+    const safeRedirect =
+      redirect && redirect.startsWith("/") && !redirect.startsWith("//")
+        ? redirect
+        : "/account";
+    router.push(safeRedirect);
     router.refresh();
   }
 
