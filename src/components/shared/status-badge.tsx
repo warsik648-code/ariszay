@@ -37,12 +37,34 @@ const statusConfig: Record<
 export function StatusBadge({
   status,
   className,
+  compact = false,
 }: {
   status: DetectionStatus;
   className?: string;
+  compact?: boolean;
 }) {
   const config = statusConfig[status];
   const Icon = config.icon;
+
+  if (compact) {
+    return (
+      <span
+        className={cn(
+          "inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-medium",
+          config.className,
+          className,
+        )}
+        title={config.label}
+      >
+        <span className="relative flex size-1.5">
+          {status === "available" && (
+            <span className={cn("absolute inline-flex size-full animate-ping rounded-full opacity-60", config.dot)} />
+          )}
+          <span className={cn("relative inline-flex size-1.5 rounded-full", config.dot)} />
+        </span>
+      </span>
+    );
+  }
 
   return (
     <Badge
