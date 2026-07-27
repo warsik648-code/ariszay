@@ -382,14 +382,19 @@ export default function HomePage() {
 
       {/* ─── FAQ ─── */}
       <section id="faq" className="container-site scroll-mt-24 py-24">
-        <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
-          <div>
-            <SectionHeading index="07" label="FAQ" title="Cheat FAQ" />
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="min-w-0 space-y-10">
+            <SectionHeading
+              index="07"
+              label="FAQ"
+              title="Cheat FAQ"
+              className="mb-0"
+            />
             <div className="max-w-3xl">
               <FaqAccordion items={faqs} />
             </div>
           </div>
-          <aside className="ind-panel h-fit p-6">
+          <aside className="ind-panel h-fit self-start p-6">
             <p className="tech-label mb-3">Support</p>
             <h3 className="font-display text-2xl font-bold uppercase">Need help?</h3>
             <p className="mt-3 text-sm leading-relaxed text-[rgb(242_240_235_/_0.45)]">

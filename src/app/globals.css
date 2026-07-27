@@ -191,7 +191,7 @@
   }
 
   .tech-label {
-    @apply font-mono text-[10px] font-medium tracking-[0.28em] uppercase text-[rgb(242_240_235_/_0.45)];
+    @apply font-mono text-[10px] font-medium leading-none tracking-[0.28em] uppercase text-[rgb(242_240_235_/_0.45)];
   }
 
   .tech-divider {
