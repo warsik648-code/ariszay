@@ -4,7 +4,7 @@ import { Cloud, Cpu, Palette, Shield } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { GlassCard } from "@/components/shared/glass-card";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 import type { Product } from "@/types";
 
 const icons = {

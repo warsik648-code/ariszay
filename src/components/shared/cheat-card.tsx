@@ -4,7 +4,7 @@ import { ArrowRight, Check } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/shared/status-badge";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 import { getCheatUrl } from "@/data/cheats";
 import { cn } from "@/lib/utils";
 import type { Cheat } from "@/types";

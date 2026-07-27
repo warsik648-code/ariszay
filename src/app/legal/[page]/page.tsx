@@ -1,39 +1,16 @@
 import { SectionHeading } from "@/components/shared/section-heading";
 
-const pages: {
-  slug: string;
-  title: string;
-  content: string;
-}[] = [
-  {
-    slug: "terms",
-    title: "Terms of Service",
-    content:
-      "This page is a placeholder. Replace this with your actual Terms of Service before launching.",
-  },
-  {
-    slug: "privacy",
-    title: "Privacy Policy",
-    content:
-      "This page is a placeholder. Replace this with your actual Privacy Policy before launching.",
-  },
-  {
-    slug: "refund",
-    title: "Refund Policy",
-    content:
-      "This page is a placeholder. Replace this with your actual Refund Policy before launching.",
-  },
+const pages: { slug: string; title: string; content: string }[] = [
+  { slug: "terms", title: "Terms of Service", content: "This page is a placeholder. Replace this with your actual Terms of Service before launching." },
+  { slug: "privacy", title: "Privacy Policy", content: "This page is a placeholder. Replace this with your actual Privacy Policy before launching." },
+  { slug: "refund", title: "Refund Policy", content: "This page is a placeholder. Replace this with your actual Refund Policy before launching." },
 ];
 
 export function generateStaticParams() {
   return pages.map((p) => ({ page: p.slug }));
 }
 
-export default async function LegalPage({
-  params,
-}: {
-  params: Promise<{ page: string }>;
-}) {
+export default async function LegalPage({ params }: { params: Promise<{ page: string }> }) {
   const { page } = await params;
   const entry = pages.find((p) => p.slug === page);
   if (!entry) return null;

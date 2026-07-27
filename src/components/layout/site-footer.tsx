@@ -1,12 +1,10 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 import { games } from "@/data/games";
 import { siteConfig } from "@/config/site";
 
 export function SiteFooter() {
-  const t = useTranslations("footer");
   const year = new Date().getFullYear();
 
   return (
@@ -17,7 +15,7 @@ export function SiteFooter() {
             Aris<span className="text-primary">Zay</span>
           </Link>
           <p className="text-muted-foreground max-w-md text-sm leading-relaxed">
-            {t("description")}
+            Enhancement software for The Isle and Naraka: Bladepoint. Clear product status, instant delivery, and written setup guides included.
           </p>
           <div className="text-muted-foreground flex flex-wrap gap-2 text-xs">
             {["Visa", "Mastercard", "Crypto", "PayPal"].map((method) => (
@@ -32,7 +30,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h3 className="mb-4 text-sm font-semibold">{t("quickLinks")}</h3>
+          <h3 className="mb-4 text-sm font-semibold">Quick Links</h3>
           <ul className="text-muted-foreground space-y-2.5 text-sm">
             {games.map((game) => (
               <li key={game.slug}>
@@ -63,34 +61,31 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h3 className="mb-4 text-sm font-semibold">{t("legal")}</h3>
+          <h3 className="mb-4 text-sm font-semibold">Legal</h3>
           <ul className="text-muted-foreground space-y-2.5 text-sm">
             <li>
               <Link href="/legal/terms" className="hover:text-foreground transition-colors">
-                {t("terms")}
+                Terms
               </Link>
             </li>
             <li>
               <Link href="/legal/privacy" className="hover:text-foreground transition-colors">
-                {t("privacy")}
+                Privacy
               </Link>
             </li>
             <li>
               <Link href="/legal/refund" className="hover:text-foreground transition-colors">
-                {t("refund")}
-              </Link>
-            </li>
-            <li>
-              <Link href="/account" className="hover:text-foreground transition-colors">
-                My Account
+                Refund
               </Link>
             </li>
           </ul>
         </div>
       </div>
 
-      <div className="text-muted-foreground border-t border-white/10 py-6 text-center text-xs">
-        © {year} {siteConfig.name}. {t("rights")}
+      <div className="container-site border-t border-white/8 py-6">
+        <p className="text-muted-foreground text-xs">
+          © {year} {siteConfig.name}. All rights reserved.
+        </p>
       </div>
     </footer>
   );

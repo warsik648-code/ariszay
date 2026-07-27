@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GlassCard } from "@/components/shared/glass-card";
 import { blogPosts } from "@/data/blog";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 
 export function BlogListing() {
   const [query, setQuery] = useState("");

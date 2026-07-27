@@ -1,21 +1,13 @@
 import { redirect } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
 import { Package, User, ArrowRight, Shield } from "lucide-react";
+import Link from "next/link";
 
 import { getServerSession } from "@/lib/auth-server";
 import { db } from "@/lib/db";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
 import SignOutButton from "@/components/auth/sign-out-button";
 
-type PageProps = {
-  params: Promise<{ locale: string }>;
-};
-
-export default async function AccountPage({ params }: PageProps) {
-  const { locale } = await params;
-  setRequestLocale(locale);
-
+export default async function AccountPage() {
   const session = await getServerSession();
   if (!session?.user) {
     redirect("/auth/sign-in");
@@ -23,16 +15,16 @@ export default async function AccountPage({ params }: PageProps) {
 
   const user = session.user;
 
-  const orders = await db.order.findMany({
-    where: { userId: user.id },
-    orderBy: { createdAt: "desc" },
-    take: 10,
-    include: {
-      items: {
-        include: { product: { select: { name: true } } },
+  const orders = await db.order
+    .findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+      include: {
+        items: { include: { product: { select: { name: true } } } },
       },
-    },
-  }).catch(() => []);
+    })
+    .catch(() => []);
 
   const statusColors: Record<string, string> = {
     PENDING: "text-yellow-400 bg-yellow-500/10 border-yellow-500/20",
@@ -53,7 +45,6 @@ export default async function AccountPage({ params }: PageProps) {
       </div>
 
       <div className="grid gap-6 md:grid-cols-[240px_1fr]">
-        {/* Sidebar */}
         <aside className="space-y-2">
           {[
             { icon: Package, label: "Orders", href: "/account", active: true },
@@ -64,9 +55,7 @@ export default async function AccountPage({ params }: PageProps) {
               key={label}
               href={href}
               className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm transition-colors ${
-                active
-                  ? "bg-white/10 font-medium text-white"
-                  : "text-white/50 hover:bg-white/5 hover:text-white"
+                active ? "bg-white/10 font-medium text-white" : "text-white/50 hover:bg-white/5 hover:text-white"
               }`}
             >
               <Icon className="size-4" />
@@ -75,10 +64,8 @@ export default async function AccountPage({ params }: PageProps) {
           ))}
         </aside>
 
-        {/* Main content */}
         <main>
           <h2 className="mb-5 text-lg font-semibold text-white">Order history</h2>
-
           {orders.length === 0 ? (
             <div className="rounded-2xl border border-white/10 bg-[#0d1117] p-10 text-center">
               <Package className="mx-auto mb-3 size-8 text-white/20" />
@@ -93,10 +80,7 @@ export default async function AccountPage({ params }: PageProps) {
           ) : (
             <div className="space-y-3">
               {orders.map((order) => (
-                <div
-                  key={order.id}
-                  className="rounded-2xl border border-white/10 bg-[#0d1117] p-5"
-                >
+                <div key={order.id} className="rounded-2xl border border-white/10 bg-[#0d1117] p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium text-white">

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cart";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
 export function CartDrawer() {

@@ -1,7 +1,7 @@
 import { FeatureList } from "@/components/shared/status-badge";
 import { BuyButton } from "@/components/shared/buy-button";
 import { StatusBadge } from "@/components/shared/status-badge";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 import type { Cheat, DetectionStatus, Pricing } from "@/types";
 import { ChevronRight } from "lucide-react";
 

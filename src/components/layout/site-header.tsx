@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ChevronDown, Menu } from "lucide-react";
-import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,13 +20,11 @@ import {
 } from "@/components/ui/sheet";
 import { games } from "@/data/games";
 import { products } from "@/data/products";
-import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { AuthButtons } from "@/components/auth/auth-buttons";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 
 export function SiteHeader() {
-  const t = useTranslations("nav");
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -58,7 +56,7 @@ export function SiteHeader() {
             <DropdownMenuTrigger
               className={cn(navLinkClass, "inline-flex items-center gap-1")}
             >
-              {t("cheats")}
+              Cheats
               <ChevronDown className="size-3.5" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="min-w-44">
@@ -74,7 +72,7 @@ export function SiteHeader() {
             <DropdownMenuTrigger
               className={cn(navLinkClass, "inline-flex items-center gap-1")}
             >
-              {t("products")}
+              Products
               <ChevronDown className="size-3.5" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="min-w-48">
@@ -86,12 +84,8 @@ export function SiteHeader() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Link href="/blog" className={navLinkClass}>
-            {t("blog")}
-          </Link>
-          <Link href="/#faq" className={navLinkClass}>
-            {t("help")}
-          </Link>
+          <Link href="/blog" className={navLinkClass}>Blog</Link>
+          <Link href="/#faq" className={navLinkClass}>Help / Support</Link>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -118,7 +112,7 @@ export function SiteHeader() {
               </SheetHeader>
               <div className="mt-6 flex flex-col gap-4">
                 <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">
-                  {t("cheats")}
+                  Cheats
                 </p>
                 {games.map((game) => (
                   <Link
@@ -131,7 +125,7 @@ export function SiteHeader() {
                   </Link>
                 ))}
                 <p className="text-muted-foreground mt-2 font-mono text-xs tracking-widest uppercase">
-                  {t("products")}
+                  Products
                 </p>
                 {products.map((product) => (
                   <Link
@@ -143,19 +137,11 @@ export function SiteHeader() {
                     {product.name}
                   </Link>
                 ))}
-                <Link
-                  href="/blog"
-                  onClick={() => setOpen(false)}
-                  className="text-sm"
-                >
-                  {t("blog")}
+                <Link href="/blog" onClick={() => setOpen(false)} className="text-sm">
+                  Blog
                 </Link>
-                <Link
-                  href="/#faq"
-                  onClick={() => setOpen(false)}
-                  className="text-sm"
-                >
-                  {t("help")}
+                <Link href="/#faq" onClick={() => setOpen(false)} className="text-sm">
+                  Help / Support
                 </Link>
               </div>
             </SheetContent>
