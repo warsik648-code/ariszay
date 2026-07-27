@@ -226,11 +226,11 @@ export default function CheckoutPage() {
             />
             <span className="text-xs leading-relaxed text-white/50">
               I agree to the{" "}
-              <Link href="/legal/terms" className="underline hover:text-white/80 transition-colors" target="_blank">
+              <Link href="/legal/terms" className="underline hover:text-white/80 transition-colors">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="/legal/refund" className="underline hover:text-white/80 transition-colors" target="_blank">
+              <Link href="/legal/refund" className="underline hover:text-white/80 transition-colors">
                 Refund Policy
               </Link>
               . I understand that prices are validated server-side and the total shown above is final.

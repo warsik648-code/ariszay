@@ -6,33 +6,66 @@ import {
 import { getGame } from "@/data/games";
 import type { Cheat, CheatTier, GameSlug } from "@/types";
 
-const systemRequirementsByGame: Record<
+const systemRequirementsByTier: Record<
   GameSlug,
-  Cheat["systemRequirements"]
+  Record<CheatTier, Cheat["systemRequirements"]>
 > = {
   isle: {
-    os: "Windows 10/11 (64-bit)",
-    cpu: "Intel Core i5 / AMD Ryzen 5 or better",
-    ram: "8 GB+",
-    gpu: "DirectX 11 compatible",
-    compatible: "The Isle Evrima and Legacy",
+    xray: {
+      os: "Windows 10 / 11 (64-bit)",
+      cpu: "Intel or AMD CPU (any modern)",
+      ram: "8 GB minimum",
+      gpu: "DirectX 11 compatible GPU",
+      compatible: "The Isle Evrima via Steam — Secure Boot OFF (or compatible mode)",
+    },
+    pro: {
+      os: "Windows 10 / 11 (64-bit)",
+      cpu: "Intel or AMD CPU (any modern)",
+      ram: "8 GB minimum",
+      gpu: "DirectX 11 compatible GPU",
+      compatible: "The Isle Evrima via Steam — Secure Boot compatible mode",
+    },
+    private: {
+      os: "Windows 10 / 11 (64-bit)",
+      cpu: "Intel or AMD CPU (modern generation)",
+      ram: "16 GB recommended",
+      gpu: "DirectX 11 compatible GPU",
+      compatible: "The Isle Evrima via Steam — active internet connection required",
+    },
   },
   naraka: {
-    os: "Windows 10/11 (64-bit)",
-    cpu: "Intel Core i5 / AMD Ryzen 5 or better",
-    ram: "8 GB+",
-    gpu: "DirectX 11 compatible",
-    compatible: "Naraka: Bladepoint (current build)",
+    xray: {
+      os: "Windows 10/11 (64-bit)",
+      cpu: "Intel Core i5 / AMD Ryzen 5 or better",
+      ram: "8 GB+",
+      gpu: "DirectX 11 compatible",
+      compatible: "Naraka: Bladepoint (current build)",
+    },
+    pro: {
+      os: "Windows 10/11 (64-bit)",
+      cpu: "Intel Core i5 / AMD Ryzen 5 or better",
+      ram: "8 GB+",
+      gpu: "DirectX 11 compatible",
+      compatible: "Naraka: Bladepoint (current build)",
+    },
+    private: {
+      os: "Windows 10/11 (64-bit)",
+      cpu: "Intel Core i5 / AMD Ryzen 5 or better",
+      ram: "16 GB recommended",
+      gpu: "DirectX 11 compatible",
+      compatible: "Naraka: Bladepoint (current build) — active internet connection required",
+    },
   },
 };
 
 const descriptions: Record<GameSlug, Record<CheatTier, string>> = {
   isle: {
     xray:
-      "Visibility overlay for The Isle — player positions, loot, and distance readouts without aim assistance.",
-    pro: "Expanded toolkit with aim-assist options, additional ESP types, and threat filters.",
+      "Essential ESP for The Isle Evrima. See every dinosaur and player through terrain, track health bars, distances, and loot values — all through a lightweight external overlay.",
+    pro:
+      "Aim Assist + Full ESP for competitive dominance. Includes everything in Xray plus a full aim assist suite, trigger bot, advanced player filtering, and multi-box ESP types.",
     private:
-      "Full-featured suite with aimbot controls, radar, and stream-capture exclusion. Includes priority support.",
+      "Full aimbot, radar, and private-grade everything. Every feature from Xray and Pro, plus full aimbot with custom hitbox selection, drone ESP, 2D radar, stream-safe mode, and direct support channel access.",
   },
   naraka: {
     xray:
@@ -66,7 +99,7 @@ export const cheats: Cheat[] = gameSlugs.flatMap((game) =>
       status: "available" as const,
       highlightFeatures: tierHighlightFeatures[tier],
       featureCount: features.length,
-      systemRequirements: systemRequirementsByGame[game],
+      systemRequirements: systemRequirementsByTier[game][tier],
     };
   }),
 );

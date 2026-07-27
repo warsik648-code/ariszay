@@ -1,9 +1,7 @@
-"use client";
-
-import { ExternalLink } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 type BuyButtonProps = {
@@ -28,15 +26,10 @@ export function BuyButton({
       size={size}
       className={cn("rounded-xl", className)}
     >
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => toast.success("Opening secure checkout…")}
-      >
+      <Link href={href}>
         {label}
-        <ExternalLink className="size-3.5" />
-      </a>
+        <ArrowRight className="size-3.5" />
+      </Link>
     </Button>
   );
 }

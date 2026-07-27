@@ -1,22 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
+import { ArrowRight, Shield, Zap, Headphones, Check } from "lucide-react";
 
-import {
-  DetailHero,
-  HowToGetStarted,
-  ImageSliderPlaceholder,
-  PricingCards,
-  StickyMobileCta,
-  SystemRequirementsCard,
-  WhatsIncluded,
-} from "@/components/shared/detail-sections";
 import { FeatureComparisonTable } from "@/components/shared/feature-comparison-table";
 import { FaqAccordion } from "@/components/shared/faq-accordion";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { CheatCard } from "@/components/shared/cheat-card";
+import { StatusBadge } from "@/components/shared/status-badge";
 import { JsonLd, breadcrumbJsonLd, productJsonLd } from "@/components/shared/json-ld";
-import { getCheatReferralUrl } from "@/config/ref-links";
+import { Link } from "@/i18n/navigation";
+import { Button } from "@/components/ui/button";
 import {
   getCheatByGameAndTier,
   getCheatsByGame,
@@ -31,6 +25,12 @@ type PageProps = {
 };
 
 const validTiers: CheatTier[] = ["xray", "pro", "private"];
+
+const tierLabels: Record<CheatTier, string> = {
+  xray: "CORE ESP",
+  pro: "AIM ASSIST",
+  private: "FULL AIMBOT",
+};
 
 export function generateStaticParams() {
   return games.flatMap((game) =>
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!cheat) return {};
 
   return {
-    title: `${cheat.name} — ${game.name} ${tier.charAt(0).toUpperCase() + tier.slice(1)} Tier`,
+    title: `${cheat.name} — ${game.name} ${tier.charAt(0).toUpperCase() + tier.slice(1)} Cheats`,
     description: cheat.description,
     alternates: { canonical: `/cheats/${game.cheatsSlug}/${tier}` },
     openGraph: {
@@ -73,21 +73,63 @@ export default async function CheatDetailPage({ params }: PageProps) {
   if (!cheat) notFound();
 
   const features = getFeaturesForCheat(cheat);
-  const buyUrl = getCheatReferralUrl(cheat.game, cheat.tier);
+  const checkoutUrl = `/checkout?product=${cheat.game}-${cheat.tier}`;
   const price = cheat.price.monthly ?? cheat.price.lifetime ?? 0;
   const faqItems = gameFaqs.filter((f) => f.game === game.slug);
 
-  // Other cheats in this game for the "Related" section
   const relatedCheats = getCheatsByGame(game.slug).filter(
     (c) => c.tier !== cheat.tier,
   );
+
+  const infoCards = [
+    {
+      icon: Shield,
+      title: "Detection Status",
+      body: "Fully external, no kernel injection. Undetected against EAC as of 2026. Updated within hours of every patch.",
+    },
+    {
+      icon: Zap,
+      title: "Delivery",
+      body: "Instant digital access — license key sent to your account after payment. No waiting.",
+    },
+    {
+      icon: Headphones,
+      title: "Support",
+      body: "Priority support included. Setup help, patch updates, and config guides available.",
+    },
+  ];
+
+  const howToSteps = [
+    {
+      num: "1",
+      title: "Choose Your Plan",
+      body: "Visit our store, select Monthly or Lifetime, and complete secure checkout.",
+    },
+    {
+      num: "2",
+      title: "Receive Your Key",
+      body: "License key delivered instantly to your account after payment.",
+    },
+    {
+      num: "3",
+      title: "Download the Loader",
+      body: "Download our lightweight loader from the dashboard — no installation needed.",
+    },
+    {
+      num: "4",
+      title: "Launch & Play",
+      body: `Start ${game.name}, run the loader, and enjoy full cheat features.`,
+    },
+  ];
+
+  const sysReq = cheat.systemRequirements;
 
   return (
     <div className="container-site py-10 pb-28 md:pb-16">
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
-          { name: game.name, path: `/cheats/${game.cheatsSlug}` },
+          { name: `${game.name} Cheats`, path: `/cheats/${game.cheatsSlug}` },
           { name: cheat.name, path: `/cheats/${game.cheatsSlug}/${cheat.tier}` },
         ])}
       />
@@ -100,80 +142,216 @@ export default async function CheatDetailPage({ params }: PageProps) {
         })}
       />
 
-      <div className="grid gap-10 lg:grid-cols-[1.5fr_1fr]">
-        {/* Left column */}
-        <div className="space-y-8">
-          <DetailHero
-            breadcrumb={[
-              { label: "Home", href: "/" },
-              { label: `${game.name} Cheats`, href: `/cheats/${game.cheatsSlug}` },
-              { label: cheat.name },
-            ]}
-            status={cheat.status}
-            title={cheat.name}
-            description={cheat.description}
-          />
+      {/* Breadcrumb */}
+      <nav aria-label="Breadcrumb" className="mb-8">
+        <ol className="flex flex-wrap items-center gap-1.5 text-sm text-white/40">
+          <li><Link href="/" className="hover:text-white/70 transition-colors">Home</Link></li>
+          <li aria-hidden>/</li>
+          <li><Link href={`/cheats/${game.cheatsSlug}`} className="hover:text-white/70 transition-colors">{game.name} Cheats</Link></li>
+          <li aria-hidden>/</li>
+          <li className="text-white/70">{cheat.name}</li>
+        </ol>
+      </nav>
 
-          <ImageSliderPlaceholder label={cheat.name} />
+      {/* Hero */}
+      <section className="mb-12">
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          <span className="font-mono text-xs tracking-[0.2em] uppercase text-white/40">
+            {tierLabels[cheat.tier as CheatTier]}
+          </span>
+          <StatusBadge status={cheat.status} />
+        </div>
+        <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl mb-4">
+          {cheat.name}
+        </h1>
+        <p className="max-w-2xl text-lg leading-relaxed text-white/60 mb-6">
+          {cheat.description}
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild size="lg" className="rounded-xl">
+            <Link href={checkoutUrl}>
+              Get {cheat.name}
+              <ArrowRight className="ml-1.5 size-4" />
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="rounded-xl">
+            <Link href={`/cheats/${game.cheatsSlug}`}>
+              View All {game.shortName} Tiers
+            </Link>
+          </Button>
+        </div>
+      </section>
 
-          <div className="rounded-2xl border border-white/10 bg-[#0d1117] p-6 border-l-4 border-l-primary">
-            <h2 className="text-lg font-semibold text-white">About this product</h2>
-            <p className="mt-3 text-sm leading-relaxed text-white/60">
-              {cheat.description} This product requires Windows 10/11 and is installed
-              following the written guide provided after purchase. The availability status
-              above reflects the current build compatibility — check before purchasing if
-              a recent game update has shipped.
-            </p>
-            <div className="mt-4 rounded-xl border border-white/8 bg-white/4 p-4">
-              <p className="text-sm font-medium text-white/80">Important notice</p>
-              <p className="mt-1 text-xs leading-relaxed text-white/50">
-                This software is provided for educational and personal use. You are
-                responsible for ensuring compliance with the terms of service of any game
-                you use this with.
-              </p>
-            </div>
+      {/* Info cards */}
+      <section className="mb-12 grid gap-4 sm:grid-cols-3">
+        {infoCards.map(({ icon: Icon, title, body }) => (
+          <div key={title} className="rounded-2xl border border-white/10 bg-[#0d1117] p-5">
+            <Icon className="mb-3 size-5 text-white/50" />
+            <h3 className="text-sm font-semibold text-white mb-1">{title}</h3>
+            <p className="text-xs leading-relaxed text-white/50">{body}</p>
           </div>
+        ))}
+      </section>
 
-          <div>
-            <h2 className="mb-4 text-lg font-semibold text-white">Pricing</h2>
-            <PricingCards
-              price={cheat.price}
-              monthlyUrl={cheat.price.monthly != null ? buyUrl : undefined}
-              lifetimeUrl={cheat.price.lifetime != null ? buyUrl : undefined}
+      {/* Image placeholder */}
+      <section className="mb-12 overflow-hidden rounded-2xl border border-white/10">
+        <div className="flex aspect-[16/9] items-center justify-center bg-[#0d1117]">
+          <div className="text-center">
+            <p className="font-mono text-xs tracking-[0.2em] text-white/30 uppercase">Preview</p>
+            <p className="mt-2 text-lg font-semibold text-white/60">{cheat.name}</p>
+            <p className="mt-1 text-sm text-white/30">Screenshots — add via admin panel</p>
+          </div>
+        </div>
+        <div className="flex gap-2 overflow-x-auto bg-black/20 p-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-14 w-24 shrink-0 rounded-xl border border-white/10 bg-white/5"
+              aria-hidden
             />
-          </div>
+          ))}
+        </div>
+      </section>
 
-          {faqItems.length > 0 && (
-            <div>
-              <h2 className="mb-4 text-lg font-semibold text-white">
-                {game.shortName} FAQ
-              </h2>
-              <FaqAccordion items={faqItems} />
+      {/* Pricing + CTA */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold text-white mb-2">Get {cheat.name}</h2>
+        <p className="text-white/50 mb-6 text-sm">
+          View available plans, monthly and lifetime options, and complete secure checkout on our store. Instant digital delivery after purchase.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2 max-w-xl">
+          {cheat.price.monthly != null && (
+            <div className="rounded-2xl border border-white/10 bg-[#0d1117] p-5 space-y-3">
+              <p className="text-sm text-white/50">Monthly subscription</p>
+              <p className="text-3xl font-bold text-white">
+                ${cheat.price.monthly.toFixed(2)}
+                <span className="ml-1 text-sm font-normal text-white/40">/mo</span>
+              </p>
+              <p className="text-xs text-white/40">Cancel anytime</p>
+              <Button asChild className="w-full rounded-xl">
+                <Link href={checkoutUrl}>
+                  Select monthly
+                  <ArrowRight className="ml-1.5 size-4" />
+                </Link>
+              </Button>
+            </div>
+          )}
+          {cheat.price.lifetime != null && (
+            <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5 space-y-3">
+              <p className="text-sm text-white/50">Lifetime access</p>
+              <p className="text-3xl font-bold text-white">
+                ${cheat.price.lifetime.toFixed(2)}
+                <span className="ml-1 text-sm font-normal text-white/40"> one-time</span>
+              </p>
+              <p className="text-xs text-white/40">Pay once, access forever</p>
+              <Button asChild className="w-full rounded-xl">
+                <Link href={`${checkoutUrl}&plan=lifetime`}>
+                  Select lifetime
+                  <ArrowRight className="ml-1.5 size-4" />
+                </Link>
+              </Button>
             </div>
           )}
         </div>
-
-        {/* Right column */}
-        <div className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-          <HowToGetStarted />
-          <WhatsIncluded features={features} featureCount={cheat.featureCount} />
-          <SystemRequirementsCard requirements={cheat.systemRequirements} />
-        </div>
-      </div>
-
-      {/* Feature comparison */}
-      <section className="mt-16">
-        <SectionHeading
-          title="Tier comparison"
-          description="Compare all tiers to confirm you have the right package."
-        />
-        <FeatureComparisonTable gameSlug={game.slug} activeColumn={cheat.tier} />
+        <p className="mt-3 text-xs text-white/30">Monthly &amp; Lifetime options available · Instant delivery</p>
       </section>
 
-      {/* Related cheats */}
+      {/* How to get started */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold text-white mb-6">How to Get Started</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {howToSteps.map((step) => (
+            <div key={step.num} className="rounded-2xl border border-white/10 bg-[#0d1117] p-5">
+              <span className="flex size-8 items-center justify-center rounded-full bg-white/8 font-mono text-xs text-white/60 mb-3">
+                {step.num}
+              </span>
+              <h3 className="text-sm font-semibold text-white mb-1">{step.title}</h3>
+              <p className="text-xs text-white/50 leading-relaxed">{step.body}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-5">
+          <Button asChild className="rounded-xl">
+            <Link href={checkoutUrl}>
+              Get Started
+              <ArrowRight className="ml-1.5 size-4" />
+            </Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* What's Included */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold text-white mb-6">
+          What&apos;s Included
+          <span className="ml-2 font-mono text-sm font-normal text-white/40">
+            ({features.length} features)
+          </span>
+        </h2>
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-3">
+          {features.map((feature) => (
+            <div key={feature} className="flex items-center gap-2 mb-2.5 break-inside-avoid">
+              <Check className="size-4 shrink-0 text-emerald-400" />
+              <span className="text-sm text-white/70">{feature}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* System Requirements */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold text-white mb-6">System Requirements</h2>
+        <div className="rounded-2xl border border-white/10 bg-[#0d1117] p-6 max-w-lg">
+          <ul className="space-y-2.5">
+            {[
+              sysReq.os,
+              `${game.name} via Steam`,
+              sysReq.cpu,
+              sysReq.ram,
+              sysReq.gpu,
+              sysReq.compatible,
+              "No virtual machines",
+            ].map((req) => (
+              <li key={req} className="flex items-center gap-2 text-sm text-white/70">
+                <Check className="size-4 shrink-0 text-emerald-400" />
+                {req}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Feature Comparison Table */}
+      <section className="mb-12">
+        <SectionHeading
+          title="Compare All Tiers"
+          description="See exactly what each tier includes."
+        />
+        <FeatureComparisonTable gameSlug={game.slug} activeColumn={cheat.tier} />
+        <div className="mt-6">
+          <Button asChild className="rounded-xl">
+            <Link href={checkoutUrl}>
+              View Pricing &amp; Get Your Tier
+              <ArrowRight className="ml-1.5 size-4" />
+            </Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      {faqItems.length > 0 && (
+        <section className="mb-12">
+          <h2 className="mb-4 text-2xl font-bold text-white">{game.shortName} FAQ</h2>
+          <div className="max-w-3xl">
+            <FaqAccordion items={faqItems} />
+          </div>
+        </section>
+      )}
+
+      {/* Related tiers */}
       {relatedCheats.length > 0 && (
-        <section className="mt-16">
-          <SectionHeading title="Other tiers" description={`More options for ${game.name}`} />
+        <section className="mb-12">
+          <SectionHeading title="Other Cheat Tiers" description={`More options for ${game.name}`} />
           <div className="grid gap-6 md:grid-cols-2">
             {relatedCheats.map((related) => (
               <CheatCard key={related.slug} cheat={related} />
@@ -182,15 +360,22 @@ export default async function CheatDetailPage({ params }: PageProps) {
         </section>
       )}
 
-      <StickyMobileCta
-        href={buyUrl}
-        label="Buy now"
-        priceLabel={
-          cheat.price.monthly != null
-            ? `$${cheat.price.monthly.toFixed(2)}/mo`
-            : `$${cheat.price.lifetime?.toFixed(2)}`
-        }
-      />
+      {/* Sticky mobile CTA */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0a0e1a]/95 p-3 backdrop-blur md:hidden">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm font-semibold text-white">
+            {cheat.price.monthly != null
+              ? `$${cheat.price.monthly.toFixed(2)}/mo`
+              : `$${cheat.price.lifetime?.toFixed(2)}`}
+          </p>
+          <Button asChild size="sm" className="rounded-xl">
+            <Link href={checkoutUrl}>
+              Get {tierLabels[cheat.tier as CheatTier]}
+              <ArrowRight className="ml-1.5 size-4" />
+            </Link>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

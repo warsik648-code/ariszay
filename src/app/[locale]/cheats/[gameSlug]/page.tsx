@@ -95,14 +95,22 @@ export default async function CheatCatalogPage({ params }: PageProps) {
             {game.tagline}
           </span>
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            {game.name} Cheats
+            Choose Your Cheat Tier
           </h1>
           <p className="mt-4 text-lg leading-relaxed text-white/60">
-            {game.description}
+            Three tiers built for every playstyle. From essential ESP to a full private aimbot suite — all external, all updated for {game.name}.
           </p>
           <p className="mt-3 text-sm text-white/40">
             All products display a live availability status. Check the status badge on each product before purchasing.
           </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button asChild size="lg" className="rounded-xl">
+              <Link href={`/cheats/${game.cheatsSlug}/private`}>
+                View Pricing &amp; Get Cheats
+                <ArrowRight className="ml-1.5 size-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
