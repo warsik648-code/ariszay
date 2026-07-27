@@ -88,6 +88,14 @@ export default async function AccountOrderDetailPage({ params }: PageProps) {
             )}
           </div>
         )}
+
+        <div className="mt-6 border border-white/10 bg-black/20 p-4 text-sm">
+          <p className="tech-label mb-2">Support</p>
+          <p className="leading-relaxed text-white/70">
+            Need help after your purchase? Our support team is available through your ArisZay
+            account to assist with your order.
+          </p>
+        </div>
       </div>
 
       <section>

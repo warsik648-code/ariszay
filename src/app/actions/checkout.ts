@@ -17,8 +17,10 @@ import {
 import { REWARBLE_PAYMENT_METHOD } from "@/lib/payments/rewarble";
 
 const checkoutSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(100),
-  email: z.string().email("Please enter a valid email"),
+  email: z.preprocess(
+    (v) => (typeof v === "string" && v.trim() === "" ? undefined : typeof v === "string" ? v.trim() : v),
+    z.string().email("Please enter a valid email").max(200).optional(),
+  ),
   discordUsername: z.string().min(2, "Discord username is required").max(64),
   giftCardCode: z
     .string()
@@ -160,8 +162,8 @@ export async function createOrder(
     data: {
       orderNumber,
       userId: session?.user?.id ?? null,
-      guestEmail: session ? null : data.email,
-      guestName: session ? null : data.name,
+      guestEmail: session ? null : (data.email ?? null),
+      guestName: null,
       discordUsername: data.discordUsername.trim(),
       status: "PENDING",
       paymentStatus: "PENDING",
@@ -241,7 +243,7 @@ export async function createOrder(
     ticketNumber = ticket?.ticketNumber;
 
     const email = orderCreatedEmail({
-      name: data.name,
+      name: session.user.name || "there",
       orderNumber,
       total: totalAmount,
     });
@@ -255,10 +257,13 @@ export async function createOrder(
     });
   }
 
+  const contactLabel =
+    session?.user?.email || data.email || data.discordUsername.trim() || "Guest";
+
   await notifyStaff({
     type: "PAYMENT_PENDING_STAFF",
     title: `Payment verification ${orderNumber}`,
-    body: `${data.email} — $${totalAmount.toFixed(2)} · Rewarble · ****${last4}`,
+    body: `${contactLabel} — $${totalAmount.toFixed(2)} · Rewarble · ****${last4}`,
     href: `/admin/payments`,
   });
 

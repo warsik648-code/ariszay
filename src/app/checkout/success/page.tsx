@@ -59,6 +59,15 @@ export default async function CheckoutSuccessPage({
       {awaiting && ticketNumber && (
         <p className="mt-4 font-mono text-sm text-primary">Support ticket {ticketNumber}</p>
       )}
+
+      <div className="mt-6 max-w-md border border-white/10 bg-white/[0.03] px-5 py-4 text-left">
+        <p className="tech-label text-primary mb-2">Support</p>
+        <p className="text-sm leading-relaxed text-white/70">
+          Need help after your purchase? Our support team is available through your ArisZay account
+          to assist with your order.
+        </p>
+      </div>
+
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Button asChild className="rounded-none">
           <Link href={orderNumber ? `/account/orders/${orderNumber}` : "/account/orders"}>

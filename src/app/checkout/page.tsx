@@ -39,7 +39,6 @@ function CheckoutPageInner() {
   const { items, total, couponCode, setCouponCode, referralCode, setReferralCode, clearCart, removeItem } =
     useCartStore();
 
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [discord, setDiscord] = useState("");
   const [giftCardCode, setGiftCardCode] = useState("");
@@ -56,7 +55,6 @@ function CheckoutPageInner() {
   useEffect(() => {
     if (session?.user) {
       setEmail((prev) => prev || session.user.email || "");
-      setName((prev) => prev || session.user.name || "");
     }
   }, [session]);
 
@@ -109,11 +107,11 @@ function CheckoutPageInner() {
           )}
           {!session?.user && !resolving && (
             <p className="text-xs text-white/35">
-              Tip:{" "}
+              Checkout as a guest, or{" "}
               <Link href="/auth/sign-in?redirect=/checkout" className="text-primary underline">
-                Sign in
+                sign in
               </Link>{" "}
-              before checkout to get an automatic support ticket with your order.
+              for order tracking and support in your account.
             </p>
           )}
         </div>
@@ -128,8 +126,7 @@ function CheckoutPageInner() {
 
     startTransition(async () => {
       const result = await createOrder({
-        name,
-        email,
+        email: email.trim() || undefined,
         discordUsername: discord,
         giftCardCode,
         paymentMethod: REWARBLE_PAYMENT_METHOD,
@@ -164,12 +161,13 @@ function CheckoutPageInner() {
         <p className="tech-label text-primary mb-2">Acquisition</p>
         <h1 className="font-display text-3xl font-bold uppercase tracking-wide text-white">Checkout</h1>
         {!session?.user && (
-          <p className="mt-2 text-sm text-white/45">
-            Guest checkout works, but{" "}
+          <p className="mt-2 max-w-2xl text-sm text-white/45">
+            Checkout as a guest or{" "}
             <Link href="/auth/sign-in?redirect=/checkout" className="text-primary underline">
               sign in
             </Link>{" "}
-            to receive an automatic support ticket and Mission Control order history.
+            for a better experience. Signed-in customers get access to order tracking, support
+            history, and account management.
           </p>
         )}
       </div>
@@ -183,37 +181,24 @@ function CheckoutPageInner() {
       <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-[1fr_380px]">
         <div className="space-y-6">
           <div className="ind-panel space-y-5 p-6">
-            <h2 className="font-display text-lg font-semibold uppercase text-white">Your details</h2>
-            <div className="space-y-1.5">
-              <label htmlFor="name" className="text-sm font-medium text-white/70">
-                Full name <span className="text-red-400">*</span>
-              </label>
-              <Input
-                id="name"
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="h-11 rounded-none border-white/10 bg-black/20 text-white"
-                placeholder="Your name"
-                disabled={isPending}
-              />
-              {fieldErrors.name && <p className="text-xs text-red-400">{fieldErrors.name[0]}</p>}
-            </div>
+            <h2 className="font-display text-lg font-semibold uppercase text-white">Contact</h2>
             <div className="space-y-1.5">
               <label htmlFor="email" className="text-sm font-medium text-white/70">
-                Email address <span className="text-red-400">*</span>
+                Email address{" "}
+                <span className="text-white/30">(optional)</span>
               </label>
               <Input
                 id="email"
                 type="email"
-                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="h-11 rounded-none border-white/10 bg-black/20 text-white"
                 placeholder="you@example.com"
                 disabled={isPending}
               />
+              <p className="text-xs text-white/35">
+                Optional — if provided, we can use it for order updates.
+              </p>
               {fieldErrors.email && <p className="text-xs text-red-400">{fieldErrors.email[0]}</p>}
             </div>
           </div>
