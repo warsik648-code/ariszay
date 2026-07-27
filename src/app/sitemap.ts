@@ -8,7 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = env.NEXT_PUBLIC_SITE_URL;
   const now = new Date().toISOString();
 
-  const locales = ["en", "zh"];
+  const locales = ["en"];
   const staticRoutes = [
     "",
     "/blog",

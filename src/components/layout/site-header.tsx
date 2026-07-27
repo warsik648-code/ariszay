@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ChevronDown, Menu } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,18 +20,13 @@ import {
 } from "@/components/ui/sheet";
 import { games } from "@/data/games";
 import { products } from "@/data/products";
-import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import type { AppLocale } from "@/i18n/routing";
 import { AuthButtons } from "@/components/auth/auth-buttons";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 
 export function SiteHeader() {
   const t = useTranslations("nav");
-  const tCommon = useTranslations("common");
-  const locale = useLocale() as AppLocale;
-  const pathname = usePathname();
-  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -41,10 +36,6 @@ export function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  const switchLocale = (next: AppLocale) => {
-    router.replace(pathname, { locale: next });
-  };
 
   const navLinkClass =
     "text-sm font-medium text-muted-foreground transition hover:text-foreground";
@@ -104,22 +95,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="rounded-xl">
-                {locale === "zh" ? "CN" : "EN"}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => switchLocale("en")}>
-                English
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => switchLocale("zh")}>
-                中文
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
           <CartDrawer />
           <AuthButtons />
 
@@ -182,9 +157,6 @@ export function SiteHeader() {
                 >
                   {t("help")}
                 </Link>
-                <p className="text-muted-foreground mt-4 text-xs">
-                  {tCommon("language")}: {locale === "zh" ? "中文" : "English"}
-                </p>
               </div>
             </SheetContent>
           </Sheet>
