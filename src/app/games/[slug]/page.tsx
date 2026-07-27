@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArrowRight, Gamepad2, Shield, Globe, Package, TrendingUp, Clock, Headphones } from "lucide-react";
+import { ArrowUpRight, Gamepad2, Shield, Globe, Headphones } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { FaqAccordion } from "@/components/shared/faq-accordion";
 import { FeatureComparisonTable } from "@/components/shared/feature-comparison-table";
 import { JsonLd, breadcrumbJsonLd } from "@/components/shared/json-ld";
 import { SectionHeading } from "@/components/shared/section-heading";
+import { IndustrialMesh } from "@/components/shared/industrial-graphics";
 import { getGame, games } from "@/data/games";
 import { gameFaqs } from "@/data/faq";
 import { blogPosts } from "@/data/blog";
@@ -25,9 +26,9 @@ const gameDetails: Record<
     lastUpdated: "2026",
     overview: [
       "The Isle is an open-world survival game set in a persistent multiplayer world where players take the role of dinosaurs competing to survive and grow.",
-      "ArisZay provides external enhancement tools for The Isle Evrima. Every product shows a current availability status updated within hours of game patches.",
+      "ArisZay provides external enhancement modules for The Isle Evrima. Every unit shows a current availability status updated within hours of game patches.",
     ],
-    notice: "Product availability may change with game updates. Always check the status badge on each product page before purchasing.",
+    notice: "Module availability may change with game updates. Always check the status indicator before purchasing.",
   },
   naraka: {
     genre: "Battle royale / melee combat",
@@ -36,9 +37,9 @@ const gameDetails: Record<
     lastUpdated: "2026",
     overview: [
       "Naraka: Bladepoint is a melee-focused battle royale where players compete using martial arts, ranged weapons, and grappling mechanics.",
-      "ArisZay's Naraka tools display real-time availability and are updated to match each game build. Check the status on the product page before purchasing.",
+      "ArisZay's Naraka modules display real-time availability and are revised to match each game build.",
     ],
-    notice: "Naraka receives frequent updates. Always verify current product status before purchase.",
+    notice: "Naraka receives frequent updates. Always verify current module status before purchase.",
   },
 };
 
@@ -53,8 +54,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const game = getGame(slug);
   if (!game) return {};
   return {
-    title: `${game.name} Cheat Collection — All Products`,
-    description: `Browse all ${game.name} enhancement software tiers. Compare Xray, Pro, and Private. Check availability status.`,
+    title: `${game.name} Collection — Technology Modules`,
+    description: `Browse all ${game.name} enhancement modules. Compare Xray, Pro, and Private. Check availability status.`,
     alternates: { canonical: `/games/${game.slug}` },
   };
 }
@@ -73,101 +74,94 @@ export default async function GameCollectionPage({ params }: PageProps) {
 
   return (
     <div className="pb-24">
-      <JsonLd data={breadcrumbJsonLd([
-        { name: "Home", path: "/" },
-        { name: `${game.name} Collection`, path: `/games/${game.slug}` },
-      ])} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: `${game.name} Collection`, path: `/games/${game.slug}` },
+        ])}
+      />
 
-      {/* ─── Collection hero ──────────────────────────────────────────── */}
-      <section
-        className="relative overflow-hidden border-b border-white/10 py-16"
-        style={{ background: `radial-gradient(circle at top left, ${game.accent}18, transparent 55%)` }}
-      >
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: "radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.8) 1px, transparent 0)",
-            backgroundSize: "20px 20px",
-          }}
-          aria-hidden
-        />
+      <section className="relative overflow-hidden border-b border-[rgb(242_240_235_/_0.1)] py-20">
+        <IndustrialMesh />
         <div className="container-site relative">
-          {/* Breadcrumb */}
           <nav aria-label="Breadcrumb" className="mb-8">
-            <ol className="flex items-center gap-1.5 text-sm text-white/40">
-              <li><Link href="/" className="hover:text-white/70 transition-colors">Home</Link></li>
+            <ol className="flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] text-[rgb(242_240_235_/_0.35)] uppercase">
+              <li>
+                <Link href="/" className="hover:text-primary transition-colors">
+                  Home
+                </Link>
+              </li>
               <li aria-hidden>/</li>
-              <li className="text-white/70">{game.name} Collection</li>
+              <li className="text-[rgb(242_240_235_/_0.7)]">{game.name}</li>
             </ol>
           </nav>
 
-          <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
-            {/* Left: game info */}
+          <div className="grid gap-10 lg:grid-cols-[1fr_300px]">
             <div>
-              <span
-                className="mb-3 inline-block font-mono text-xs tracking-[0.25em] uppercase"
-                style={{ color: game.accent }}
-              >
-                Game Collection
-              </span>
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+              <span className="tech-label text-primary mb-3 block">Technology Collection</span>
+              <h1 className="font-display text-5xl font-extrabold tracking-tight text-[#f2f0eb] uppercase sm:text-7xl">
                 {game.name}
               </h1>
-              <p className="mt-4 max-w-xl text-lg leading-relaxed text-white/55">
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-[rgb(242_240_235_/_0.5)]">
                 {game.description}
               </p>
 
-              {/* Stats */}
-              <div className="mt-6 flex flex-wrap gap-3">
-                <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                  <Package className="size-4 text-white/40" />
-                  <span className="text-sm font-medium text-white">{gp.productCount} products</span>
-                </div>
-                <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                  <TrendingUp className="size-4 text-white/40" />
-                  <span className="text-sm font-medium text-white">From ${gp.startingPrice.toFixed(2)}/mo</span>
-                </div>
-                <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                  <Clock className="size-4 text-white/40" />
-                  <span className="text-sm font-medium text-white">Updated {details?.lastUpdated ?? "2026"}</span>
-                </div>
+              <div className="mt-8 grid max-w-lg grid-cols-3 gap-px border border-[rgb(242_240_235_/_0.1)] bg-[rgb(242_240_235_/_0.1)]">
+                {[
+                  { k: "Modules", v: String(gp.productCount) },
+                  { k: "From", v: `$${gp.startingPrice.toFixed(2)}` },
+                  { k: "Rev", v: details?.lastUpdated ?? "2026" },
+                ].map(({ k, v }) => (
+                  <div key={k} className="bg-[#0a0a0a]/90 px-3 py-3">
+                    <p className="tech-label mb-1">{k}</p>
+                    <p className="font-display text-xl font-bold uppercase">{v}</p>
+                  </div>
+                ))}
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Button asChild className="rounded-xl" size="lg">
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button
+                  asChild
+                  className="h-11 rounded-none bg-primary px-6 font-display text-sm font-bold tracking-[0.15em] text-primary-foreground uppercase hover:bg-[#d4ff33]"
+                >
                   <Link href={`/cheats/${game.cheatsSlug}/private`}>
-                    Get Private (Full Suite)
-                    <ArrowRight className="ml-1.5 size-4" />
+                    Acquire Private
+                    <ArrowUpRight className="ml-2 size-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" className="rounded-xl" size="lg">
-                  <Link href={`/cheats/${game.cheatsSlug}`}>Compare all tiers</Link>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="h-11 rounded-none border-[rgb(242_240_235_/_0.2)] px-6 font-display text-sm tracking-[0.15em] uppercase"
+                >
+                  <Link href={`/cheats/${game.cheatsSlug}`}>Compare Modules</Link>
                 </Button>
               </div>
             </div>
 
-            {/* Right: game info card */}
             {details && (
-              <div className="rounded-2xl border border-white/10 bg-[#0d1117] p-5 self-start">
-                <h2 className="mb-4 text-xs font-semibold tracking-wider uppercase text-white/40">Game info</h2>
-                <dl className="space-y-3 text-sm">
+              <div className="ind-panel h-fit p-5">
+                <p className="tech-label mb-4">Facility Data</p>
+                <dl className="space-y-4 text-sm">
                   {[
                     { icon: Gamepad2, label: "Genre", value: details.genre },
                     { icon: Shield, label: "Developer", value: details.developer },
                     { icon: Globe, label: "Platform", value: details.platform },
                   ].map(({ icon: Icon, label, value }) => (
                     <div key={label} className="flex items-start gap-3">
-                      <Icon className="mt-0.5 size-4 shrink-0 text-white/25" />
+                      <Icon className="mt-0.5 size-4 shrink-0 text-primary" />
                       <div>
-                        <dt className="text-xs text-white/35">{label}</dt>
-                        <dd className="text-white/75">{value}</dd>
+                        <dt className="tech-label">{label}</dt>
+                        <dd className="mt-0.5 text-[rgb(242_240_235_/_0.75)]">{value}</dd>
                       </div>
                     </div>
                   ))}
                 </dl>
                 {details.notice && (
-                  <div className="mt-4 rounded-xl border border-white/8 bg-white/4 p-3">
-                    <p className="text-xs leading-relaxed text-white/40">{details.notice}</p>
+                  <div className="mt-5 border border-[rgb(255_92_0_/_0.25)] bg-[rgb(255_92_0_/_0.06)] p-3">
+                    <p className="font-mono text-[10px] leading-relaxed tracking-wide text-[#ff5c00] uppercase">
+                      {details.notice}
+                    </p>
                   </div>
                 )}
               </div>
@@ -176,68 +170,71 @@ export default async function GameCollectionPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* ─── Overview ─────────────────────────────────────────────────── */}
       {details && (
-        <section className="container-site py-12 border-b border-white/8">
+        <section className="container-site border-b border-[rgb(242_240_235_/_0.08)] py-12">
           <div className="max-w-3xl space-y-3">
             {details.overview.map((para, i) => (
-              <p key={i} className="text-white/55 leading-relaxed">{para}</p>
+              <p key={i} className="leading-relaxed text-[rgb(242_240_235_/_0.5)]">
+                {para}
+              </p>
             ))}
           </div>
         </section>
       )}
 
-      {/* ─── All products with filters ────────────────────────────────── */}
       <section className="container-site py-16">
         <SectionHeading
-          title={`${game.name} Products`}
-          description={`All ${gp.productCount} enhancement tools for ${game.name}. Filter by tier or sort by price.`}
-          align="left"
+          index="01"
+          label="Modules"
+          title={`${game.name} Modules`}
+          description={`All ${gp.productCount} enhancement units. Filter by tier or sort by price.`}
         />
         <GameProductGrid cheats={gp.cheats} games={[game]} showGameFilter={false} />
       </section>
 
-      {/* ─── Feature comparison ───────────────────────────────────────── */}
-      <section className="container-site py-16 border-t border-white/8">
+      <section className="container-site border-t border-[rgb(242_240_235_/_0.08)] py-16">
         <SectionHeading
-          title="Compare all tiers"
-          description="Every feature, side by side. See exactly what you're getting before you buy."
-          align="left"
+          index="02"
+          label="Comparison"
+          title="Specification Matrix"
+          description="Every feature across all tiers — side by side."
         />
         <FeatureComparisonTable gameSlug={game.slug} />
         <div className="mt-6 flex flex-wrap gap-3">
           {gp.cheats.map((cheat) => (
-            <Button key={cheat.slug} asChild variant="outline" className="rounded-xl border-white/10">
+            <Button
+              key={cheat.slug}
+              asChild
+              variant="outline"
+              className="rounded-none border-[rgb(242_240_235_/_0.15)] font-display text-xs tracking-wider uppercase"
+            >
               <Link href={`/cheats/${game.cheatsSlug}/${cheat.tier}`}>
-                View {cheat.name} details
-                <ArrowRight className="ml-1.5 size-4" />
+                {cheat.name} specs
+                <ArrowUpRight className="ml-1.5 size-3.5" />
               </Link>
             </Button>
           ))}
         </div>
       </section>
 
-      {/* ─── Related guides ───────────────────────────────────────────── */}
       {relatedPosts.length > 0 && (
-        <section className="container-site py-16 border-t border-white/8">
-          <div className="mb-6 flex items-end justify-between gap-4">
-            <SectionHeading title={`${game.shortName} guides`} className="mb-0" />
-            <Button asChild variant="ghost" size="sm" className="rounded-xl shrink-0">
-              <Link href="/blog">All posts <ArrowRight className="ml-1 size-3.5" /></Link>
-            </Button>
-          </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="container-site border-t border-[rgb(242_240_235_/_0.08)] py-16">
+          <SectionHeading index="03" label="Briefings" title={`${game.shortName} Updates`} />
+          <div className="grid gap-4 sm:grid-cols-3">
             {relatedPosts.map((post) => (
-              <article
-                key={post.slug}
-                className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-[#0d1117] p-5 hover:border-white/20 transition-all"
-              >
-                <p className="font-mono text-[10px] tracking-widest uppercase text-white/30">{post.category}</p>
-                <h3 className="text-sm font-semibold text-white leading-snug line-clamp-2">{post.title}</h3>
-                <p className="text-xs text-white/40 line-clamp-2">{post.excerpt}</p>
-                <p className="text-xs text-white/25 mt-auto">{post.readTimeMinutes} min · {post.publishedAt}</p>
-                <Button asChild variant="outline" size="sm" className="rounded-xl border-white/10">
-                  <Link href={`/blog/${post.slug}`}>Read guide</Link>
+              <article key={post.slug} className="ind-panel ind-panel-hover flex flex-col p-5">
+                <p className="tech-label mb-2">{post.category}</p>
+                <h3 className="font-display text-base font-bold uppercase leading-snug line-clamp-2">
+                  {post.title}
+                </h3>
+                <p className="mt-2 line-clamp-2 text-xs text-[rgb(242_240_235_/_0.4)]">{post.excerpt}</p>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="mt-auto rounded-none border-[rgb(242_240_235_/_0.12)] font-display text-xs uppercase"
+                >
+                  <Link href={`/blog/${post.slug}`}>Read</Link>
                 </Button>
               </article>
             ))}
@@ -245,38 +242,43 @@ export default async function GameCollectionPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* ─── FAQ ──────────────────────────────────────────────────────── */}
       {faqItems.length > 0 && (
-        <section className="container-site py-16 border-t border-white/8">
-          <SectionHeading title={`${game.shortName} FAQ`} align="left" />
+        <section className="container-site border-t border-[rgb(242_240_235_/_0.08)] py-16">
+          <SectionHeading index="04" label="FAQ" title={`${game.shortName} FAQ`} />
           <div className="max-w-3xl">
             <FaqAccordion items={faqItems} />
           </div>
         </section>
       )}
 
-      {/* ─── Support CTA ──────────────────────────────────────────────── */}
-      <section className="container-site py-12 border-t border-white/8">
-        <div className="rounded-2xl border border-white/10 bg-[#0d1117] p-6 md:p-8">
-          <div className="grid gap-6 md:grid-cols-[1fr_auto]">
-            <div className="space-y-2">
-              <Headphones className="size-6 text-white/40" />
-              <h2 className="text-xl font-bold text-white">Questions about {game.name} tools?</h2>
-              <p className="text-sm text-white/45 leading-relaxed max-w-lg">
-                Setup guides are included with every purchase. Check the FAQ above or view the detailed product page for system requirements and delivery information.
-              </p>
-            </div>
-            <div className="flex flex-col gap-2 md:items-end md:justify-center">
-              <Button asChild className="rounded-xl">
-                <Link href={`/cheats/${game.cheatsSlug}`}>
-                  View all tiers
-                  <ArrowRight className="ml-1.5 size-4" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" className="rounded-xl border-white/10">
-                <Link href="/#faq">Support FAQ</Link>
-              </Button>
-            </div>
+      <section className="container-site border-t border-[rgb(242_240_235_/_0.08)] py-12">
+        <div className="ind-panel grid gap-6 p-6 md:grid-cols-[1fr_auto] md:p-8">
+          <div className="space-y-2">
+            <Headphones className="size-5 text-primary" />
+            <h2 className="font-display text-2xl font-bold uppercase">
+              Questions about {game.name}?
+            </h2>
+            <p className="max-w-lg text-sm text-[rgb(242_240_235_/_0.45)]">
+              Setup guides ship with every license. Check the FAQ or open a module specification sheet.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 md:items-end md:justify-center">
+            <Button
+              asChild
+              className="rounded-none bg-primary font-display text-xs font-bold tracking-wider text-primary-foreground uppercase"
+            >
+              <Link href={`/cheats/${game.cheatsSlug}`}>
+                View all modules
+                <ArrowUpRight className="ml-1.5 size-4" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-none border-[rgb(242_240_235_/_0.15)] font-display text-xs tracking-wider uppercase"
+            >
+              <Link href="/#faq">Support FAQ</Link>
+            </Button>
           </div>
         </div>
       </section>

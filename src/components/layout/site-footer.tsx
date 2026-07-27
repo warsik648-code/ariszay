@@ -8,83 +8,85 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-24 border-t border-white/10 bg-[#070a14]">
-      <div className="container-site grid gap-10 py-14 md:grid-cols-4">
-        <div className="space-y-4 md:col-span-2">
-          <Link href="/" className="text-xl font-bold tracking-tight">
+    <footer className="mt-24 border-t border-[rgb(242_240_235_/_0.1)] bg-[#060606]">
+      <div className="container-site grid gap-12 py-16 md:grid-cols-12">
+        <div className="space-y-5 md:col-span-5">
+          <Link href="/" className="font-display text-3xl font-extrabold tracking-tight uppercase">
             Aris<span className="text-primary">Zay</span>
           </Link>
-          <p className="text-muted-foreground max-w-md text-sm leading-relaxed">
-            Enhancement software for The Isle and Naraka: Bladepoint. Clear product status, instant delivery, and written setup guides included.
+          <p className="max-w-sm text-sm leading-relaxed text-[rgb(242_240_235_/_0.45)]">
+            Classified technology marketplace for advanced gaming software systems.
+            Spec-driven. Status-monitored. Instant delivery.
           </p>
-          <div className="text-muted-foreground flex flex-wrap gap-2 text-xs">
-            {["Visa", "Mastercard", "Crypto", "PayPal"].map((method) => (
-              <span
-                key={method}
-                className="rounded-lg border border-white/10 px-2.5 py-1"
-              >
-                {method}
-              </span>
-            ))}
-          </div>
+          <p className="font-mono text-[10px] tracking-[0.3em] text-[rgb(242_240_235_/_0.25)] uppercase">
+            AZ-MKPL-2026 · REV.04
+          </p>
         </div>
 
-        <div>
-          <h3 className="mb-4 text-sm font-semibold">Quick Links</h3>
-          <ul className="text-muted-foreground space-y-2.5 text-sm">
+        <div className="md:col-span-3">
+          <p className="tech-label mb-4">Collections</p>
+          <ul className="space-y-2.5 text-sm text-[rgb(242_240_235_/_0.55)]">
             {games.map((game) => (
               <li key={game.slug}>
                 <Link
-                  href={`/cheats/${game.cheatsSlug}`}
-                  className="hover:text-foreground transition-colors"
+                  href={`/games/${game.slug}`}
+                  className="hover:text-primary transition-colors"
                 >
-                  {game.shortName} Cheats
+                  {game.name}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href="/products/ugc" className="hover:text-foreground transition-colors">
-                Products
+              <Link href="/products/ugc" className="hover:text-primary transition-colors">
+                Utility Modules
               </Link>
             </li>
             <li>
-              <Link href="/blog" className="hover:text-foreground transition-colors">
-                Blog
-              </Link>
-            </li>
-            <li>
-              <Link href="/#faq" className="hover:text-foreground transition-colors">
-                Support
+              <Link href="/blog" className="hover:text-primary transition-colors">
+                System Updates
               </Link>
             </li>
           </ul>
         </div>
 
-        <div>
-          <h3 className="mb-4 text-sm font-semibold">Legal</h3>
-          <ul className="text-muted-foreground space-y-2.5 text-sm">
+        <div className="md:col-span-2">
+          <p className="tech-label mb-4">Legal</p>
+          <ul className="space-y-2.5 text-sm text-[rgb(242_240_235_/_0.55)]">
             <li>
-              <Link href="/legal/terms" className="hover:text-foreground transition-colors">
+              <Link href="/legal/terms" className="hover:text-primary transition-colors">
                 Terms
               </Link>
             </li>
             <li>
-              <Link href="/legal/privacy" className="hover:text-foreground transition-colors">
+              <Link href="/legal/privacy" className="hover:text-primary transition-colors">
                 Privacy
               </Link>
             </li>
             <li>
-              <Link href="/legal/refund" className="hover:text-foreground transition-colors">
+              <Link href="/legal/refund" className="hover:text-primary transition-colors">
                 Refund
               </Link>
             </li>
           </ul>
         </div>
+
+        <div className="md:col-span-2">
+          <p className="tech-label mb-4">Channels</p>
+          <ul className="space-y-2.5 font-mono text-xs text-[rgb(242_240_235_/_0.4)]">
+            <li>VISA</li>
+            <li>MC</li>
+            <li>CRYPTO</li>
+            <li>PAYPAL</li>
+          </ul>
+        </div>
       </div>
 
-      <div className="container-site border-t border-white/8 py-6">
-        <p className="text-muted-foreground text-xs">
-          © {year} {siteConfig.name}. All rights reserved.
+      <div className="container-site flex flex-wrap items-center justify-between gap-3 border-t border-[rgb(242_240_235_/_0.06)] py-6">
+        <p className="font-mono text-[10px] tracking-wider text-[rgb(242_240_235_/_0.3)] uppercase">
+          © {year} {siteConfig.name} · All systems reserved
+        </p>
+        <p className="font-mono text-[10px] tracking-wider text-[rgb(242_240_235_/_0.25)] uppercase">
+          Status: Operational
         </p>
       </div>
     </footer>

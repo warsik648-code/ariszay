@@ -1,19 +1,21 @@
 import { cn } from "@/lib/utils";
 
 type SectionHeadingProps = {
-  eyebrow?: string;
   title: string;
   description?: string;
   align?: "left" | "center";
   className?: string;
+  label?: string;
+  index?: string;
 };
 
 export function SectionHeading({
-  eyebrow,
   title,
   description,
-  align = "center",
+  align = "left",
   className,
+  label = "Section",
+  index,
 }: SectionHeadingProps) {
   return (
     <div
@@ -23,17 +25,26 @@ export function SectionHeading({
         className,
       )}
     >
-      {eyebrow ? (
-        <p className="text-primary font-mono text-xs tracking-[0.2em] uppercase">
-          {eyebrow}
-        </p>
-      ) : null}
-      <h2 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
+      <div
+        className={cn(
+          "flex items-center gap-3",
+          align === "center" && "justify-center",
+        )}
+      >
+        {index && (
+          <span className="font-mono text-xs tracking-[0.2em] text-primary">{index}</span>
+        )}
+        <span className="tech-label">{label}</span>
+      </div>
+      <h2 className="font-display text-4xl font-extrabold tracking-tight text-[#f2f0eb] uppercase sm:text-5xl">
         {title}
       </h2>
       {description ? (
-        <p className="text-muted-foreground text-base">{description}</p>
+        <p className="max-w-xl text-sm leading-relaxed text-[rgb(242_240_235_/_0.45)] sm:text-base">
+          {description}
+        </p>
       ) : null}
+      <div className="tech-divider mt-4 max-w-24" />
     </div>
   );
 }

@@ -9,7 +9,7 @@ export const games: Game[] = [
     description:
       "Software tools for The Isle — covering both Evrima and Legacy builds. Check product pages for current availability before purchasing.",
     tagline: "Evrima & Legacy supported",
-    accent: "#10b981",
+    accent: "#c8ff00",
   },
   {
     slug: "naraka",
@@ -19,7 +19,7 @@ export const games: Game[] = [
     description:
       "Enhancement tools for Naraka: Bladepoint's competitive melee-combat environment. All products display a current availability status.",
     tagline: "Competitive enhancement tools",
-    accent: "#6366f1",
+    accent: "#00e5ff",
   },
 ];
 

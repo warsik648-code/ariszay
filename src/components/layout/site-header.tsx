@@ -1,16 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -29,63 +23,71 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const navLinkClass =
-    "text-sm font-medium text-muted-foreground transition hover:text-foreground";
-
   return (
     <header
       className={cn(
         "sticky top-0 z-50 border-b border-transparent transition-all duration-300",
-        scrolled &&
-          "border-white/10 bg-[#0a0e1a]/80 shadow-lg shadow-black/20 backdrop-blur-xl",
+        scrolled && "border-[rgb(242_240_235_/_0.1)] bg-[#080808]/90 backdrop-blur-xl",
       )}
     >
-      <div className="container-site flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="text-lg font-bold tracking-tight">
-          Aris<span className="text-primary">Zay</span>
+      <div className="container-site flex h-16 items-center justify-between gap-6">
+        <Link href="/" className="group flex items-baseline gap-2">
+          <span className="font-display text-2xl font-extrabold tracking-tight text-[#f2f0eb] uppercase sm:text-[1.75rem]">
+            Aris<span className="text-primary">Zay</span>
+          </span>
+          <span className="hidden font-mono text-[9px] tracking-[0.25em] text-[rgb(242_240_235_/_0.35)] uppercase sm:inline">
+            SYS.01
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className={cn(navLinkClass, "inline-flex items-center gap-1")}
+        <nav className="hidden items-center gap-8 md:flex">
+          <div className="group relative">
+            <button
+              type="button"
+              className="tech-label hover:text-primary transition-colors"
             >
-              Cheats
-              <ChevronDown className="size-3.5" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="min-w-44">
+              Collections
+            </button>
+            <div className="invisible absolute top-full left-0 z-50 min-w-52 border border-[rgb(242_240_235_/_0.12)] bg-[#111] pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
               {games.map((game) => (
-                <DropdownMenuItem key={game.slug} asChild>
-                  <Link href={`/cheats/${game.cheatsSlug}`}>{game.name}</Link>
-                </DropdownMenuItem>
+                <Link
+                  key={game.slug}
+                  href={`/games/${game.slug}`}
+                  className="block border-t border-[rgb(242_240_235_/_0.06)] px-4 py-3 font-display text-sm font-semibold tracking-wide uppercase text-[#f2f0eb]/80 hover:bg-[rgb(200_255_0_/_0.06)] hover:text-primary"
+                >
+                  {game.name}
+                </Link>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className={cn(navLinkClass, "inline-flex items-center gap-1")}
-            >
-              Products
-              <ChevronDown className="size-3.5" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="min-w-48">
+            </div>
+          </div>
+          <div className="group relative">
+            <button type="button" className="tech-label hover:text-primary transition-colors">
+              Modules
+            </button>
+            <div className="invisible absolute top-full left-0 z-50 min-w-52 border border-[rgb(242_240_235_/_0.12)] bg-[#111] pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
               {products.map((product) => (
-                <DropdownMenuItem key={product.slug} asChild>
-                  <Link href={`/products/${product.slug}`}>{product.name}</Link>
-                </DropdownMenuItem>
+                <Link
+                  key={product.slug}
+                  href={`/products/${product.slug}`}
+                  className="block border-t border-[rgb(242_240_235_/_0.06)] px-4 py-3 font-display text-sm font-semibold tracking-wide uppercase text-[#f2f0eb]/80 hover:bg-[rgb(200_255_0_/_0.06)] hover:text-primary"
+                >
+                  {product.name}
+                </Link>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <Link href="/blog" className={navLinkClass}>Blog</Link>
-          <Link href="/#faq" className={navLinkClass}>Help / Support</Link>
+            </div>
+          </div>
+          <Link href="/blog" className="tech-label hover:text-primary transition-colors">
+            Updates
+          </Link>
+          <Link href="/#faq" className="tech-label hover:text-primary transition-colors">
+            Support
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -97,51 +99,49 @@ export function SiteHeader() {
               <Button
                 variant="outline"
                 size="icon"
-                className="rounded-xl md:hidden"
+                className="border-[rgb(242_240_235_/_0.15)] bg-transparent md:hidden"
                 aria-label="Open menu"
               >
-                <Menu className="size-4" />
+                {open ? <X className="size-4" /> : <Menu className="size-4" />}
               </Button>
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-[300px] border-white/10 bg-[#0a0e1a]"
+              className="w-[300px] border-[rgb(242_240_235_/_0.12)] bg-[#0c0c0c]"
             >
               <SheetHeader>
-                <SheetTitle>ArisZay</SheetTitle>
+                <SheetTitle className="font-display text-xl uppercase tracking-wide">
+                  ArisZay
+                </SheetTitle>
               </SheetHeader>
-              <div className="mt-6 flex flex-col gap-4">
-                <p className="text-muted-foreground font-mono text-xs tracking-widest uppercase">
-                  Cheats
-                </p>
+              <div className="mt-8 flex flex-col gap-1">
+                <p className="tech-label mb-2">Collections</p>
                 {games.map((game) => (
                   <Link
                     key={game.slug}
-                    href={`/cheats/${game.cheatsSlug}`}
+                    href={`/games/${game.slug}`}
                     onClick={() => setOpen(false)}
-                    className="text-sm"
+                    className="font-display py-2 text-lg font-semibold uppercase tracking-wide"
                   >
                     {game.name}
                   </Link>
                 ))}
-                <p className="text-muted-foreground mt-2 font-mono text-xs tracking-widest uppercase">
-                  Products
-                </p>
+                <p className="tech-label mt-6 mb-2">Modules</p>
                 {products.map((product) => (
                   <Link
                     key={product.slug}
                     href={`/products/${product.slug}`}
                     onClick={() => setOpen(false)}
-                    className="text-sm"
+                    className="py-2 text-sm text-[rgb(242_240_235_/_0.7)]"
                   >
                     {product.name}
                   </Link>
                 ))}
-                <Link href="/blog" onClick={() => setOpen(false)} className="text-sm">
-                  Blog
+                <Link href="/blog" onClick={() => setOpen(false)} className="tech-label mt-6 py-2">
+                  Updates
                 </Link>
-                <Link href="/#faq" onClick={() => setOpen(false)} className="text-sm">
-                  Help / Support
+                <Link href="/#faq" onClick={() => setOpen(false)} className="tech-label py-2">
+                  Support
                 </Link>
               </div>
             </SheetContent>

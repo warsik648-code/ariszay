@@ -2,9 +2,7 @@
 
 import { Cloud, Cpu, Palette, Shield } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { GlassCard } from "@/components/shared/glass-card";
-import Link from "next/link";
+import { ProductPricingRow } from "@/components/marketplace/product-pricing-row";
 import type { Product } from "@/types";
 
 const icons = {
@@ -14,33 +12,42 @@ const icons = {
   cpu: Cpu,
 } as const;
 
+const utilityCategory: Record<Product["slug"], string> = {
+  ugc: "ACCOUNT TOOL",
+  "skin-changer": "COSMETIC",
+  "cloud-dma": "INFRASTRUCTURE",
+  "hwid-spoofer": "IDENTITY",
+};
+
 export function ProductCard({
   product,
-  viewLabel = "View Product",
 }: {
   product: Product;
   viewLabel?: string;
 }) {
   const Icon = icons[product.icon];
-  const price = product.price.lifetime ?? product.price.monthly ?? 0;
+  const code = `AZ-UTL-${product.slug.slice(0, 3).toUpperCase()}-01`;
 
   return (
-    <GlassCard className="flex flex-col gap-4">
-      <div className="bg-primary/15 text-primary flex size-12 items-center justify-center rounded-2xl">
-        <Icon className="size-6" />
+    <article className="ind-panel ind-panel-hover flex flex-col overflow-hidden">
+      <div className="flex items-center justify-between border-b border-[rgb(242_240_235_/_0.08)] px-4 py-2.5">
+        <span className="font-mono text-[9px] tracking-[0.2em] text-[rgb(242_240_235_/_0.35)] uppercase">
+          {code}
+        </span>
+        <Icon className="size-4 text-primary" />
       </div>
-      <div>
-        <h3 className="text-lg font-bold">{product.name}</h3>
-        <p className="text-muted-foreground mt-2 text-sm">
-          {product.description}
-        </p>
+      <ProductPricingRow
+        name={product.name}
+        category={utilityCategory[product.slug] ?? "UTILITY"}
+        price={product.price}
+        href={`/products/${product.slug}`}
+        channel="Release"
+        compatibility="Win 10/11"
+        categoryColor="#00e5ff"
+      />
+      <div className="border-t border-[rgb(242_240_235_/_0.08)] px-5 py-4">
+        <p className="text-sm text-[rgb(242_240_235_/_0.45)]">{product.description}</p>
       </div>
-      <p className="text-2xl font-bold">${price.toFixed(2)}</p>
-      <div className="mt-auto">
-        <Button asChild variant="outline" className="w-full rounded-xl">
-          <Link href={`/products/${product.slug}`}>{viewLabel}</Link>
-        </Button>
-      </div>
-    </GlassCard>
+    </article>
   );
 }

@@ -20,23 +20,23 @@ export const tierConfig: Record<string, TierConfig> = {
   xray: {
     label: "XRAY",
     subtitle: "CORE ESP",
-    color: "#10b981",
-    badgeClass: "bg-emerald-500/10 border-emerald-500/30 text-emerald-400",
-    glowColor: "rgba(16,185,129,0.15)",
+    color: "#00e5ff",
+    badgeClass: "border-[rgb(0_229_255_/_0.35)] bg-[rgb(0_229_255_/_0.08)] text-[#00e5ff]",
+    glowColor: "rgba(0,229,255,0.12)",
   },
   pro: {
     label: "PRO",
     subtitle: "AIM ASSIST",
-    color: "#3b82f6",
-    badgeClass: "bg-blue-500/10 border-blue-500/30 text-blue-400",
-    glowColor: "rgba(59,130,246,0.15)",
+    color: "#c8ff00",
+    badgeClass: "border-[rgb(200_255_0_/_0.35)] bg-[rgb(200_255_0_/_0.08)] text-[#c8ff00]",
+    glowColor: "rgba(200,255,0,0.12)",
   },
   private: {
     label: "PRIVATE",
     subtitle: "FULL AIMBOT",
-    color: "#8b5cf6",
-    badgeClass: "bg-purple-500/10 border-purple-500/30 text-purple-400",
-    glowColor: "rgba(139,92,246,0.15)",
+    color: "#ff5c00",
+    badgeClass: "border-[rgb(255_92_0_/_0.4)] bg-[rgb(255_92_0_/_0.08)] text-[#ff5c00]",
+    glowColor: "rgba(255,92,0,0.12)",
   },
 };
 

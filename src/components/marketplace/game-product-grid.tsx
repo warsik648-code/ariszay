@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SlidersHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { MarketplaceProductCard } from "@/components/marketplace/marketplace-product-card";
@@ -20,16 +19,16 @@ type Props = {
 const TIER_ORDER: Record<string, number> = { private: 0, pro: 1, xray: 2 };
 
 const tierFilters: { value: TierFilter; label: string }[] = [
-  { value: "all", label: "All Tiers" },
-  { value: "xray", label: "Xray — Core ESP" },
-  { value: "pro", label: "Pro — Aim Assist" },
-  { value: "private", label: "Private — Full Suite" },
+  { value: "all", label: "All" },
+  { value: "xray", label: "Xray" },
+  { value: "pro", label: "Pro" },
+  { value: "private", label: "Private" },
 ];
 
 const sortOptions: { value: SortOption; label: string }[] = [
   { value: "featured", label: "Featured" },
-  { value: "price-asc", label: "Price: Low to High" },
-  { value: "price-desc", label: "Price: High to Low" },
+  { value: "price-asc", label: "Price ↑" },
+  { value: "price-desc", label: "Price ↓" },
 ];
 
 export function GameProductGrid({ cheats, games, showGameFilter = false }: Props) {
@@ -44,9 +43,9 @@ export function GameProductGrid({ cheats, games, showGameFilter = false }: Props
 
   const filtered = useMemo(() => {
     let result = [...cheats];
-
     if (tierFilter !== "all") result = result.filter((c) => c.tier === tierFilter);
-    if (showGameFilter && gameFilter !== "all") result = result.filter((c) => c.game === gameFilter);
+    if (showGameFilter && gameFilter !== "all")
+      result = result.filter((c) => c.game === gameFilter);
 
     result.sort((a, b) => {
       if (sort === "featured") return (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9);
@@ -54,17 +53,22 @@ export function GameProductGrid({ cheats, games, showGameFilter = false }: Props
       const bPrice = b.price.monthly ?? b.price.lifetime ?? 999;
       return sort === "price-asc" ? aPrice - bPrice : bPrice - aPrice;
     });
-
     return result;
   }, [cheats, tierFilter, sort, gameFilter, showGameFilter]);
 
+  const chipClass = (active: boolean) =>
+    cn(
+      "border px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-colors",
+      active
+        ? "border-primary bg-[rgb(200_255_0_/_0.1)] text-primary"
+        : "border-[rgb(242_240_235_/_0.12)] text-[rgb(242_240_235_/_0.45)] hover:border-[rgb(242_240_235_/_0.25)] hover:text-[#f2f0eb]",
+    );
+
   return (
     <div className="space-y-6">
-      {/* Filter bar */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 border border-[rgb(242_240_235_/_0.1)] bg-[#0e0e0e] p-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-2">
-          <SlidersHorizontal className="size-4 text-white/30 shrink-0" />
-
+          <span className="tech-label mr-2">Filter</span>
           {showGameFilter && (
             <>
               {["all", ...games.map((g) => g.slug)].map((slug) => {
@@ -74,68 +78,47 @@ export function GameProductGrid({ cheats, games, showGameFilter = false }: Props
                     key={slug}
                     type="button"
                     onClick={() => setGameFilter(slug)}
-                    className={cn(
-                      "rounded-xl border px-3 py-1.5 text-xs font-medium transition-all",
-                      gameFilter === slug
-                        ? "border-primary/50 bg-primary/10 text-primary"
-                        : "border-white/10 bg-white/4 text-white/50 hover:border-white/20 hover:text-white/80",
-                    )}
+                    className={chipClass(gameFilter === slug)}
                   >
-                    {slug === "all" ? "All Games" : game?.shortName}
+                    {slug === "all" ? "All" : game?.shortName}
                   </button>
                 );
               })}
-              <span className="h-4 w-px bg-white/10" />
+              <span className="mx-1 h-4 w-px bg-[rgb(242_240_235_/_0.1)]" />
             </>
           )}
-
           {tierFilters.map(({ value, label }) => (
             <button
               key={value}
               type="button"
               onClick={() => setTierFilter(value)}
-              className={cn(
-                "rounded-xl border px-3 py-1.5 text-xs font-medium transition-all",
-                tierFilter === value
-                  ? "border-primary/50 bg-primary/10 text-primary"
-                  : "border-white/10 bg-white/4 text-white/50 hover:border-white/20 hover:text-white/80",
-              )}
+              className={chipClass(tierFilter === value)}
             >
               {label}
             </button>
           ))}
         </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs text-white/30">Sort:</span>
-          <div className="flex gap-1">
-            {sortOptions.map(({ value, label }) => (
-              <button
-                key={value}
-                type="button"
-                onClick={() => setSort(value)}
-                className={cn(
-                  "rounded-xl border px-3 py-1.5 text-xs font-medium transition-all",
-                  sort === value
-                    ? "border-primary/50 bg-primary/10 text-primary"
-                    : "border-white/10 bg-white/4 text-white/50 hover:border-white/20 hover:text-white/80",
-                )}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="tech-label">Sort</span>
+          {sortOptions.map(({ value, label }) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setSort(value)}
+              className={chipClass(sort === value)}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Results count */}
-      <p className="text-xs text-white/30">
-        Showing {filtered.length} {filtered.length === 1 ? "product" : "products"}
+      <p className="font-mono text-[10px] tracking-[0.2em] text-[rgb(242_240_235_/_0.3)] uppercase">
+        {filtered.length} modules listed
       </p>
 
-      {/* Product grid */}
       {filtered.length > 0 ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((cheat) => {
             const game = gameMap[cheat.game];
             if (!game) return null;
@@ -150,13 +133,16 @@ export function GameProductGrid({ cheats, games, showGameFilter = false }: Props
           })}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-          <p className="text-white/40">No products match the selected filters.</p>
+        <div className="flex flex-col items-center justify-center gap-3 border border-dashed border-[rgb(242_240_235_/_0.15)] py-16 text-center">
+          <p className="text-sm text-[rgb(242_240_235_/_0.4)]">No modules match filters.</p>
           <Button
             variant="outline"
             size="sm"
-            className="rounded-xl"
-            onClick={() => { setTierFilter("all"); setGameFilter("all"); }}
+            className="rounded-none border-[rgb(242_240_235_/_0.2)]"
+            onClick={() => {
+              setTierFilter("all");
+              setGameFilter("all");
+            }}
           >
             Clear filters
           </Button>
