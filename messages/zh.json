@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "cheats": "作弊",
+    "products": "产品",
+    "blog": "博客",
+    "help": "帮助/支持",
+    "cart": "购物车",
+    "account": "账户",
+    "browseCheats": "浏览作弊",
+    "viewProducts": "查看产品"
+  },
+  "common": {
+    "learnMore": "了解更多",
+    "viewCheats": "查看作弊",
+    "viewProduct": "查看产品",
+    "select": "选择",
+    "getStarted": "开始使用",
+    "undetected": "未检测",
+    "instantDelivery": "即时交付",
+    "support247": "全天候支持",
+    "moreFeatures": "+{count} 更多功能",
+    "monthly": "月付",
+    "lifetime": "终身",
+    "oneTime": "一次性",
+    "perMonth": "/月",
+    "reviews": "评价",
+    "subscribe": "订阅",
+    "emailPlaceholder": "输入您的邮箱",
+    "language": "语言"
+  },
+  "home": {
+    "headline": "高级未检测游戏软件",
+    "subheadline": "全球超过 26,000 名客户。即时交付。全天候支持。",
+    "featuredGames": "精选游戏",
+    "featuredGamesSub": "从我们的旗舰游戏开始。",
+    "tiersTitle": "作弊等级",
+    "tiersSub": "选择适合您玩法的强度。",
+    "productsTitle": "产品",
+    "productsSub": "搭配任何配置的实用工具。",
+    "whyTitle": "为什么选择 ArisZay",
+    "whySub": "为重视稳定与支持的玩家打造。",
+    "testimonialsTitle": "玩家评价",
+    "blogTitle": "最新博客",
+    "faqTitle": "常见问题",
+    "newsletterTitle": "抢先了解更新",
+    "newsletterSub": "获取新作弊与功能的最新消息。"
+  },
+  "footer": {
+    "description": "高级未检测游戏软件，即时交付与全天候支持。",
+    "quickLinks": "快速链接",
+    "legal": "法律信息",
+    "terms": "条款",
+    "privacy": "隐私",
+    "refund": "退款",
+    "rights": "版权所有。"
+  }
+}
