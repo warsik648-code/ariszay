@@ -10,6 +10,8 @@ export type Capability =
   | "tickets:status_any"
   | "refunds:review"
   | "orders:update"
+  | "payments:verify"
+  | "payments:view_code"
   | "staff:manage"
   | "reports:read"
   | "admin:access";
@@ -24,6 +26,8 @@ const ROLE_CAPS: Record<UserRole, Capability[]> = {
     "tickets:status_any",
     "refunds:review",
     "orders:update",
+    "payments:verify",
+    "payments:view_code",
     "staff:manage",
     "reports:read",
   ],
@@ -36,6 +40,8 @@ const ROLE_CAPS: Record<UserRole, Capability[]> = {
     "tickets:status_any",
     "refunds:review",
     "orders:update",
+    "payments:verify",
+    "payments:view_code",
     "reports:read",
   ],
   SUPPORT_MANAGER: [
@@ -139,6 +145,8 @@ export async function writeAuditLog(input: {
   targetType?: string;
   targetId?: string;
   meta?: Prisma.InputJsonValue;
+  ip?: string | null;
+  userAgent?: string | null;
 }) {
   await db.auditLog.create({
     data: {
@@ -147,6 +155,8 @@ export async function writeAuditLog(input: {
       targetType: input.targetType,
       targetId: input.targetId,
       meta: input.meta ?? undefined,
+      ip: input.ip ?? undefined,
+      userAgent: input.userAgent ?? undefined,
     },
   });
 }

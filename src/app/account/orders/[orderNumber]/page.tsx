@@ -10,8 +10,13 @@ import {
   refundStatusLabel,
   ticketStatusLabel,
 } from "@/lib/support/labels";
+import {
+  orderStatusCustomerLabel,
+  paymentStatusCustomerLabel,
+} from "@/lib/payments/rewarble";
 import { Button } from "@/components/ui/button";
 import { RefundRequestForm } from "@/components/account/refund-request-form";
+import { maskGiftCardCode } from "@/lib/payments/gift-card";
 
 type PageProps = { params: Promise<{ orderNumber: string }> };
 
@@ -29,6 +34,7 @@ export default async function AccountOrderDetailPage({ params }: PageProps) {
       items: true,
       tickets: { orderBy: { createdAt: "desc" } },
       refundRequests: { orderBy: { createdAt: "desc" } },
+      paymentVerifications: { orderBy: { createdAt: "desc" }, take: 1 },
     },
   });
   if (!order) notFound();
@@ -36,6 +42,7 @@ export default async function AccountOrderDetailPage({ params }: PageProps) {
   const activeRefund = order.refundRequests.find((r) =>
     ["REQUESTED", "REVIEWING", "APPROVED"].includes(r.status),
   );
+  const verification = order.paymentVerifications[0];
 
   return (
     <div className="space-y-8">
@@ -51,11 +58,36 @@ export default async function AccountOrderDetailPage({ params }: PageProps) {
         <p className="mt-2 text-sm text-white/45">Purchased {formatMadridDate(order.createdAt)}</p>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-4">
-          <Stat label="Payment" value={order.paymentStatus} ok={order.paymentStatus === "PAID"} />
-          <Stat label="Order" value={order.status} ok={order.status === "DELIVERED"} />
+          <Stat
+            label="Payment"
+            value={paymentStatusCustomerLabel(order.paymentStatus)}
+            ok={order.paymentStatus === "PAID"}
+            bad={order.paymentStatus === "FAILED"}
+          />
+          <Stat
+            label="Order"
+            value={orderStatusCustomerLabel(order.status, order.paymentStatus)}
+            ok={order.status === "DELIVERED"}
+          />
           <Stat label="Delivery" value={deliveryStatusLabel[order.deliveryStatus]} ok={order.deliveryStatus === "DELIVERED"} />
           <Stat label="Total" value={`$${Number(order.totalAmount).toFixed(2)}`} ok />
         </div>
+
+        {verification && (
+          <div className="mt-6 border border-white/10 bg-black/20 p-4 text-sm">
+            <p className="tech-label mb-2">Payment method</p>
+            <p className="text-white/80">Rewarble Visa Gift Card</p>
+            <p className="mt-1 font-mono text-xs text-white/40">
+              Code on file: {maskGiftCardCode(verification.giftCardLast4)}
+            </p>
+            {order.paymentStatus === "PENDING" && (
+              <p className="mt-2 text-yellow-300/90">Your order is being reviewed.</p>
+            )}
+            {order.paymentStatus === "FAILED" && verification.rejectionReason && (
+              <p className="mt-2 text-red-300/90">{verification.rejectionReason}</p>
+            )}
+          </div>
+        )}
       </div>
 
       <section>
@@ -119,11 +151,27 @@ export default async function AccountOrderDetailPage({ params }: PageProps) {
   );
 }
 
-function Stat({ label, value, ok }: { label: string; value: string; ok?: boolean }) {
+function Stat({
+  label,
+  value,
+  ok,
+  bad,
+}: {
+  label: string;
+  value: string;
+  ok?: boolean;
+  bad?: boolean;
+}) {
   return (
     <div className="border border-white/10 bg-black/30 p-3">
       <p className="tech-label mb-1">{label}</p>
-      <p className={`font-mono text-sm ${ok ? "text-emerald-400" : "text-white/70"}`}>{value}</p>
+      <p
+        className={`font-mono text-sm ${
+          bad ? "text-red-400" : ok ? "text-emerald-400" : "text-white/70"
+        }`}
+      >
+        {value}
+      </p>
     </div>
   );
 }

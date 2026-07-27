@@ -9,6 +9,10 @@ import {
   refundStatusLabel,
   statusChipClass,
 } from "@/lib/support/labels";
+import {
+  orderStatusCustomerLabel,
+  paymentStatusCustomerLabel,
+} from "@/lib/payments/rewarble";
 
 export default async function AccountOrdersPage() {
   const session = await getServerSession();
@@ -71,10 +75,22 @@ export default async function AccountOrdersPage() {
                     </td>
                     <td className="px-4 py-3 text-white">${Number(order.totalAmount).toFixed(2)}</td>
                     <td className="px-4 py-3">
-                      <Chip text={order.paymentStatus} kind={order.paymentStatus === "PAID" ? "ok" : "warn"} />
+                      <Chip
+                        text={paymentStatusCustomerLabel(order.paymentStatus)}
+                        kind={
+                          order.paymentStatus === "PAID"
+                            ? "ok"
+                            : order.paymentStatus === "FAILED"
+                              ? "bad"
+                              : "warn"
+                        }
+                      />
                     </td>
                     <td className="px-4 py-3">
-                      <Chip text={order.status} kind={order.status === "DELIVERED" ? "ok" : "info"} />
+                      <Chip
+                        text={orderStatusCustomerLabel(order.status, order.paymentStatus)}
+                        kind={order.status === "DELIVERED" ? "ok" : "info"}
+                      />
                     </td>
                     <td className="px-4 py-3">
                       <Chip text={deliveryStatusLabel[order.deliveryStatus]} kind={order.deliveryStatus === "DELIVERED" ? "ok" : "muted"} />

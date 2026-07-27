@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { getServerSession } from "@/lib/auth-server";
@@ -8,11 +9,22 @@ import { nextOrderNumber } from "@/lib/support/sequences";
 import { ensureAutoOrderTicket } from "@/lib/support/tickets";
 import { createNotification, notifyStaff } from "@/lib/support/notifications";
 import { orderCreatedEmail } from "@/lib/email/templates";
+import {
+  encryptGiftCardCode,
+  giftCardLast4,
+  normalizeGiftCardCode,
+} from "@/lib/payments/gift-card";
+import { REWARBLE_PAYMENT_METHOD } from "@/lib/payments/rewarble";
 
 const checkoutSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
   email: z.string().email("Please enter a valid email"),
-  discordUsername: z.string().optional(),
+  discordUsername: z.string().min(2, "Discord username is required").max(64),
+  giftCardCode: z
+    .string()
+    .min(8, "Enter your gift card code")
+    .max(64, "Gift card code is too long"),
+  paymentMethod: z.literal(REWARBLE_PAYMENT_METHOD),
   items: z
     .array(
       z.object({
@@ -32,7 +44,13 @@ const checkoutSchema = z.object({
 export type CheckoutInput = z.infer<typeof checkoutSchema>;
 
 export type CheckoutResult =
-  | { success: true; orderId: string; orderNumber?: string; ticketNumber?: string; redirectUrl: string }
+  | {
+      success: true;
+      orderId: string;
+      orderNumber?: string;
+      ticketNumber?: string;
+      redirectUrl: string;
+    }
   | { success: false; error: string; fieldErrors?: Record<string, string[]> };
 
 export async function createOrder(
@@ -49,6 +67,14 @@ export async function createOrder(
 
   const data = parsed.data;
   const session = await getServerSession().catch(() => null);
+  const giftCode = normalizeGiftCardCode(data.giftCardCode);
+  if (giftCode.replace(/-/g, "").length < 8) {
+    return {
+      success: false,
+      error: "Gift card code looks incomplete.",
+      fieldErrors: { giftCardCode: ["Enter the full gift card code"] },
+    };
+  }
 
   const lineItems = await Promise.all(
     data.items.map(async (item) => {
@@ -101,15 +127,15 @@ export async function createOrder(
       return { success: false, error: "This coupon has reached its usage limit." };
     }
 
-    const subtotal = lineItems.reduce(
+    const couponSubtotal = lineItems.reduce(
       (sum, item) => sum + item.unitPrice * item.quantity,
       0,
     );
 
     if (couponRecord.type === "PERCENTAGE") {
-      discountAmount = (subtotal * Number(couponRecord.value)) / 100;
+      discountAmount = (couponSubtotal * Number(couponRecord.value)) / 100;
     } else {
-      discountAmount = Math.min(Number(couponRecord.value), subtotal);
+      discountAmount = Math.min(Number(couponRecord.value), couponSubtotal);
     }
   }
 
@@ -120,15 +146,25 @@ export async function createOrder(
   const totalAmount = Math.max(subtotal - discountAmount, 0);
   const orderNumber = await nextOrderNumber();
 
+  const hdrs = await headers();
+  const ipAddress =
+    hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    hdrs.get("x-real-ip") ||
+    null;
+  const userAgent = hdrs.get("user-agent");
+
+  const encrypted = encryptGiftCardCode(giftCode);
+  const last4 = giftCardLast4(giftCode);
+
   const order = await db.order.create({
     data: {
       orderNumber,
       userId: session?.user?.id ?? null,
       guestEmail: session ? null : data.email,
       guestName: session ? null : data.name,
-      discordUsername: data.discordUsername,
+      discordUsername: data.discordUsername.trim(),
       status: "PENDING",
-      paymentStatus: "UNPAID",
+      paymentStatus: "PENDING",
       deliveryStatus: "PENDING",
       totalAmount,
       discountAmount,
@@ -144,13 +180,38 @@ export async function createOrder(
           quantity: item.quantity,
         })),
       },
+      payments: {
+        create: {
+          amount: totalAmount,
+          status: "PENDING",
+          provider: REWARBLE_PAYMENT_METHOD,
+          providerTxId: `masked:${last4}`,
+          providerData: {
+            method: REWARBLE_PAYMENT_METHOD,
+            giftCardLast4: last4,
+          },
+        },
+      },
+      paymentVerifications: {
+        create: {
+          userId: session?.user?.id ?? null,
+          paymentMethod: REWARBLE_PAYMENT_METHOD,
+          giftCardCodeEncrypted: encrypted,
+          giftCardLast4: last4,
+          discordUsername: data.discordUsername.trim(),
+          amount: totalAmount,
+          status: "PENDING",
+          ipAddress,
+          userAgent,
+        },
+      },
       statusHistory: {
         create: {
           toStatus: "PENDING",
-          toPaymentStatus: "UNPAID",
+          toPaymentStatus: "PENDING",
           toDeliveryStatus: "PENDING",
           actorId: session?.user?.id ?? null,
-          note: "Order created",
+          note: "Order created — awaiting Rewarble gift card verification",
         },
       },
       ...(couponRecord
@@ -187,21 +248,23 @@ export async function createOrder(
     await createNotification({
       userId: session.user.id,
       type: "ORDER_CREATED",
-      title: `Order ${orderNumber} created`,
-      body: ticketNumber
-        ? `Your support ticket has been created (${ticketNumber}).`
-        : "Track your order in Mission Control.",
+      title: `Order ${orderNumber} submitted`,
+      body: "Payment code submitted successfully. Your order is being reviewed.",
       href: `/account/orders/${orderNumber}`,
       email: { to: session.user.email, ...email },
     });
   }
 
   await notifyStaff({
-    type: "NEW_ORDER_STAFF",
-    title: `New order ${orderNumber}`,
-    body: `${data.email} — $${totalAmount.toFixed(2)}`,
-    href: `/admin/orders/${order.id}`,
+    type: "PAYMENT_PENDING_STAFF",
+    title: `Payment verification ${orderNumber}`,
+    body: `${data.email} — $${totalAmount.toFixed(2)} · Rewarble · ****${last4}`,
+    href: `/admin/payments`,
   });
+
+  const successUrl = `/checkout/success?orderId=${order.id}&orderNumber=${orderNumber}&pendingVerification=1${
+    ticketNumber ? `&ticketNumber=${ticketNumber}` : ""
+  }`;
 
   const firstItem = lineItems[0];
   if (firstItem) {
@@ -217,21 +280,10 @@ export async function createOrder(
         | "private"
         | undefined;
       if (tierFromSlug) {
-        const referralUrl = getCheatReferralUrl(
+        void getCheatReferralUrl(
           product.game.slug as "isle" | "naraka",
           tierFromSlug,
         );
-        const successUrl = `/checkout/success?orderId=${order.id}&orderNumber=${orderNumber}${
-          ticketNumber ? `&ticketNumber=${ticketNumber}` : ""
-        }`;
-        return {
-          success: true,
-          orderId: order.id,
-          orderNumber,
-          ticketNumber,
-          // Prefer in-app success so customers see ticket confirmation; keep referral as secondary path via success page CTA later
-          redirectUrl: successUrl || referralUrl,
-        };
       }
     }
   }
@@ -241,8 +293,6 @@ export async function createOrder(
     orderId: order.id,
     orderNumber,
     ticketNumber,
-    redirectUrl: `/checkout/success?orderId=${order.id}&orderNumber=${orderNumber}${
-      ticketNumber ? `&ticketNumber=${ticketNumber}` : ""
-    }`,
+    redirectUrl: successUrl,
   };
 }

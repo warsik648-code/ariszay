@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ShoppingCart, ArrowRight, Tag, AlertCircle } from "lucide-react";
+import { ShoppingCart, ArrowRight, Tag, AlertCircle, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,10 @@ import { createOrder } from "@/app/actions/checkout";
 import { customerOwnsProduct } from "@/app/actions/cart";
 import { useSession } from "@/lib/auth-client";
 import { CheckoutCartBootstrap } from "@/components/cart/checkout-cart-bootstrap";
+import {
+  giftCardsForTotal,
+  REWARBLE_PAYMENT_METHOD,
+} from "@/lib/payments/rewarble";
 
 export default function CheckoutPage() {
   return (
@@ -38,6 +42,8 @@ function CheckoutPageInner() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [discord, setDiscord] = useState("");
+  const [giftCardCode, setGiftCardCode] = useState("");
+  const [paymentMethod] = useState(REWARBLE_PAYMENT_METHOD);
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
@@ -124,7 +130,9 @@ function CheckoutPageInner() {
       const result = await createOrder({
         name,
         email,
-        discordUsername: discord || undefined,
+        discordUsername: discord,
+        giftCardCode,
+        paymentMethod: REWARBLE_PAYMENT_METHOD,
         items: items.map((item) => ({
           productId: item.productId,
           planId: item.planId,
@@ -147,6 +155,7 @@ function CheckoutPageInner() {
   }
 
   const subtotal = total();
+  const giftCards = giftCardsForTotal(subtotal);
 
   return (
     <div className="container-site py-12 pb-20">
@@ -207,19 +216,86 @@ function CheckoutPageInner() {
               />
               {fieldErrors.email && <p className="text-xs text-red-400">{fieldErrors.email[0]}</p>}
             </div>
-            <div className="space-y-1.5">
-              <label htmlFor="discord" className="text-sm font-medium text-white/70">
-                Discord username <span className="text-white/30">(optional)</span>
-              </label>
-              <Input
-                id="discord"
-                type="text"
-                value={discord}
-                onChange={(e) => setDiscord(e.target.value)}
-                className="h-11 rounded-none border-white/10 bg-black/20 text-white"
-                placeholder="yourname"
-                disabled={isPending}
+          </div>
+
+          <div className="ind-panel space-y-5 p-6">
+            <p className="tech-label text-primary">Payment terminal</p>
+            <h2 className="font-display text-lg font-semibold uppercase text-white">Payment method</h2>
+
+            <label className="flex cursor-pointer items-start gap-3 border border-primary/40 bg-[rgb(200_255_0_/_0.05)] p-4">
+              <input
+                type="radio"
+                name="paymentMethod"
+                checked={paymentMethod === REWARBLE_PAYMENT_METHOD}
+                readOnly
+                className="mt-1 accent-primary"
               />
+              <span>
+                <span className="block text-sm font-semibold text-white">Rewarble Visa Gift Card</span>
+                <span className="mt-0.5 block text-xs text-white/45">
+                  Purchase on G2A, then submit your card code for verification. Orders are not marked paid until reviewed.
+                </span>
+              </span>
+            </label>
+
+            <div className="space-y-4 border-t border-white/10 pt-5">
+              <div>
+                <p className="font-mono text-[10px] tracking-[0.2em] text-primary uppercase">Step 1</p>
+                <h3 className="mt-1 text-sm font-semibold text-white">Purchase a Rewarble Visa Gift Card</h3>
+                <p className="mt-1 text-xs text-white/45">
+                  Buy a gift card that matches your order total (${subtotal.toFixed(2)}).
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {giftCards.map((card) => (
+                    <Button key={card.amount} asChild variant="outline" className="rounded-none border-white/20">
+                      <a href={card.url} target="_blank" rel="noopener noreferrer">
+                        {card.label}
+                        <ExternalLink className="ml-1.5 size-3.5" />
+                      </a>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="font-mono text-[10px] tracking-[0.2em] text-primary uppercase">Step 2</p>
+                <h3 className="mt-1 text-sm font-semibold text-white">Enter your card code</h3>
+                <p className="mt-1 text-xs text-white/45">
+                  Copy the promo/gift card code from your G2A purchase and paste it below.
+                </p>
+                <Input
+                  id="giftCardCode"
+                  type="text"
+                  required
+                  autoComplete="off"
+                  value={giftCardCode}
+                  onChange={(e) => setGiftCardCode(e.target.value.toUpperCase())}
+                  className="mt-3 h-11 rounded-none border-white/10 bg-black/20 font-mono tracking-widest text-white"
+                  placeholder="XXXX-XXXX-XXXX-XXXX"
+                  disabled={isPending}
+                />
+                {fieldErrors.giftCardCode && (
+                  <p className="mt-1 text-xs text-red-400">{fieldErrors.giftCardCode[0]}</p>
+                )}
+              </div>
+
+              <div>
+                <p className="font-mono text-[10px] tracking-[0.2em] text-primary uppercase">Step 3</p>
+                <h3 className="mt-1 text-sm font-semibold text-white">Enter Discord username</h3>
+                <Input
+                  id="discord"
+                  type="text"
+                  required
+                  value={discord}
+                  onChange={(e) => setDiscord(e.target.value)}
+                  className="mt-3 h-11 rounded-none border-white/10 bg-black/20 text-white"
+                  placeholder="username#0000"
+                  disabled={isPending}
+                />
+                {fieldErrors.discordUsername && (
+                  <p className="mt-1 text-xs text-red-400">{fieldErrors.discordUsername[0]}</p>
+                )}
+              </div>
             </div>
           </div>
 
@@ -337,9 +413,12 @@ function CheckoutPageInner() {
             disabled={isPending || !agreed}
             className="h-12 w-full rounded-none text-base"
           >
-            {isPending ? "Processing…" : "Complete order"}
+            {isPending ? "Submitting…" : "Submit & Place Order"}
             {!isPending && <ArrowRight className="ml-1.5 size-5" />}
           </Button>
+          <p className="text-center text-[11px] text-white/35">
+            Payment stays Pending Verification until an admin approves your code.
+          </p>
         </div>
       </form>
     </div>

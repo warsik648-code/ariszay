@@ -14,12 +14,14 @@ import {
   Shield,
   LifeBuoy,
   RotateCcw,
+  CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
+  { href: "/admin/payments", label: "Payments", icon: CreditCard },
   { href: "/admin/tickets", label: "Tickets", icon: LifeBuoy },
   { href: "/admin/refunds", label: "Refunds", icon: RotateCcw },
   { href: "/admin/products", label: "Products", icon: Package },

@@ -7,7 +7,7 @@ export const products: Product[] = [
     description: "Account recovery and unban tool builder.",
     longDescription:
       "UGC helps you recover locked accounts and rebuild access after restrictive bans with a guided, secure workflow.",
-    price: { monthly: null, lifetime: 49.99 },
+    price: { monthly: null, lifetime: 150 },
     icon: "shield",
     highlightFeatures: [
       "Account recovery workflows",
@@ -31,7 +31,7 @@ export const products: Product[] = [
     description: "Unlock all cosmetics instantly.",
     longDescription:
       "Preview and unlock cosmetic skins client-side for a premium look without grinding every unlock path.",
-    price: { monthly: null, lifetime: 39.99 },
+    price: { monthly: null, lifetime: 150 },
     icon: "palette",
     highlightFeatures: [
       "Unlock all cosmetics",
@@ -55,7 +55,7 @@ export const products: Product[] = [
     description: "Single-PC cheat infrastructure.",
     longDescription:
       "Run advanced DMA-style tooling through a cloud bridge designed for a single-PC setup with low overhead.",
-    price: { monthly: null, lifetime: 50.0 },
+    price: { monthly: null, lifetime: 150 },
     icon: "cloud",
     highlightFeatures: [
       "Single-PC method",
@@ -79,7 +79,7 @@ export const products: Product[] = [
     description: "Hardware ID spoofing tool.",
     longDescription:
       "Reset and spoof hardware identifiers safely after a hardware ban so you can return to supported games.",
-    price: { monthly: null, lifetime: 34.99 },
+    price: { monthly: null, lifetime: 150 },
     icon: "cpu",
     highlightFeatures: [
       "HWID reset",

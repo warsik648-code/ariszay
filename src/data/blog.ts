@@ -80,7 +80,7 @@ Private adds aimbot, radar, stream-safe mode, and direct support. Pro covers ass
 
 ## Pricing
 
-Monthly plans start at $14.99 for Xray. Private offers a lifetime option at $99.99 for players who want long-term value.`,
+Monthly plans are $35. Lifetime access is $150 for players who want long-term value.`,
   },
   {
     slug: "how-to-stay-undetected",

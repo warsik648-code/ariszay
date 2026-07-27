@@ -41,6 +41,8 @@ model User {
   refundRequests     RefundRequest[]      @relation("RefundCustomer")
   refundReviews      RefundRequest[]      @relation("RefundReviewer")
   notifications      Notification[]
+  paymentVerifications PaymentVerification[] @relation("PaymentVerificationCustomer")
+  paymentVerificationsReviewed PaymentVerification[] @relation("PaymentVerificationReviewer")
 
   @@map("users")
 }
@@ -238,6 +240,7 @@ model Order {
   tickets        Ticket[]
   refundRequests RefundRequest[]
   supportNotes   InternalNote[]
+  paymentVerifications PaymentVerification[]
 
   @@index([status])
   @@index([paymentStatus])
@@ -279,6 +282,36 @@ model Payment {
   @@map("payments")
 }
 
+model PaymentVerification {
+  id                   String                    @id @default(cuid())
+  orderId              String
+  userId               String?
+  paymentMethod        String                    @default("REWARBLE_VISA_GIFT_CARD")
+  /// AES-GCM encrypted gift card code — never expose except to OWNER/ADMIN via decrypt
+  giftCardCodeEncrypted String                   @db.Text
+  giftCardLast4        String
+  discordUsername      String
+  amount               Decimal                   @db.Decimal(10, 2)
+  status               PaymentVerificationStatus @default(PENDING)
+  internalNote         String?                   @db.Text
+  rejectionReason      String?
+  ipAddress            String?
+  userAgent            String?
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+  verifiedAt           DateTime?
+  verifiedById         String?
+
+  order      Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user       User?  @relation("PaymentVerificationCustomer", fields: [userId], references: [id])
+  verifiedBy User?  @relation("PaymentVerificationReviewer", fields: [verifiedById], references: [id])
+
+  @@index([status])
+  @@index([orderId])
+  @@index([createdAt])
+  @@map("payment_verifications")
+}
+
 model OrderStatusHistory {
   id                 String          @id @default(cuid())
   orderId            String
@@ -313,6 +346,12 @@ enum PaymentStatus {
   PAID
   FAILED
   REFUNDED
+}
+
+enum PaymentVerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum DeliveryStatus {
@@ -664,6 +703,9 @@ enum NotificationType {
   NEW_ORDER_STAFF
   NEW_TICKET_STAFF
   REFUND_REQUEST_STAFF
+  PAYMENT_PENDING_STAFF
+  PAYMENT_VERIFIED
+  PAYMENT_REJECTED
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

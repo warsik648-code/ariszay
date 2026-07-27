@@ -154,7 +154,7 @@ export const tierHighlightFeatures: Record<CheatTier, string[]> = {
 };
 
 export const tierPricing = {
-  xray: { monthly: 14.99, lifetime: null as number | null },
-  pro: { monthly: 24.99, lifetime: null as number | null },
-  private: { monthly: 29.99, lifetime: 99.99 as number | null },
+  xray: { monthly: 35, lifetime: 150 as number | null },
+  pro: { monthly: 35, lifetime: 150 as number | null },
+  private: { monthly: 35, lifetime: 150 as number | null },
 } as const;

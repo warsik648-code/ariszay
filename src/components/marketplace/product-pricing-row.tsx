@@ -8,7 +8,7 @@ import type { DetectionStatus, Pricing } from "@/types";
 
 export { getProductCode };
 
-/** Formats a starting price line: "From $14.99 / mo" or "From $49.99". */
+/** Formats a starting price line: "From $35.00 / mo" or "From $150.00". */
 export function formatFromPrice(price: Pricing): string {
   if (price.monthly != null) {
     return `From $${price.monthly.toFixed(2)} / mo`;
