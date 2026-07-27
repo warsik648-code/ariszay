@@ -4,11 +4,10 @@ import { env } from "@/env";
 
 export const siteConfig = {
   name: "ArisZay",
-  tagline: "Premium Undetected Gaming Software",
+  tagline: "Gaming Enhancement Software",
   description:
-    "26,000+ customers worldwide. Instant delivery. 24/7 support. Premium undetected gaming software for Isle, Naraka, and more.",
+    "Enhancement software for The Isle and Naraka: Bladepoint. Clear product status, instant delivery, and written setup guides included.",
   url: env.NEXT_PUBLIC_SITE_URL,
-  customersLabel: "26,000+",
 } as const;
 
 export const defaultMetadata: Metadata = {

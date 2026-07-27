@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-
 import { Link } from "@/i18n/navigation";
+import { games } from "@/data/games";
 import { siteConfig } from "@/config/site";
 
 export function SiteFooter() {
@@ -13,53 +13,49 @@ export function SiteFooter() {
     <footer className="mt-24 border-t border-white/10 bg-[#070a14]">
       <div className="container-site grid gap-10 py-14 md:grid-cols-4">
         <div className="space-y-4 md:col-span-2">
-          <Link href="/" className="text-xl font-bold">
+          <Link href="/" className="text-xl font-bold tracking-tight">
             Aris<span className="text-primary">Zay</span>
           </Link>
-          <p className="text-muted-foreground max-w-md text-sm">
+          <p className="text-muted-foreground max-w-md text-sm leading-relaxed">
             {t("description")}
           </p>
           <div className="text-muted-foreground flex flex-wrap gap-2 text-xs">
-            <span className="rounded-lg border border-white/10 px-2 py-1">
-              Visa
-            </span>
-            <span className="rounded-lg border border-white/10 px-2 py-1">
-              Mastercard
-            </span>
-            <span className="rounded-lg border border-white/10 px-2 py-1">
-              Crypto
-            </span>
-            <span className="rounded-lg border border-white/10 px-2 py-1">
-              PayPal
-            </span>
+            {["Visa", "Mastercard", "Crypto", "PayPal"].map((method) => (
+              <span
+                key={method}
+                className="rounded-lg border border-white/10 px-2.5 py-1"
+              >
+                {method}
+              </span>
+            ))}
           </div>
         </div>
 
         <div>
           <h3 className="mb-4 text-sm font-semibold">{t("quickLinks")}</h3>
-          <ul className="text-muted-foreground space-y-2 text-sm">
+          <ul className="text-muted-foreground space-y-2.5 text-sm">
+            {games.map((game) => (
+              <li key={game.slug}>
+                <Link
+                  href={`/cheats/${game.cheatsSlug}`}
+                  className="hover:text-foreground transition-colors"
+                >
+                  {game.shortName} Cheats
+                </Link>
+              </li>
+            ))}
             <li>
-              <Link href="/games/isle" className="hover:text-foreground">
-                Isle
-              </Link>
-            </li>
-            <li>
-              <Link href="/games/naraka" className="hover:text-foreground">
-                Naraka
-              </Link>
-            </li>
-            <li>
-              <Link href="/products/ugc" className="hover:text-foreground">
+              <Link href="/products/ugc" className="hover:text-foreground transition-colors">
                 Products
               </Link>
             </li>
             <li>
-              <Link href="/blog" className="hover:text-foreground">
+              <Link href="/blog" className="hover:text-foreground transition-colors">
                 Blog
               </Link>
             </li>
             <li>
-              <Link href="/#faq" className="hover:text-foreground">
+              <Link href="/#faq" className="hover:text-foreground transition-colors">
                 Support
               </Link>
             </li>
@@ -68,10 +64,27 @@ export function SiteFooter() {
 
         <div>
           <h3 className="mb-4 text-sm font-semibold">{t("legal")}</h3>
-          <ul className="text-muted-foreground space-y-2 text-sm">
-            <li>{t("terms")}</li>
-            <li>{t("privacy")}</li>
-            <li>{t("refund")}</li>
+          <ul className="text-muted-foreground space-y-2.5 text-sm">
+            <li>
+              <Link href="/legal/terms" className="hover:text-foreground transition-colors">
+                {t("terms")}
+              </Link>
+            </li>
+            <li>
+              <Link href="/legal/privacy" className="hover:text-foreground transition-colors">
+                {t("privacy")}
+              </Link>
+            </li>
+            <li>
+              <Link href="/legal/refund" className="hover:text-foreground transition-colors">
+                {t("refund")}
+              </Link>
+            </li>
+            <li>
+              <Link href="/account" className="hover:text-foreground transition-colors">
+                My Account
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

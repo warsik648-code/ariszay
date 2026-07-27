@@ -72,7 +72,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <div className="grid gap-10 lg:grid-cols-[1.5fr_1fr]">
         <div className="space-y-8">
           <DetailHero
-            breadcrumb={["Home", "Products", product.name]}
+            breadcrumb={[
+              { label: "Home", href: "/" },
+              { label: "Products", href: "/products/ugc" },
+              { label: product.name },
+            ]}
             title={product.name}
             description={product.longDescription}
           />

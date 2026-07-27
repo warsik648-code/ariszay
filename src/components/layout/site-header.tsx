@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, Menu, ShoppingCart, UserRound } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,8 @@ import { products } from "@/data/products";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import type { AppLocale } from "@/i18n/routing";
+import { AuthButtons } from "@/components/auth/auth-buttons";
+import { CartDrawer } from "@/components/cart/cart-drawer";
 
 export function SiteHeader() {
   const t = useTranslations("nav");
@@ -71,7 +73,7 @@ export function SiteHeader() {
             <DropdownMenuContent align="start" className="min-w-44">
               {games.map((game) => (
                 <DropdownMenuItem key={game.slug} asChild>
-                  <Link href={`/games/${game.slug}`}>{game.name}</Link>
+                  <Link href={`/cheats/${game.cheatsSlug}`}>{game.name}</Link>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -118,28 +120,8 @@ export function SiteHeader() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button
-            asChild
-            variant="ghost"
-            size="icon"
-            className="rounded-xl"
-            aria-label={t("cart")}
-          >
-            <Link href="/checkout">
-              <ShoppingCart className="size-4" />
-            </Link>
-          </Button>
-          <Button
-            asChild
-            variant="ghost"
-            size="icon"
-            className="rounded-xl"
-            aria-label={t("account")}
-          >
-            <Link href="/account">
-              <UserRound className="size-4" />
-            </Link>
-          </Button>
+          <CartDrawer />
+          <AuthButtons />
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -166,7 +148,7 @@ export function SiteHeader() {
                 {games.map((game) => (
                   <Link
                     key={game.slug}
-                    href={`/games/${game.slug}`}
+                    href={`/cheats/${game.cheatsSlug}`}
                     onClick={() => setOpen(false)}
                     className="text-sm"
                   >

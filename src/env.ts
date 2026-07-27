@@ -1,43 +1,63 @@
 import { z } from "zod";
 
-/**
- * Client-exposed env vars must be prefixed with NEXT_PUBLIC_.
- * Only values that are safe to ship to the browser belong here.
- */
 const clientSchema = z.object({
-  NEXT_PUBLIC_SITE_URL: z
-    .string()
-    .url()
-    .describe("Canonical site URL used for metadata and absolute links"),
+  NEXT_PUBLIC_SITE_URL: z.url(),
 });
 
-/**
- * Server-only env vars. Never prefix these with NEXT_PUBLIC_.
- * Add secrets and private config here as the project grows.
- */
 const serverSchema = z.object({
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
+
+  // Database
+  DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
+
+  // Auth (Better Auth)
+  BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET must be at least 32 chars"),
+  BETTER_AUTH_URL: z.url().default("http://localhost:3000"),
+
+  // First admin account (for seeding only)
+  SEED_ADMIN_EMAIL: z.email().optional(),
+  SEED_ADMIN_PASSWORD: z.string().min(12).optional(),
+  SEED_ADMIN_NAME: z.string().optional(),
+
+  // Email (SMTP)
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().default(587),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  SMTP_FROM: z.email().optional().default("noreply@example.com"),
 });
 
-const processEnv = {
-  NODE_ENV: process.env.NODE_ENV,
+const clientEnv = clientSchema.safeParse({
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-};
+});
 
-const mergedSchema = serverSchema.merge(clientSchema);
-
-const parsed = mergedSchema.safeParse(processEnv);
-
-if (!parsed.success) {
+if (!clientEnv.success) {
   console.error(
-    "❌ Invalid environment variables:\n",
-    z.prettifyError(parsed.error),
+    "❌ Invalid client environment variables:",
+    clientEnv.error.flatten().fieldErrors,
   );
-  throw new Error("Invalid environment variables. Check .env.example.");
+  throw new Error("Invalid client environment variables");
 }
 
-export const env = parsed.data;
+function getServerEnv() {
+  if (typeof window !== "undefined") return {} as z.infer<typeof serverSchema>;
 
-export type Env = z.infer<typeof mergedSchema>;
+  const parsed = serverSchema.safeParse(process.env);
+  if (!parsed.success) {
+    console.error(
+      "❌ Invalid server environment variables:",
+      parsed.error.flatten().fieldErrors,
+    );
+    throw new Error("Invalid server environment variables");
+  }
+  return parsed.data;
+}
+
+export const env = {
+  ...clientEnv.data,
+  ...getServerEnv(),
+};
+
+export type Env = typeof env;

@@ -1,34 +1,32 @@
-import { setRequestLocale } from "next-intl/server";
-import { getTranslations } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import {
   Headphones,
   ShieldCheck,
   Truck,
   WalletCards,
-  Star,
+  ArrowRight,
+  Clock,
+  Package,
+  Download,
+  CheckCircle,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { CheatCard } from "@/components/shared/cheat-card";
 import { FaqAccordion } from "@/components/shared/faq-accordion";
-import {
-  FadeIn,
-  StaggerChildren,
-  StaggerItem,
-} from "@/components/shared/motion";
+import { FadeIn, StaggerChildren, StaggerItem } from "@/components/shared/motion";
 import { GameCard } from "@/components/shared/game-card";
 import { ProductCard } from "@/components/shared/product-card";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { GlassCard } from "@/components/shared/glass-card";
 import { blogPosts } from "@/data/blog";
 import { getCheatsByGame } from "@/data/cheats";
-import { faqs, testimonials } from "@/data/faq";
+import { faqs } from "@/data/faq";
 import { games } from "@/data/games";
 import { products } from "@/data/products";
 import { JsonLd, organizationJsonLd } from "@/components/shared/json-ld";
 import { Link } from "@/i18n/navigation";
 import { siteConfig } from "@/config/site";
+import NewsletterForm from "@/components/shared/newsletter-form";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -41,46 +39,75 @@ export default async function HomePage({ params }: PageProps) {
   const tNav = await getTranslations("nav");
   const tCommon = await getTranslations("common");
 
-  const tierCheats = getCheatsByGame("isle");
+  const isleCheats = getCheatsByGame("isle");
   const latestPosts = blogPosts.slice(0, 3);
 
   const whyItems = [
     {
       icon: ShieldCheck,
-      title: tCommon("undetected"),
-      body: "Actively maintained against current anti-cheat builds.",
+      title: "Status monitoring",
+      body: "Each product page shows a live availability status. We update it whenever the product state changes.",
     },
     {
       icon: Truck,
-      title: tCommon("instantDelivery"),
-      body: "License and download instructions arrive immediately after payment.",
+      title: "Instant delivery",
+      body: "License and setup instructions are sent to your email immediately after payment confirmation.",
     },
     {
       icon: Headphones,
-      title: tCommon("support247"),
-      body: "Premium support for installs, configs, and status questions.",
+      title: "Support included",
+      body: "Written guides are included with every purchase. Private tier customers get a direct support channel.",
     },
     {
       icon: WalletCards,
-      title: "Secure Payment",
-      body: "Checkout through trusted payment partners with regional methods.",
+      title: "Secure checkout",
+      body: "Checkout is handled by established payment partners supporting cards and regional methods.",
+    },
+  ];
+
+  const howItWorks = [
+    {
+      icon: CheckCircle,
+      step: "1",
+      title: "Choose your game & tier",
+      body: "Browse The Isle or Naraka cheats. Pick the Xray, Pro, or Private tier that fits your needs.",
+    },
+    {
+      icon: WalletCards,
+      step: "2",
+      title: "Complete payment",
+      body: "Checkout securely through our payment partner. Monthly or lifetime options available.",
+    },
+    {
+      icon: Download,
+      step: "3",
+      title: "Receive your license",
+      body: "Your license key and setup guide arrive by email and appear in your account dashboard.",
+    },
+    {
+      icon: Package,
+      step: "4",
+      title: "Install and play",
+      body: "Follow the written guide to install. Support is available if you run into any issues.",
     },
   ];
 
   return (
     <>
       <JsonLd data={organizationJsonLd()} />
+
+      {/* Hero */}
       <section className="relative overflow-hidden pt-16 pb-20 sm:pt-24 sm:pb-28">
         <div className="pointer-events-none absolute inset-0">
-          <div className="bg-primary/20 absolute top-10 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full blur-3xl" />
-          <div className="bg-indigo/20 absolute right-10 bottom-0 h-64 w-64 rounded-full blur-3xl" />
+          <div className="absolute top-10 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-primary/15 blur-3xl" />
           <div
-            className="absolute inset-0 opacity-[0.15]"
+            className="absolute inset-0 opacity-[0.06]"
             style={{
               backgroundImage:
-                "radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.35) 1px, transparent 0)",
-              backgroundSize: "28px 28px",
+                "radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.5) 1px, transparent 0)",
+              backgroundSize: "32px 32px",
             }}
+            aria-hidden
           />
         </div>
 
@@ -89,15 +116,21 @@ export default async function HomePage({ params }: PageProps) {
             <p className="text-primary mb-4 font-mono text-xs tracking-[0.25em] uppercase">
               {siteConfig.name}
             </p>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
-              <span className="text-gradient">{t("headline")}</span>
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+              {t("headline")}
             </h1>
-            <p className="text-muted-foreground mx-auto mt-5 max-w-2xl text-base sm:text-lg">
+            <p className="mx-auto mt-5 max-w-2xl text-base text-white/60 sm:text-lg">
               {t("subheadline")}
+            </p>
+            <p className="mt-3 text-sm text-white/40">
+              Software tools for The Isle and Naraka: Bladepoint. Check each product page for current availability status before purchasing.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Button asChild size="lg" className="rounded-xl px-6">
-                <Link href="/games/isle">{tNav("browseCheats")}</Link>
+                <Link href={`/cheats/${games[0].cheatsSlug}`}>
+                  {tNav("browseCheats")}
+                  <ArrowRight className="ml-1.5 size-4" />
+                </Link>
               </Button>
               <Button
                 asChild
@@ -108,15 +141,15 @@ export default async function HomePage({ params }: PageProps) {
                 <Link href="/products/ugc">{tNav("viewProducts")}</Link>
               </Button>
             </div>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-3 text-sm">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-2 text-sm">
               {[
-                tCommon("undetected"),
+                "Status monitored",
                 tCommon("instantDelivery"),
                 tCommon("support247"),
               ].map((badge) => (
                 <span
                   key={badge}
-                  className="text-muted-foreground rounded-full border border-white/10 bg-white/5 px-4 py-1.5 backdrop-blur"
+                  className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-white/50 backdrop-blur"
                 >
                   {badge}
                 </span>
@@ -126,6 +159,7 @@ export default async function HomePage({ params }: PageProps) {
         </div>
       </section>
 
+      {/* Featured games */}
       <section className="container-site py-16">
         <SectionHeading
           title={t("featuredGames")}
@@ -140,14 +174,19 @@ export default async function HomePage({ params }: PageProps) {
         </StaggerChildren>
       </section>
 
+      {/* Tier preview */}
       <section className="container-site py-16">
-        <SectionHeading title={t("tiersTitle")} description={t("tiersSub")} />
+        <SectionHeading
+          title={t("tiersTitle")}
+          description={t("tiersSub")}
+        />
         <StaggerChildren className="grid items-stretch gap-6 md:grid-cols-3">
-          {tierCheats.map((cheat) => (
+          {isleCheats.map((cheat, index) => (
             <StaggerItem key={cheat.slug} className="h-full">
               <CheatCard
                 cheat={cheat}
                 learnMoreLabel={tCommon("learnMore")}
+                featured={index === 1}
                 moreFeaturesLabel={tCommon("moreFeatures", {
                   count: Math.max(
                     cheat.featureCount - cheat.highlightFeatures.length,
@@ -158,8 +197,17 @@ export default async function HomePage({ params }: PageProps) {
             </StaggerItem>
           ))}
         </StaggerChildren>
+        <div className="mt-6 text-center">
+          <Button asChild variant="outline" className="rounded-xl">
+            <Link href={`/cheats/${games[1].cheatsSlug}`}>
+              View Naraka cheats
+              <ArrowRight className="ml-1.5 size-4" />
+            </Link>
+          </Button>
+        </div>
       </section>
 
+      {/* Products */}
       <section className="container-site py-16">
         <SectionHeading
           title={t("productsTitle")}
@@ -177,76 +225,110 @@ export default async function HomePage({ params }: PageProps) {
         </StaggerChildren>
       </section>
 
+      {/* How it works */}
+      <section className="container-site py-16">
+        <SectionHeading
+          title="How ordering works"
+          description="From choosing a product to having it installed — four straightforward steps."
+        />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {howItWorks.map(({ icon: Icon, step, title, body }) => (
+            <div
+              key={step}
+              className="rounded-2xl border border-white/10 bg-[#0d1117] p-5"
+            >
+              <div className="mb-4 flex items-center gap-3">
+                <span className="flex size-8 items-center justify-center rounded-full border border-white/10 font-mono text-xs text-white/50">
+                  {step}
+                </span>
+                <Icon className="size-4 text-white/40" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">{title}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-white/50">{body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Why choose us */}
       <section className="container-site py-16">
         <SectionHeading title={t("whyTitle")} description={t("whySub")} />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {whyItems.map((item) => (
-            <GlassCard key={item.title} className="space-y-3">
-              <item.icon className="text-primary size-6" />
-              <h3 className="font-semibold">{item.title}</h3>
-              <p className="text-muted-foreground text-sm">{item.body}</p>
-            </GlassCard>
+            <div
+              key={item.title}
+              className="rounded-2xl border border-white/10 bg-[#0d1117] p-5 space-y-3"
+            >
+              <item.icon className="size-5 text-white/50" />
+              <h3 className="text-sm font-semibold text-white">{item.title}</h3>
+              <p className="text-sm leading-relaxed text-white/50">{item.body}</p>
+            </div>
           ))}
         </div>
       </section>
 
+      {/* Blog */}
       <section className="container-site py-16">
-        <SectionHeading title={t("testimonialsTitle")} />
-        <div className="grid gap-6 md:grid-cols-3">
-          {testimonials.map((item) => (
-            <GlassCard key={item.id} className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-primary/20 text-primary flex size-10 items-center justify-center rounded-full text-sm font-bold">
-                  {item.name
-                    .split(" ")
-                    .map((part) => part[0])
-                    .join("")}
-                </div>
-                <div>
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-muted-foreground text-xs">{item.role}</p>
-                </div>
-              </div>
-              <div className="text-warning flex gap-0.5">
-                {Array.from({ length: item.rating }).map((_, i) => (
-                  <Star key={i} className="fill-warning size-3.5" />
-                ))}
-              </div>
-              <p className="text-muted-foreground text-sm">
-                &ldquo;{item.quote}&rdquo;
-              </p>
-            </GlassCard>
-          ))}
+        <div className="flex items-end justify-between gap-4">
+          <SectionHeading title={t("blogTitle")} className="mb-0" />
+          <Button asChild variant="ghost" size="sm" className="rounded-xl shrink-0 mb-8">
+            <Link href="/blog">
+              All posts
+              <ArrowRight className="ml-1 size-4" />
+            </Link>
+          </Button>
         </div>
-      </section>
-
-      <section className="container-site py-16">
-        <SectionHeading title={t("blogTitle")} />
         <div className="grid gap-6 md:grid-cols-3">
           {latestPosts.map((post) => (
-            <GlassCard key={post.slug} className="flex flex-col gap-3">
-              <div className="from-primary/30 via-indigo/20 flex h-36 items-end rounded-2xl bg-gradient-to-br to-transparent p-4">
-                <span className="rounded-full bg-black/40 px-2 py-1 font-mono text-[10px] tracking-wider uppercase">
+            <article
+              key={post.slug}
+              className="group flex flex-col gap-3 rounded-2xl border border-white/10 bg-[#0d1117] p-5 transition-all duration-200 hover:border-white/20"
+            >
+              <div className="flex h-28 items-end overflow-hidden rounded-xl border border-white/8 bg-white/4 p-3">
+                <span className="rounded-full border border-white/10 bg-black/40 px-2 py-0.5 font-mono text-[10px] text-white/60 tracking-wider uppercase">
                   {post.category}
                 </span>
               </div>
-              <h3 className="text-lg leading-snug font-semibold">
+              <h3 className="text-base font-semibold leading-snug text-white line-clamp-2">
                 {post.title}
               </h3>
-              <p className="text-muted-foreground line-clamp-3 text-sm">
+              <p className="line-clamp-2 text-sm leading-relaxed text-white/50">
                 {post.excerpt}
               </p>
-              <p className="text-muted-foreground mt-auto text-xs">
+              <p className="text-xs text-white/30 mt-auto">
                 {post.readTimeMinutes} min read · {post.publishedAt}
               </p>
-              <Button asChild variant="outline" className="rounded-xl">
-                <Link href={`/blog/${post.slug}`}>{tCommon("learnMore")}</Link>
+              <Button asChild variant="outline" size="sm" className="rounded-xl">
+                <Link href={`/blog/${post.slug}`}>Read post</Link>
               </Button>
-            </GlassCard>
+            </article>
           ))}
         </div>
       </section>
 
+      {/* Support */}
+      <section className="container-site py-16">
+        <div className="rounded-2xl border border-white/10 bg-[#0d1117] p-6 md:p-10">
+          <div className="grid gap-8 md:grid-cols-[1fr_auto]">
+            <div className="space-y-3">
+              <Headphones className="size-6 text-white/50" />
+              <h2 className="text-2xl font-bold text-white">Need help?</h2>
+              <p className="max-w-md leading-relaxed text-white/60">
+                Check the FAQ below for common questions. Private tier customers have access to a direct support channel. All other customers can reach support through the contact form.
+              </p>
+            </div>
+            <div className="flex flex-col items-start gap-3 md:items-end md:justify-center">
+              <Clock className="size-4 text-white/30" />
+              <p className="text-sm text-white/40">Typical response within 24 hours</p>
+              <Button asChild variant="outline" className="rounded-xl">
+                <Link href="/#faq">View FAQ</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
       <section id="faq" className="container-site scroll-mt-24 py-16">
         <SectionHeading title={t("faqTitle")} />
         <div className="mx-auto max-w-3xl">
@@ -254,24 +336,16 @@ export default async function HomePage({ params }: PageProps) {
         </div>
       </section>
 
+      {/* Newsletter */}
       <section className="container-site py-16">
-        <GlassCard className="mx-auto max-w-3xl text-center" hover={false}>
-          <h2 className="text-2xl font-bold">{t("newsletterTitle")}</h2>
-          <p className="text-muted-foreground mt-2 text-sm">
-            {t("newsletterSub")}
-          </p>
-          <form className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <Input
-              type="email"
-              required
-              placeholder={tCommon("emailPlaceholder")}
-              className="h-11 rounded-xl border-white/10 bg-black/20"
-            />
-            <Button type="submit" className="h-11 rounded-xl px-6">
-              {tCommon("subscribe")}
-            </Button>
-          </form>
-        </GlassCard>
+        <div className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-[#0d1117] p-6 text-center md:p-10">
+          <h2 className="text-2xl font-bold text-white">{t("newsletterTitle")}</h2>
+          <p className="mt-2 text-sm text-white/50">{t("newsletterSub")}</p>
+          <NewsletterForm
+            emailPlaceholder={tCommon("emailPlaceholder")}
+            subscribeLabel={tCommon("subscribe")}
+          />
+        </div>
       </section>
     </>
   );

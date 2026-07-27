@@ -1,4 +1,4 @@
-import { Check, ShieldAlert, ShieldCheck, ShieldQuestion } from "lucide-react";
+import { Check, ShieldAlert, ShieldCheck, ShieldQuestion, ShieldOff } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -6,22 +6,31 @@ import type { DetectionStatus } from "@/types";
 
 const statusConfig: Record<
   DetectionStatus,
-  { label: string; className: string; icon: typeof ShieldCheck }
+  { label: string; className: string; icon: typeof ShieldCheck; dot: string }
 > = {
-  undetected: {
-    label: "Undetected",
+  available: {
+    label: "Available",
     className: "border-success/30 bg-success/10 text-success",
     icon: ShieldCheck,
+    dot: "bg-success",
   },
   updating: {
     label: "Updating",
     className: "border-warning/30 bg-warning/10 text-warning",
     icon: ShieldQuestion,
+    dot: "bg-warning",
   },
-  detected: {
-    label: "Detected",
+  unavailable: {
+    label: "Unavailable",
     className: "border-destructive/30 bg-destructive/10 text-destructive",
     icon: ShieldAlert,
+    dot: "bg-destructive",
+  },
+  unknown: {
+    label: "Status Unknown",
+    className: "border-muted/30 bg-muted/10 text-muted-foreground",
+    icon: ShieldOff,
+    dot: "bg-muted-foreground",
   },
 };
 
@@ -45,21 +54,16 @@ export function StatusBadge({
       )}
     >
       <span className="relative flex size-2">
+        {status === "available" && (
+          <span
+            className={cn(
+              "absolute inline-flex size-full animate-ping rounded-full opacity-60",
+              config.dot,
+            )}
+          />
+        )}
         <span
-          className={cn(
-            "absolute inline-flex size-full animate-ping rounded-full opacity-60",
-            status === "undetected" && "bg-success",
-            status === "updating" && "bg-warning",
-            status === "detected" && "bg-destructive",
-          )}
-        />
-        <span
-          className={cn(
-            "relative inline-flex size-2 rounded-full",
-            status === "undetected" && "bg-success",
-            status === "updating" && "bg-warning",
-            status === "detected" && "bg-destructive",
-          )}
+          className={cn("relative inline-flex size-2 rounded-full", config.dot)}
         />
       </span>
       <Icon className="size-3.5" />

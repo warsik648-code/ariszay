@@ -1,7 +1,8 @@
 export type CheatTier = "xray" | "pro" | "private";
 export type GameSlug = "isle" | "naraka";
 export type ProductSlug = "ugc" | "skin-changer" | "cloud-dma" | "hwid-spoofer";
-export type DetectionStatus = "undetected" | "updating" | "detected";
+/** Availability status for products. Do not use "undetected" — that is a false guarantee. */
+export type DetectionStatus = "available" | "updating" | "unavailable" | "unknown";
 
 export type Pricing = {
   monthly: number | null;
@@ -10,12 +11,17 @@ export type Pricing = {
 
 export type Game = {
   slug: GameSlug;
+  /** URL-safe slug used in /cheats/[cheatsSlug] routes */
+  cheatsSlug: string;
   name: string;
   shortName: string;
   description: string;
   tagline: string;
   accent: string;
 };
+
+export type ProductStatus = "available" | "updating" | "unavailable" | "unknown";
+export type CheatTierLabel = "Xray" | "Pro" | "Private";
 
 export type Cheat = {
   slug: string;
@@ -25,8 +31,6 @@ export type Cheat = {
   description: string;
   price: Pricing;
   status: DetectionStatus;
-  rating: number;
-  reviewCount: number;
   highlightFeatures: string[];
   featureCount: number;
   systemRequirements: {
