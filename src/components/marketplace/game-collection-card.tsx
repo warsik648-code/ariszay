@@ -19,8 +19,14 @@ function displayTierName(tier: string): string {
   return tier.charAt(0).toUpperCase() + tier.slice(1);
 }
 
+const collectionCovers: Record<string, string> = {
+  isle: "/games/isle-collection.jpg",
+  naraka: "/games/naraka-collection.jpg",
+};
+
 export function GameCollectionCard({ game, index = 0 }: Props) {
   const serial = `AZ-COL-${String(index + 1).padStart(2, "0")}`;
+  const cover = collectionCovers[game.slug];
 
   return (
     <article className="ind-panel ind-panel-hover group flex flex-col overflow-hidden">
@@ -34,8 +40,10 @@ export function GameCollectionCard({ game, index = 0 }: Props) {
           code={game.cheatsSlug.toUpperCase()}
           accent={game.accent}
           label="Cheat Suite"
+          backgroundSrc={cover}
+          backgroundOpacity={0.75}
         />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#111] via-[#111]/80 to-transparent p-5 pt-16">
+        <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-[#111] via-[#111]/80 to-transparent p-5 pt-16">
           <h3 className="font-display text-4xl font-extrabold tracking-tight text-[#f2f0eb] uppercase sm:text-5xl">
             {game.name} Cheats
           </h3>

@@ -203,7 +203,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <article className="min-w-0">
           <p className="text-muted-foreground mb-6 text-base leading-relaxed">{post.excerpt}</p>
           <div className="space-y-1">{renderContent(post.content)}</div>
-          <GlassCard className="mt-12 space-y-3" hover={false}>
+          <GlassCard className="mt-12 h-auto w-full max-w-md space-y-3 p-5" hover={false}>
             <p className="font-medium">Ready to play smarter?</p>
             <Button asChild className="rounded-xl">
               <Link href="/cheats/the-isle">View The Isle products</Link>

@@ -59,13 +59,32 @@ export function ModuleVisual({
   code,
   accent = "#c8ff00",
   label,
+  backgroundSrc,
+  backgroundOpacity = 0.75,
 }: {
   code: string;
   accent?: string;
   label: string;
+  /** Optional cover photo shown behind the industrial frame */
+  backgroundSrc?: string;
+  /** 0–1 opacity for the cover photo (default 0.75) */
+  backgroundOpacity?: number;
 }) {
   return (
     <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden border border-[rgb(242_240_235_/_0.1)] bg-[#0c0c0c]">
+      {backgroundSrc ? (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={backgroundSrc}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ opacity: backgroundOpacity }}
+            aria-hidden
+          />
+          <div className="absolute inset-0 bg-[#080808]/45" aria-hidden />
+        </>
+      ) : null}
       <div className="absolute inset-0 blueprint-grid opacity-50" />
       <div className="absolute inset-0 diagonal-stripe opacity-40" />
       <svg viewBox="0 0 200 150" className="relative z-10 h-[70%] w-[70%] opacity-80">
@@ -89,11 +108,11 @@ export function ModuleVisual({
           {code}
         </text>
       </svg>
-      <span className="absolute top-3 left-3 font-mono text-[9px] tracking-[0.2em] text-[rgb(242_240_235_/_0.4)] uppercase">
+      <span className="absolute top-3 left-3 z-10 font-mono text-[9px] tracking-[0.2em] text-[rgb(242_240_235_/_0.55)] uppercase">
         {label}
       </span>
       <span
-        className="absolute top-3 right-3 size-2 animate-accent-pulse"
+        className="absolute top-3 right-3 z-10 size-2 animate-accent-pulse"
         style={{ background: accent }}
       />
     </div>
