@@ -107,3 +107,131 @@ export function passwordResetEmail(resetUrl: string) {
     text: `Reset your ${BRAND} password\n\nClick this link to reset your password (expires in 1 hour):\n${resetUrl}\n\nIf you did not request this, ignore this email.`,
   };
 }
+
+export function ticketCreatedEmail(opts: {
+  name: string;
+  ticketNumber: string;
+  orderNumber: string;
+  productSummary: string;
+}) {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/account/tickets/${opts.ticketNumber}`;
+  return {
+    subject: `Support ticket created — ${opts.ticketNumber}`,
+    html: layout(`
+      <h1 style="margin:0 0 16px;font-size:22px;color:#fff;">Your support ticket has been created</h1>
+      <p style="margin:0 0 16px;color:rgba(255,255,255,0.6);line-height:1.6;">
+        Hi ${opts.name}, ticket <strong style="color:#fff;">${opts.ticketNumber}</strong> is linked to order ${opts.orderNumber}.
+      </p>
+      <p style="margin:0 0 24px;color:rgba(255,255,255,0.5);line-height:1.6;">Products: ${opts.productSummary || "—"}</p>
+      <a href="${url}" style="display:inline-block;background:#c8ff00;color:#0a0a0a;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;">
+        Open ticket
+      </a>
+    `),
+    text: `Ticket ${opts.ticketNumber} created for order ${opts.orderNumber}.\nOpen: ${url}`,
+  };
+}
+
+export function staffReplyEmail(opts: {
+  name: string;
+  ticketNumber: string;
+  preview: string;
+}) {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/account/tickets/${opts.ticketNumber}`;
+  return {
+    subject: `Staff replied — ${opts.ticketNumber}`,
+    html: layout(`
+      <h1 style="margin:0 0 16px;font-size:22px;color:#fff;">Staff reply on ${opts.ticketNumber}</h1>
+      <p style="margin:0 0 16px;color:rgba(255,255,255,0.6);line-height:1.6;">Hi ${opts.name},</p>
+      <p style="margin:0 0 24px;color:rgba(255,255,255,0.7);line-height:1.6;">${opts.preview}</p>
+      <a href="${url}" style="display:inline-block;background:#c8ff00;color:#0a0a0a;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;">
+        View conversation
+      </a>
+    `),
+    text: `Staff replied on ${opts.ticketNumber}:\n${opts.preview}\n\n${url}`,
+  };
+}
+
+export function newTicketStaffEmail(opts: {
+  ticketNumber: string;
+  orderNumber: string;
+  customerEmail: string;
+  category: string;
+}) {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/admin/tickets/${opts.ticketNumber}`;
+  return {
+    subject: `[Ops] New ticket ${opts.ticketNumber}`,
+    html: layout(`
+      <h1 style="margin:0 0 16px;font-size:22px;color:#fff;">New support ticket</h1>
+      <p style="margin:0;color:rgba(255,255,255,0.6);line-height:1.6;">
+        ${opts.ticketNumber} · ${opts.category}<br/>
+        Order: ${opts.orderNumber}<br/>
+        Customer: ${opts.customerEmail}
+      </p>
+      <p style="margin:24px 0 0;"><a href="${url}" style="color:#c8ff00;">Open in Operations Center</a></p>
+    `),
+    text: `New ticket ${opts.ticketNumber} (${opts.category}) order ${opts.orderNumber} — ${opts.customerEmail}\n${url}`,
+  };
+}
+
+export function refundUpdatedEmail(opts: {
+  name: string;
+  orderNumber: string;
+  status: string;
+}) {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/account/refunds`;
+  return {
+    subject: `Refund ${opts.status.toLowerCase()} — ${opts.orderNumber}`,
+    html: layout(`
+      <h1 style="margin:0 0 16px;font-size:22px;color:#fff;">Refund update</h1>
+      <p style="margin:0 0 16px;color:rgba(255,255,255,0.6);line-height:1.6;">
+        Hi ${opts.name}, your refund for order ${opts.orderNumber} is now <strong style="color:#fff;">${opts.status}</strong>.
+      </p>
+      <a href="${url}" style="display:inline-block;background:#c8ff00;color:#0a0a0a;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;">
+        Track refund
+      </a>
+    `),
+    text: `Refund for ${opts.orderNumber} is now ${opts.status}.\n${url}`,
+  };
+}
+
+export function refundRequestStaffEmail(opts: {
+  orderNumber: string;
+  customerEmail: string;
+  reason: string;
+}) {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/admin/refunds`;
+  return {
+    subject: `[Ops] Refund request — ${opts.orderNumber}`,
+    html: layout(`
+      <h1 style="margin:0 0 16px;font-size:22px;color:#fff;">Refund request</h1>
+      <p style="margin:0;color:rgba(255,255,255,0.6);line-height:1.6;">
+        Order ${opts.orderNumber}<br/>
+        Customer: ${opts.customerEmail}<br/>
+        Reason: ${opts.reason}
+      </p>
+      <p style="margin:24px 0 0;"><a href="${url}" style="color:#c8ff00;">Review refunds</a></p>
+    `),
+    text: `Refund request ${opts.orderNumber} from ${opts.customerEmail}: ${opts.reason}\n${url}`,
+  };
+}
+
+export function orderCreatedEmail(opts: {
+  name: string;
+  orderNumber: string;
+  total: number;
+}) {
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/account/orders/${opts.orderNumber}`;
+  return {
+    subject: `Order created — ${opts.orderNumber}`,
+    html: layout(`
+      <h1 style="margin:0 0 16px;font-size:22px;color:#fff;">Order ${opts.orderNumber}</h1>
+      <p style="margin:0 0 16px;color:rgba(255,255,255,0.6);line-height:1.6;">
+        Hi ${opts.name}, your order totaling $${opts.total.toFixed(2)} is in Mission Control.
+      </p>
+      <a href="${url}" style="display:inline-block;background:#c8ff00;color:#0a0a0a;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;">
+        View order
+      </a>
+    `),
+    text: `Order ${opts.orderNumber} created ($${opts.total.toFixed(2)}).\n${url}`,
+  };
+}

@@ -255,6 +255,40 @@ async function main() {
     );
   }
 
+  // ── Order number backfill + sequence counters ─────────────────────────────
+  const ordersMissingNumber = await prisma.order.findMany({
+    where: { orderNumber: null },
+    orderBy: { createdAt: "asc" },
+    select: { id: true },
+  });
+  let seq = 10000;
+  const existingMax = await prisma.order.findMany({
+    where: { orderNumber: { not: null } },
+    select: { orderNumber: true },
+  });
+  for (const o of existingMax) {
+    const m = o.orderNumber?.match(/^AZ-(\d+)$/);
+    if (m) seq = Math.max(seq, Number(m[1]) + 1);
+  }
+  for (const o of ordersMissingNumber) {
+    await prisma.order.update({
+      where: { id: o.id },
+      data: { orderNumber: `AZ-${seq}` },
+    });
+    seq += 1;
+  }
+  await prisma.sequenceCounter.upsert({
+    where: { name: "order" },
+    create: { name: "order", value: seq - 1 },
+    update: { value: seq - 1 },
+  });
+  await prisma.sequenceCounter.upsert({
+    where: { name: "ticket" },
+    create: { name: "ticket", value: 9999 },
+    update: {},
+  });
+  console.log("✅ Sequence counters ready");
+
   console.log("🎉 Seed complete");
 }
 

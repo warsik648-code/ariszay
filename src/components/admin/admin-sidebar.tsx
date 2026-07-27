@@ -12,12 +12,16 @@ import {
   Share2,
   FileText,
   Shield,
+  LifeBuoy,
+  RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
+  { href: "/admin/tickets", label: "Tickets", icon: LifeBuoy },
+  { href: "/admin/refunds", label: "Refunds", icon: RotateCcw },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/games", label: "Games", icon: Gamepad2 },
   { href: "/admin/customers", label: "Customers", icon: Users },
@@ -35,7 +39,7 @@ export default function AdminSidebar() {
       <div className="border-b border-white/10 px-5 py-4">
         <Link href="/admin" className="text-lg font-bold tracking-tight text-white">
           Aris<span className="text-primary">Zay</span>{" "}
-          <span className="text-xs font-normal text-white/30">Admin</span>
+          <span className="text-xs font-normal text-white/30">Ops</span>
         </Link>
       </div>
 

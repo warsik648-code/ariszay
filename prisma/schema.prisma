@@ -23,16 +23,24 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  // Auth relations (Better Auth)
-  sessions      Session[]
-  accounts      Account[]
+  sessions   Session[]
+  accounts   Account[]
 
-  // Commerce relations
-  orders            Order[]
-  referralCode      Referral?         @relation("ReferralOwner")
-  referralUsages    ReferralConversion[]
-  couponUsages      CouponUsage[]
-  internalNotes     AdminNote[]
+  orders             Order[]
+  referralCode       Referral?            @relation("ReferralOwner")
+  referralUsages     ReferralConversion[]
+  couponUsages       CouponUsage[]
+  internalNotes      AdminNote[]
+  tickets            Ticket[]             @relation("TicketCustomer")
+  assignedTickets    Ticket[]             @relation("TicketAssignee")
+  ticketMessages     TicketMessage[]
+  ticketAttachments  TicketAttachment[]
+  ticketAssignments  TicketAssignment[]   @relation("AssignmentAssignee")
+  ticketAssignerLogs TicketAssignment[]   @relation("AssignmentAssigner")
+  supportNotes       InternalNote[]       @relation("InternalNoteAuthor")
+  refundRequests     RefundRequest[]      @relation("RefundCustomer")
+  refundReviews      RefundRequest[]      @relation("RefundReviewer")
+  notifications      Notification[]
 
   @@map("users")
 }
@@ -53,19 +61,19 @@ model Session {
 }
 
 model Account {
-  id                   String    @id @default(cuid())
-  userId               String
-  accountId            String
-  providerId           String
-  accessToken          String?
-  refreshToken         String?
-  idToken              String?
-  accessTokenExpiresAt DateTime?
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
-  scope                String?
-  password             String?   // hashed, only for credential provider
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -86,7 +94,8 @@ model Verification {
 
 enum UserRole {
   CUSTOMER
-  SUPPORT
+  SUPPORT_AGENT
+  SUPPORT_MANAGER
   CONTENT_MANAGER
   ANALYST
   ADMIN
@@ -94,7 +103,7 @@ enum UserRole {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Product Catalog (DB-backed, seeded from static data)
+// Product Catalog
 // ─────────────────────────────────────────────────────────────────────────────
 
 model Game {
@@ -110,8 +119,8 @@ model Game {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  products   Product[]
-  faqs       Faq[]
+  products Product[]
+  faqs     Faq[]
 
   @@map("games")
 }
@@ -134,36 +143,36 @@ model Product {
   gameId String?
   game   Game?   @relation(fields: [gameId], references: [id])
 
-  plans        ProductPlan[]
-  features     ProductFeature[]
-  orderItems   OrderItem[]
-  images       ProductImage[]
+  plans      ProductPlan[]
+  features   ProductFeature[]
+  orderItems OrderItem[]
+  images     ProductImage[]
 
   @@map("products")
 }
 
 model ProductPlan {
-  id          String   @id @default(cuid())
-  productId   String
-  label       String   // e.g. "Monthly", "Lifetime"
-  durationDays Int?    // null = lifetime
-  price       Decimal  @db.Decimal(10, 2)
-  active      Boolean  @default(true)
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  productId    String
+  label        String
+  durationDays Int?
+  price        Decimal  @db.Decimal(10, 2)
+  active       Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   orderItems OrderItem[]
 
   @@map("product_plans")
 }
 
 model ProductFeature {
-  id        String  @id @default(cuid())
+  id        String @id @default(cuid())
   productId String
   text      String
-  sortOrder Int     @default(0)
+  sortOrder Int    @default(0)
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
@@ -199,34 +208,42 @@ enum ProductStatus {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model Order {
-  id              String        @id @default(cuid())
+  id              String         @id @default(cuid())
+  orderNumber     String?        @unique
   userId          String?
   guestEmail      String?
   guestName       String?
   discordUsername String?
-  status          OrderStatus   @default(PENDING)
-  paymentStatus   PaymentStatus @default(UNPAID)
-  totalAmount     Decimal       @db.Decimal(10, 2)
-  discountAmount  Decimal       @default(0) @db.Decimal(10, 2)
+  status          OrderStatus    @default(PENDING)
+  paymentStatus   PaymentStatus  @default(UNPAID)
+  deliveryStatus  DeliveryStatus @default(PENDING)
+  totalAmount     Decimal        @db.Decimal(10, 2)
+  discountAmount  Decimal        @default(0) @db.Decimal(10, 2)
   couponCode      String?
   referralCode    String?
-  providerOrderId String?       // ID from payment provider
+  providerOrderId String?
   internalNote    String?
   customerNote    String?
   deliveredAt     DateTime?
   cancelledAt     DateTime?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
-  user         User?           @relation(fields: [userId], references: [id])
-  items        OrderItem[]
-  payments     Payment[]
-  couponUsage  CouponUsage?
-  notes        AdminNote[]
+  user           User?                @relation(fields: [userId], references: [id])
+  items          OrderItem[]
+  payments       Payment[]
+  couponUsage    CouponUsage?
+  notes          AdminNote[]
+  statusHistory  OrderStatusHistory[]
+  tickets        Ticket[]
+  refundRequests RefundRequest[]
+  supportNotes   InternalNote[]
 
   @@index([status])
   @@index([paymentStatus])
+  @@index([deliveryStatus])
   @@index([createdAt])
+  @@index([orderNumber])
   @@map("orders")
 }
 
@@ -235,31 +252,51 @@ model OrderItem {
   orderId     String
   productId   String
   planId      String?
-  productName String  // snapshot at time of order
-  planLabel   String? // snapshot at time of order
+  productName String
+  planLabel   String?
   unitPrice   Decimal @db.Decimal(10, 2)
   quantity    Int     @default(1)
 
-  order   Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product     @relation(fields: [productId], references: [id])
+  order   Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product      @relation(fields: [productId], references: [id])
   plan    ProductPlan? @relation(fields: [planId], references: [id])
 
   @@map("order_items")
 }
 
 model Payment {
-  id             String        @id @default(cuid())
-  orderId        String
-  amount         Decimal       @db.Decimal(10, 2)
-  status         PaymentStatus
-  provider       String        // e.g. "stripe", "paypal", "manual"
-  providerTxId   String?
-  providerData   Json?
-  createdAt      DateTime      @default(now())
+  id           String        @id @default(cuid())
+  orderId      String
+  amount       Decimal       @db.Decimal(10, 2)
+  status       PaymentStatus
+  provider     String
+  providerTxId String?
+  providerData Json?
+  createdAt    DateTime      @default(now())
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@map("payments")
+}
+
+model OrderStatusHistory {
+  id                 String          @id @default(cuid())
+  orderId            String
+  fromStatus         OrderStatus?
+  toStatus           OrderStatus?
+  fromPaymentStatus  PaymentStatus?
+  toPaymentStatus    PaymentStatus?
+  fromDeliveryStatus DeliveryStatus?
+  toDeliveryStatus   DeliveryStatus?
+  actorId            String?
+  note               String?
+  createdAt          DateTime        @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([createdAt])
+  @@map("order_status_history")
 }
 
 enum OrderStatus {
@@ -278,23 +315,30 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum DeliveryStatus {
+  PENDING
+  PROCESSING
+  DELIVERED
+  FAILED
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Coupons
 // ─────────────────────────────────────────────────────────────────────────────
 
 model Coupon {
-  id             String       @id @default(cuid())
-  code           String       @unique
-  type           DiscountType
-  value          Decimal      @db.Decimal(10, 2)
-  maxUsages      Int?
-  usageCount     Int          @default(0)
-  expiresAt      DateTime?
-  active         Boolean      @default(true)
-  productIds     String[]     // restrict to specific products (empty = all)
-  gameIds        String[]     // restrict to specific games (empty = all)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id         String       @id @default(cuid())
+  code       String       @unique
+  type       DiscountType
+  value      Decimal      @db.Decimal(10, 2)
+  maxUsages  Int?
+  usageCount Int          @default(0)
+  expiresAt  DateTime?
+  active     Boolean      @default(true)
+  productIds String[]
+  gameIds    String[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 
   usages CouponUsage[]
 
@@ -302,11 +346,11 @@ model Coupon {
 }
 
 model CouponUsage {
-  id        String   @id @default(cuid())
-  couponId  String
-  userId    String?
-  orderId   String   @unique
-  usedAt    DateTime @default(now())
+  id       String   @id @default(cuid())
+  couponId String
+  userId   String?
+  orderId  String   @unique
+  usedAt   DateTime @default(now())
 
   coupon Coupon @relation(fields: [couponId], references: [id])
   user   User?  @relation(fields: [userId], references: [id])
@@ -325,14 +369,14 @@ enum DiscountType {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model Referral {
-  id               String   @id @default(cuid())
-  code             String   @unique
-  ownerId          String   @unique
+  id                String   @id @default(cuid())
+  code              String   @unique
+  ownerId           String   @unique
   commissionPercent Decimal  @db.Decimal(5, 2)
-  active           Boolean  @default(true)
-  clickCount       Int      @default(0)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  active            Boolean  @default(true)
+  clickCount        Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   owner       User                 @relation("ReferralOwner", fields: [ownerId], references: [id])
   clicks      ReferralClick[]
@@ -373,21 +417,21 @@ model ReferralConversion {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model BlogPost {
-  id             String   @id @default(cuid())
-  slug           String   @unique
-  title          String
-  excerpt        String
-  content        String   @db.Text
-  category       String
-  game           String?
-  author         String
-  publishedAt    DateTime
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  title           String
+  excerpt         String
+  content         String   @db.Text
+  category        String
+  game            String?
+  author          String
+  publishedAt     DateTime
   readTimeMinutes Int
-  published      Boolean  @default(true)
-  seoTitle       String?
-  seoDescription String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  published       Boolean  @default(true)
+  seoTitle        String?
+  seoDescription  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@index([publishedAt])
   @@map("blog_posts")
@@ -417,6 +461,212 @@ model SiteSetting {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Support: Tickets, Refunds, Notifications
+// ─────────────────────────────────────────────────────────────────────────────
+
+model SequenceCounter {
+  name  String @id
+  value Int    @default(10000)
+
+  @@map("sequence_counters")
+}
+
+model Ticket {
+  id           String         @id @default(cuid())
+  ticketNumber String         @unique
+  userId       String
+  orderId      String?
+  category     TicketCategory
+  status       TicketStatus   @default(NEW)
+  priority     TicketPriority @default(NORMAL)
+  subject      String
+  autoCreated  Boolean        @default(false)
+  assignedToId String?
+  closedAt     DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  user         User               @relation("TicketCustomer", fields: [userId], references: [id])
+  order        Order?             @relation(fields: [orderId], references: [id])
+  assignedTo   User?              @relation("TicketAssignee", fields: [assignedToId], references: [id])
+  messages     TicketMessage[]
+  attachments  TicketAttachment[]
+  assignments  TicketAssignment[]
+  internalNotes InternalNote[]
+  refundRequests RefundRequest[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([userId])
+  @@index([orderId])
+  @@index([assignedToId])
+  @@index([createdAt])
+  @@map("tickets")
+}
+
+model TicketMessage {
+  id        String   @id @default(cuid())
+  ticketId  String
+  authorId  String
+  body      String   @db.Text
+  isStaff   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  ticket      Ticket             @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author      User               @relation(fields: [authorId], references: [id])
+  attachments TicketAttachment[]
+
+  @@index([ticketId])
+  @@index([createdAt])
+  @@map("ticket_messages")
+}
+
+model TicketAttachment {
+  id           String   @id @default(cuid())
+  ticketId     String
+  messageId    String?
+  uploadedById String
+  fileName     String
+  mimeType     String
+  sizeBytes    Int
+  storageKey   String
+  createdAt    DateTime @default(now())
+
+  ticket     Ticket         @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  message    TicketMessage? @relation(fields: [messageId], references: [id], onDelete: SetNull)
+  uploadedBy User           @relation(fields: [uploadedById], references: [id])
+
+  @@index([ticketId])
+  @@map("ticket_attachments")
+}
+
+model TicketAssignment {
+  id           String   @id @default(cuid())
+  ticketId     String
+  assigneeId   String
+  assignedById String
+  createdAt    DateTime @default(now())
+
+  ticket     Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  assignee   User   @relation("AssignmentAssignee", fields: [assigneeId], references: [id])
+  assignedBy User   @relation("AssignmentAssigner", fields: [assignedById], references: [id])
+
+  @@index([ticketId])
+  @@map("ticket_assignments")
+}
+
+model InternalNote {
+  id        String   @id @default(cuid())
+  ticketId  String?
+  orderId   String?
+  authorId  String
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+
+  ticket Ticket? @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  order  Order?  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  author User    @relation("InternalNoteAuthor", fields: [authorId], references: [id])
+
+  @@index([ticketId])
+  @@index([orderId])
+  @@map("internal_notes")
+}
+
+model RefundRequest {
+  id          String       @id @default(cuid())
+  orderId     String
+  userId      String
+  ticketId    String?
+  reason      RefundReason
+  description String       @db.Text
+  status      RefundStatus @default(REQUESTED)
+  reviewerId  String?
+  reviewNote  String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  resolvedAt  DateTime?
+
+  order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user     User    @relation("RefundCustomer", fields: [userId], references: [id])
+  ticket   Ticket? @relation(fields: [ticketId], references: [id])
+  reviewer User?   @relation("RefundReviewer", fields: [reviewerId], references: [id])
+
+  @@index([status])
+  @@index([orderId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("refund_requests")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String
+  href      String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+enum TicketCategory {
+  ORDER_SUPPORT
+  PAYMENT_ISSUE
+  REFUND_REQUEST
+  TECHNICAL_ISSUE
+  ACCOUNT_ISSUE
+  OTHER
+}
+
+enum TicketStatus {
+  NEW
+  OPEN
+  WAITING_CUSTOMER
+  WAITING_STAFF
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum RefundStatus {
+  REQUESTED
+  REVIEWING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+enum RefundReason {
+  NOT_WORKING
+  WRONG_PRODUCT
+  PAYMENT_ISSUE
+  OTHER
+}
+
+enum NotificationType {
+  ORDER_CREATED
+  TICKET_CREATED
+  STAFF_REPLIED
+  REFUND_UPDATED
+  ORDER_COMPLETED
+  NEW_ORDER_STAFF
+  NEW_TICKET_STAFF
+  REFUND_REQUEST_STAFF
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Admin
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -426,7 +676,7 @@ model AdminNote {
   userId    String?
   authorId  String
   body      String   @db.Text
-  internal  Boolean  @default(true) // false = visible to customer
+  internal  Boolean  @default(true)
   createdAt DateTime @default(now())
 
   order  Order? @relation(fields: [orderId], references: [id])
@@ -437,11 +687,11 @@ model AdminNote {
 
 model AuditLog {
   id         String   @id @default(cuid())
-  actorId    String   // admin user who performed the action
-  action     String   // e.g. "order.status.update"
-  targetType String?  // e.g. "Order"
+  actorId    String
+  action     String
+  targetType String?
   targetId   String?
-  meta       Json?    // before/after values
+  meta       Json?
   ip         String?
   userAgent  String?
   createdAt  DateTime @default(now())

@@ -3,18 +3,20 @@
 import { useTransition } from "react";
 import { updateOrderStatus } from "@/app/actions/admin/orders";
 import { Button } from "@/components/ui/button";
-import type { OrderStatus, PaymentStatus } from "@prisma/client";
+import type { DeliveryStatus, OrderStatus, PaymentStatus } from "@prisma/client";
 
 type Props = {
   orderId: string;
   currentStatus: OrderStatus;
   currentPaymentStatus: PaymentStatus;
+  currentDeliveryStatus?: DeliveryStatus;
 };
 
 export default function OrderStatusForm({
   orderId,
   currentStatus,
   currentPaymentStatus,
+  currentDeliveryStatus = "PENDING",
 }: Props) {
   const [isPending, startTransition] = useTransition();
 
@@ -36,7 +38,7 @@ export default function OrderStatusForm({
         Update order
       </h2>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
           <label className="text-xs font-medium text-white/50 uppercase tracking-wider">
             Order status
@@ -63,6 +65,21 @@ export default function OrderStatusForm({
             disabled={isPending}
           >
             {(["UNPAID", "PENDING", "PAID", "FAILED", "REFUNDED"] as PaymentStatus[]).map((s) => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-white/50 uppercase tracking-wider">
+            Delivery
+          </label>
+          <select
+            name="deliveryStatus"
+            defaultValue={currentDeliveryStatus}
+            className="h-10 w-full rounded-xl border border-white/10 bg-black/20 px-3 text-sm text-white"
+            disabled={isPending}
+          >
+            {(["PENDING", "PROCESSING", "DELIVERED", "FAILED"] as DeliveryStatus[]).map((s) => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>

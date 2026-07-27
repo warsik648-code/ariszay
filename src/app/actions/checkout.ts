@@ -4,18 +4,24 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { getServerSession } from "@/lib/auth-server";
 import { getCheatReferralUrl } from "@/config/ref-links";
+import { nextOrderNumber } from "@/lib/support/sequences";
+import { ensureAutoOrderTicket } from "@/lib/support/tickets";
+import { createNotification, notifyStaff } from "@/lib/support/notifications";
+import { orderCreatedEmail } from "@/lib/email/templates";
 
 const checkoutSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
   email: z.string().email("Please enter a valid email"),
   discordUsername: z.string().optional(),
-  items: z.array(
-    z.object({
-      productId: z.string().cuid(),
-      planId: z.string().cuid(),
-      quantity: z.number().int().min(1).max(10),
-    }),
-  ).min(1, "Cart is empty"),
+  items: z
+    .array(
+      z.object({
+        productId: z.string().cuid(),
+        planId: z.string().cuid(),
+        quantity: z.number().int().min(1).max(10),
+      }),
+    )
+    .min(1, "Cart is empty"),
   couponCode: z.string().optional(),
   referralCode: z.string().optional(),
   agreeToTerms: z.boolean().refine((v) => v === true, {
@@ -26,7 +32,7 @@ const checkoutSchema = z.object({
 export type CheckoutInput = z.infer<typeof checkoutSchema>;
 
 export type CheckoutResult =
-  | { success: true; orderId: string; redirectUrl: string }
+  | { success: true; orderId: string; orderNumber?: string; ticketNumber?: string; redirectUrl: string }
   | { success: false; error: string; fieldErrors?: Record<string, string[]> };
 
 export async function createOrder(
@@ -42,12 +48,8 @@ export async function createOrder(
   }
 
   const data = parsed.data;
-
-  // Get session (optional — guest checkout is allowed)
   const session = await getServerSession().catch(() => null);
 
-  // ── Server-side price lookup ─────────────────────────────────────────────
-  // NEVER trust prices submitted from the browser.
   const lineItems = await Promise.all(
     data.items.map(async (item) => {
       const plan = await db.productPlan.findFirst({
@@ -76,7 +78,6 @@ export async function createOrder(
     return { success: false, error: lineItems.error };
   }
 
-  // ── Coupon validation ────────────────────────────────────────────────────
   let discountAmount = 0;
   let couponRecord = null;
 
@@ -85,10 +86,7 @@ export async function createOrder(
       where: {
         code: data.couponCode.toUpperCase(),
         active: true,
-        OR: [
-          { expiresAt: null },
-          { expiresAt: { gte: new Date() } },
-        ],
+        OR: [{ expiresAt: null }, { expiresAt: { gte: new Date() } }],
       },
     });
 
@@ -120,16 +118,18 @@ export async function createOrder(
     0,
   );
   const totalAmount = Math.max(subtotal - discountAmount, 0);
+  const orderNumber = await nextOrderNumber();
 
-  // ── Create order in DB ───────────────────────────────────────────────────
   const order = await db.order.create({
     data: {
+      orderNumber,
       userId: session?.user?.id ?? null,
       guestEmail: session ? null : data.email,
       guestName: session ? null : data.name,
       discordUsername: data.discordUsername,
       status: "PENDING",
       paymentStatus: "UNPAID",
+      deliveryStatus: "PENDING",
       totalAmount,
       discountAmount,
       couponCode: data.couponCode?.toUpperCase() ?? null,
@@ -144,6 +144,15 @@ export async function createOrder(
           quantity: item.quantity,
         })),
       },
+      statusHistory: {
+        create: {
+          toStatus: "PENDING",
+          toPaymentStatus: "UNPAID",
+          toDeliveryStatus: "PENDING",
+          actorId: session?.user?.id ?? null,
+          note: "Order created",
+        },
+      },
       ...(couponRecord
         ? {
             couponUsage: {
@@ -157,7 +166,6 @@ export async function createOrder(
     },
   });
 
-  // Update coupon usage count
   if (couponRecord) {
     await db.coupon.update({
       where: { id: couponRecord.id },
@@ -165,9 +173,36 @@ export async function createOrder(
     });
   }
 
-  // ── Payment redirect ─────────────────────────────────────────────────────
-  // For now, redirect to the referral payment URL for the first item.
-  // Replace with real payment gateway (Stripe/Paddle/etc.) when ready.
+  let ticketNumber: string | undefined;
+
+  if (session?.user?.id) {
+    const ticket = await ensureAutoOrderTicket(order.id).catch(() => null);
+    ticketNumber = ticket?.ticketNumber;
+
+    const email = orderCreatedEmail({
+      name: data.name,
+      orderNumber,
+      total: totalAmount,
+    });
+    await createNotification({
+      userId: session.user.id,
+      type: "ORDER_CREATED",
+      title: `Order ${orderNumber} created`,
+      body: ticketNumber
+        ? `Your support ticket has been created (${ticketNumber}).`
+        : "Track your order in Mission Control.",
+      href: `/account/orders/${orderNumber}`,
+      email: { to: session.user.email, ...email },
+    });
+  }
+
+  await notifyStaff({
+    type: "NEW_ORDER_STAFF",
+    title: `New order ${orderNumber}`,
+    body: `${data.email} — $${totalAmount.toFixed(2)}`,
+    href: `/admin/orders/${order.id}`,
+  });
+
   const firstItem = lineItems[0];
   if (firstItem) {
     const product = await db.product.findUnique({
@@ -175,28 +210,39 @@ export async function createOrder(
       include: { game: { select: { slug: true } } },
     });
 
-    // If it's a cheat product with a game, use referral URL
     if (product?.game?.slug) {
-      // Map product slug to the ref-links config
-      const tierFromSlug = product.slug?.split("-").pop() as "xray" | "pro" | "private" | undefined;
+      const tierFromSlug = product.slug?.split("-").pop() as
+        | "xray"
+        | "pro"
+        | "private"
+        | undefined;
       if (tierFromSlug) {
         const referralUrl = getCheatReferralUrl(
           product.game.slug as "isle" | "naraka",
           tierFromSlug,
         );
+        const successUrl = `/checkout/success?orderId=${order.id}&orderNumber=${orderNumber}${
+          ticketNumber ? `&ticketNumber=${ticketNumber}` : ""
+        }`;
         return {
           success: true,
           orderId: order.id,
-          redirectUrl: referralUrl,
+          orderNumber,
+          ticketNumber,
+          // Prefer in-app success so customers see ticket confirmation; keep referral as secondary path via success page CTA later
+          redirectUrl: successUrl || referralUrl,
         };
       }
     }
   }
 
-  // Fallback: redirect to success page
   return {
     success: true,
     orderId: order.id,
-    redirectUrl: `/checkout/success?orderId=${order.id}`,
+    orderNumber,
+    ticketNumber,
+    redirectUrl: `/checkout/success?orderId=${order.id}&orderNumber=${orderNumber}${
+      ticketNumber ? `&ticketNumber=${ticketNumber}` : ""
+    }`,
   };
 }

@@ -29,7 +29,7 @@ export default async function OrderDetailPage({
 
   if (!order) notFound();
 
-  const canEdit = role === "OWNER" || role === "ADMIN" || role === "SUPPORT";
+  const canEdit = role === "OWNER" || role === "ADMIN";
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -151,6 +151,7 @@ export default async function OrderDetailPage({
           orderId={order.id}
           currentStatus={order.status}
           currentPaymentStatus={order.paymentStatus}
+          currentDeliveryStatus={order.deliveryStatus}
         />
       )}
 

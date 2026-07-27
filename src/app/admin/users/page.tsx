@@ -4,7 +4,7 @@ export default async function AdminUsersPage() {
   const users = await db.user.findMany({
     where: {
       role: {
-        in: ["ADMIN", "OWNER", "SUPPORT", "CONTENT_MANAGER", "ANALYST"],
+        in: ["ADMIN", "OWNER", "SUPPORT_AGENT", "SUPPORT_MANAGER", "CONTENT_MANAGER", "ANALYST"],
       },
     },
     orderBy: { createdAt: "desc" },
@@ -13,7 +13,8 @@ export default async function AdminUsersPage() {
   const roleColors: Record<string, string> = {
     OWNER: "text-yellow-400 bg-yellow-500/10",
     ADMIN: "text-primary bg-primary/10",
-    SUPPORT: "text-blue-400 bg-blue-500/10",
+    SUPPORT_AGENT: "text-blue-400 bg-blue-500/10",
+    SUPPORT_MANAGER: "text-cyan-400 bg-cyan-500/10",
     CONTENT_MANAGER: "text-purple-400 bg-purple-500/10",
     ANALYST: "text-white/50 bg-white/5",
   };

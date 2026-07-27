@@ -1,0 +1,11 @@
+-- Support & Order Management System
+-- Applied via prisma db push; this file documents the additive schema change.
+--
+-- Roles: SUPPORT -> SUPPORT_AGENT; added SUPPORT_MANAGER
+-- New: SequenceCounter, OrderStatusHistory, Ticket*, InternalNote, RefundRequest, Notification
+-- Order: +orderNumber, +deliveryStatus
+
+-- Pre-steps (already run on existing DBs):
+-- ALTER TYPE "UserRole" ADD VALUE IF NOT EXISTS 'SUPPORT_AGENT';
+-- ALTER TYPE "UserRole" ADD VALUE IF NOT EXISTS 'SUPPORT_MANAGER';
+-- UPDATE users SET role = 'SUPPORT_AGENT' WHERE role::text = 'SUPPORT';
