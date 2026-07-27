@@ -10,7 +10,7 @@
  */
 
 import { PrismaClient, UserRole } from "@prisma/client";
-import { hash } from "bcryptjs";
+import { hashPassword } from "better-auth/crypto";
 
 const prisma = new PrismaClient();
 
@@ -215,11 +215,15 @@ async function main() {
   const adminName = process.env.SEED_ADMIN_NAME ?? "Admin";
 
   if (adminEmail && adminPassword) {
-    const hashedPassword = await hash(adminPassword, 12);
+    const hashedPassword = await hashPassword(adminPassword);
 
     const admin = await prisma.user.upsert({
       where: { email: adminEmail },
-      update: {},
+      update: {
+        name: adminName,
+        emailVerified: true,
+        role: UserRole.OWNER,
+      },
       create: {
         email: adminEmail,
         name: adminName,
