@@ -20,7 +20,8 @@
     "db:seed": "dotenv -e .env.local -- tsx prisma/seed.ts",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset --force && pnpm db:seed",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "verify:support": "dotenv -e .env.local -- tsx scripts/verify-support-system.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.11.1",

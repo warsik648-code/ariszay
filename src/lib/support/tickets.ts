@@ -178,19 +178,10 @@ export async function addTicketReply(input: {
     },
   });
 
-  const nextStatus: TicketStatus = input.isStaff
-    ? "WAITING_CUSTOMER"
-    : "WAITING_STAFF";
-
   await db.ticket.update({
     where: { id: input.ticketId },
     data: {
-      status:
-        ticket.status === "NEW" || ticket.status === "CLOSED" || ticket.status === "RESOLVED"
-          ? input.isStaff
-            ? "WAITING_CUSTOMER"
-            : "OPEN"
-          : nextStatus,
+      status: input.isStaff ? "WAITING_CUSTOMER" : "WAITING_STAFF",
       updatedAt: new Date(),
       closedAt: null,
     },

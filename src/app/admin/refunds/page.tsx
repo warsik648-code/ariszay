@@ -1,13 +1,18 @@
+import { redirect } from "next/navigation";
+import Link from "next/link";
 import { db } from "@/lib/db";
-import { requireCapability } from "@/lib/permissions";
+import { getSessionRole } from "@/lib/auth-server";
+import { roleHasCapability } from "@/lib/permissions";
 import { formatMadridDateShort } from "@/lib/support/datetime";
 import { refundReasonLabel, refundStatusLabel } from "@/lib/support/labels";
 import { staffReviewRefund } from "@/app/actions/support/refunds";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export default async function AdminRefundsPage() {
-  await requireCapability("refunds:review");
+  const role = await getSessionRole();
+  if (!role || !roleHasCapability(role, "refunds:review")) {
+    redirect("/admin");
+  }
 
   const refunds = await db.refundRequest.findMany({
     orderBy: { createdAt: "desc" },

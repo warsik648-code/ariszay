@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
 import type { OrderStatus, PaymentStatus } from "@prisma/client";
+import { formatMadridDateShort } from "@/lib/support/datetime";
 
 type SearchParams = {
   status?: OrderStatus;
@@ -176,7 +177,7 @@ export default async function AdminOrdersPage({
                       </span>
                     </td>
                     <td className="px-4 py-3 text-white/40">
-                      {order.createdAt.toLocaleDateString()}
+                      {formatMadridDateShort(order.createdAt)}
                     </td>
                   </tr>
                 ))

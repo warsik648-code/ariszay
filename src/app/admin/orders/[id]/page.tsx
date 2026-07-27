@@ -1,8 +1,9 @@
-import { notFound } from "next/navigation";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { getSessionRole } from "@/lib/auth-server";
 import OrderStatusForm from "@/components/admin/order-status-form";
+import { formatMadridDate } from "@/lib/support/datetime";
 
 export default async function OrderDetailPage({
   params,
@@ -73,12 +74,12 @@ export default async function OrderDetailPage({
             )}
             <div className="flex justify-between">
               <dt className="text-white/40">Created</dt>
-              <dd className="text-white/70">{order.createdAt.toLocaleString()}</dd>
+              <dd className="text-white/70">{formatMadridDate(order.createdAt)}</dd>
             </div>
             {order.deliveredAt && (
               <div className="flex justify-between">
                 <dt className="text-white/40">Delivered</dt>
-                <dd className="text-emerald-400">{order.deliveredAt.toLocaleString()}</dd>
+                <dd className="text-emerald-400">{formatMadridDate(order.deliveredAt)}</dd>
               </div>
             )}
             {order.couponCode && (
