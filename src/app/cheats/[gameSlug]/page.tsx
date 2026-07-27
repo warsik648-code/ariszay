@@ -25,8 +25,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const game = getGameByCheatsSlug(gameSlug);
   if (!game) return {};
   return {
-    title: `${game.name} Cheats — Xray, Pro & Private Tiers`,
-    description: `Browse all ArisZay software tiers for ${game.name}.`,
+    title: `${game.name} Cheats — ESP, Aim Assist & Aimbot`,
+    description: `Buy ${game.name} cheats: Xray ESP hack, Pro aim assist, and Private aimbot. Compare features and checkout securely.`,
     alternates: { canonical: `/cheats/${game.cheatsSlug}` },
   };
 }

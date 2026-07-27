@@ -41,7 +41,7 @@ export function ProductCard({
         category={utilityCategory[product.slug] ?? "UTILITY"}
         price={product.price}
         href={`/products/${product.slug}`}
-        channel="Release"
+        channel="Updated"
         compatibility="Win 10/11"
         categoryColor="#00e5ff"
       />

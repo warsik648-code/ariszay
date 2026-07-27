@@ -26,18 +26,18 @@ export function GameCollectionCard({ game, index = 0 }: Props) {
     <article className="ind-panel ind-panel-hover group flex flex-col overflow-hidden">
       <div className="flex items-center justify-between border-b border-[rgb(242_240_235_/_0.08)] px-5 py-3">
         <span className="tech-label text-primary">{serial}</span>
-        <span className="tech-label">Collection</span>
+        <span className="tech-label">Cheats</span>
       </div>
 
       <div className="relative">
         <ModuleVisual
           code={game.cheatsSlug.toUpperCase()}
           accent={game.accent}
-          label="Facility Scan"
+          label="Cheat Suite"
         />
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#111] via-[#111]/80 to-transparent p-5 pt-16">
           <h3 className="font-display text-4xl font-extrabold tracking-tight text-[#f2f0eb] uppercase sm:text-5xl">
-            {game.name}
+            {game.name} Cheats
           </h3>
           <p className="mt-1 font-mono text-xs tracking-[0.2em] text-[rgb(242_240_235_/_0.4)] uppercase">
             {game.tagline}
@@ -46,9 +46,9 @@ export function GameCollectionCard({ game, index = 0 }: Props) {
       </div>
 
       <div className="grid grid-cols-3 gap-px bg-[rgb(242_240_235_/_0.08)]">
-        <SpecChip label="Modules" value={String(game.productCount)} accent />
+        <SpecChip label="Cheats" value={String(game.productCount)} accent />
         <SpecChip label="From" value={`$${game.startingPrice.toFixed(2)}`} />
-        <SpecChip label="Channel" value="STABLE" />
+        <SpecChip label="Status" value="LIVE" />
       </div>
 
       <div className="flex flex-col divide-y divide-[rgb(242_240_235_/_0.08)]">
@@ -76,7 +76,7 @@ export function GameCollectionCard({ game, index = 0 }: Props) {
           className="h-11 w-full rounded-none bg-primary font-display text-sm font-bold tracking-[0.15em] text-primary-foreground uppercase hover:bg-[#d4ff33]"
         >
           <Link href={`/games/${game.slug}`}>
-            Explore Collection
+            Explore Cheats
             <ArrowUpRight className="ml-2 size-4" />
           </Link>
         </Button>

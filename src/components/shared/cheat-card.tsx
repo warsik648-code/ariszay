@@ -42,7 +42,7 @@ export function CheatCard({
       {featured && (
         <div className="border-b border-[rgb(255_92_0_/_0.2)] bg-[rgb(255_92_0_/_0.06)] px-5 py-2">
           <span className="font-mono text-[10px] font-semibold tracking-[0.15em] text-[#ff5c00] uppercase">
-            Flagship
+            Most Popular
           </span>
         </div>
       )}
@@ -54,7 +54,7 @@ export function CheatCard({
         href={cheatUrl}
         productCode={productCode}
         status={cheat.status}
-        channel="Release"
+        channel="Updated"
         compatibility="Win 10/11"
         categoryColor={cfg.color}
       />

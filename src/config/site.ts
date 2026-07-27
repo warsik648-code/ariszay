@@ -4,9 +4,9 @@ import { env } from "@/env";
 
 export const siteConfig = {
   name: "ArisZay",
-  tagline: "Gaming Enhancement Software",
+  tagline: "Premium Game Cheats & ESP",
   description:
-    "Enhancement software for The Isle and Naraka: Bladepoint. Clear product status, instant delivery, and written setup guides included.",
+    "Buy premium game cheats for The Isle and Naraka: Bladepoint — ESP, aim assist, and private aimbot tiers. Instant delivery, live status, and setup guides.",
   url: env.NEXT_PUBLIC_SITE_URL,
 } as const;
 

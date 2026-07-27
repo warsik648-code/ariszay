@@ -37,7 +37,7 @@ export function MarketplaceProductCard({ cheat, game, featured = false }: Props)
         <div className="flex items-center gap-2">
           {featured && (
             <span className="font-mono text-[9px] tracking-[0.15em] text-[#ff5c00] uppercase">
-              Flagship
+              Most Popular
             </span>
           )}
           <StatusBadge status={cheat.status} compact />
@@ -52,7 +52,7 @@ export function MarketplaceProductCard({ cheat, game, featured = false }: Props)
         price={cheat.price}
         href={detailUrl}
         status={cheat.status}
-        channel="Release"
+        channel="Updated"
         compatibility="Win 10/11"
         categoryColor={cfg.color}
         className="border-t border-[rgb(242_240_235_/_0.08)]"

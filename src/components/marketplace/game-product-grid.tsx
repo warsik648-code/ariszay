@@ -114,7 +114,7 @@ export function GameProductGrid({ cheats, games, showGameFilter = false }: Props
       </div>
 
       <p className="font-mono text-[10px] tracking-[0.2em] text-[rgb(242_240_235_/_0.3)] uppercase">
-        {filtered.length} modules listed
+        Showing {filtered.length} {filtered.length === 1 ? "cheat" : "cheats"}
       </p>
 
       {filtered.length > 0 ? (
@@ -134,7 +134,7 @@ export function GameProductGrid({ cheats, games, showGameFilter = false }: Props
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center gap-3 border border-dashed border-[rgb(242_240_235_/_0.15)] py-16 text-center">
-          <p className="text-sm text-[rgb(242_240_235_/_0.4)]">No modules match filters.</p>
+          <p className="text-sm text-[rgb(242_240_235_/_0.4)]">No cheats match filters.</p>
           <Button
             variant="outline"
             size="sm"

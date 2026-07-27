@@ -15,16 +15,16 @@ export function SiteFooter() {
             Aris<span className="text-primary">Zay</span>
           </Link>
           <p className="max-w-sm text-sm leading-relaxed text-[rgb(242_240_235_/_0.45)]">
-            Classified technology marketplace for advanced gaming software systems.
-            Spec-driven. Status-monitored. Instant delivery.
+            Premium game cheats for The Isle and Naraka: Bladepoint — ESP, aim assist, and private
+            aimbot tiers with instant delivery and live product status.
           </p>
           <p className="font-mono text-[10px] tracking-[0.3em] text-[rgb(242_240_235_/_0.25)] uppercase">
-            AZ-MKPL-2026 · REV.04
+            Game Cheats · ESP · Aimbot
           </p>
         </div>
 
         <div className="md:col-span-3">
-          <p className="tech-label mb-4">Collections</p>
+          <p className="tech-label mb-4">Cheats</p>
           <ul className="space-y-2.5 text-sm text-[rgb(242_240_235_/_0.55)]">
             {games.map((game) => (
               <li key={game.slug}>
@@ -32,18 +32,18 @@ export function SiteFooter() {
                   href={`/games/${game.slug}`}
                   className="hover:text-primary transition-colors"
                 >
-                  {game.name}
+                  {game.shortName} Cheats
                 </Link>
               </li>
             ))}
             <li>
               <Link href="/products/ugc" className="hover:text-primary transition-colors">
-                Utility Modules
+                Utility Products
               </Link>
             </li>
             <li>
               <Link href="/blog" className="hover:text-primary transition-colors">
-                System Updates
+                Cheat Guides
               </Link>
             </li>
           </ul>
@@ -71,7 +71,7 @@ export function SiteFooter() {
         </div>
 
         <div className="md:col-span-2">
-          <p className="tech-label mb-4">Channels</p>
+          <p className="tech-label mb-4">Payments</p>
           <ul className="space-y-2.5 font-mono text-xs text-[rgb(242_240_235_/_0.4)]">
             <li>VISA</li>
             <li>MC</li>
@@ -83,10 +83,10 @@ export function SiteFooter() {
 
       <div className="container-site flex flex-wrap items-center justify-between gap-3 border-t border-[rgb(242_240_235_/_0.06)] py-6">
         <p className="font-mono text-[10px] tracking-wider text-[rgb(242_240_235_/_0.3)] uppercase">
-          © {year} {siteConfig.name} · All systems reserved
+          © {year} {siteConfig.name}. All rights reserved.
         </p>
         <p className="font-mono text-[10px] tracking-wider text-[rgb(242_240_235_/_0.25)] uppercase">
-          Status: Operational
+          Status: Available
         </p>
       </div>
     </footer>

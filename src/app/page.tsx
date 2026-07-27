@@ -54,10 +54,10 @@ export default function HomePage() {
               Aris<span className="text-primary">Zay</span>
             </p>
             <h1 className="font-display max-w-3xl text-3xl font-bold tracking-tight text-[rgb(242_240_235_/_0.85)] uppercase sm:text-5xl lg:text-6xl">
-              Classified technology for competitive systems
+              Premium game cheats, ESP &amp; aimbot software
             </h1>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-[rgb(242_240_235_/_0.5)] sm:text-lg">
-              Precision software modules for The Isle and Naraka — engineered like hardware, delivered instantly.
+              Buy The Isle and Naraka cheats — Xray ESP, Pro aim assist, and Private aimbot. Instant delivery. Live status on every product.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button
@@ -66,7 +66,7 @@ export default function HomePage() {
                 className="h-12 rounded-none bg-primary px-8 font-display text-sm font-bold tracking-[0.18em] text-primary-foreground uppercase hover:bg-[#d4ff33]"
               >
                 <Link href={`/games/${games[0].slug}`}>
-                  Enter Marketplace
+                  Browse Cheats
                   <ArrowUpRight className="ml-2 size-4" />
                 </Link>
               </Button>
@@ -76,17 +76,17 @@ export default function HomePage() {
                 variant="outline"
                 className="h-12 rounded-none border-[rgb(242_240_235_/_0.2)] bg-transparent px-8 font-display text-sm tracking-[0.18em] uppercase hover:border-primary hover:bg-transparent hover:text-primary"
               >
-                <Link href={`/cheats/${games[0].cheatsSlug}`}>View Modules</Link>
+                <Link href={`/cheats/${games[0].cheatsSlug}`}>View Isle Cheats</Link>
               </Button>
             </div>
           </FadeIn>
 
           <div className="mt-14 grid grid-cols-2 gap-px border border-[rgb(242_240_235_/_0.1)] bg-[rgb(242_240_235_/_0.1)] sm:grid-cols-4">
             {[
-              { k: "Modules", v: String(totalProducts) },
-              { k: "Collections", v: String(gamesWithProducts.length) },
+              { k: "Cheats", v: String(totalProducts) },
+              { k: "Games", v: String(gamesWithProducts.length) },
               { k: "Delivery", v: "Instant" },
-              { k: "Status", v: "Online" },
+              { k: "Status", v: "Live" },
             ].map(({ k, v }) => (
               <div key={k} className="bg-[#0a0a0a]/90 px-4 py-4 backdrop-blur-sm">
                 <p className="tech-label mb-1">{k}</p>
@@ -103,9 +103,9 @@ export default function HomePage() {
       <section className="container-site py-24">
         <SectionHeading
           index="01"
-          label="Featured Collections"
-          title="Technology Collections"
-          description="Each collection is a full suite of hardware-grade software modules. Select a platform to explore every available unit."
+          label="Game Cheats"
+          title="Cheat Collections"
+          description="Browse ESP, aim assist, and private aimbot cheats by game. Every tier is a separate product you can buy."
         />
         <StaggerChildren className="grid gap-6 lg:grid-cols-2">
           {gamesWithProducts.map((game, i) => (
@@ -121,9 +121,9 @@ export default function HomePage() {
         <div className="container-site">
           <SectionHeading
             index="02"
-            label="Featured Technology"
-            title="Active Modules"
-            description="Every purchasable unit across all collections — presented as premium hardware."
+            label="Featured Cheats"
+            title="ESP, Aim Assist &amp; Aimbot"
+            description="Every cheat tier across both games — Xray ESP, Pro aim, and Private aimbot."
           />
           {gamesWithProducts.map((gp) => (
             <div key={gp.slug} className="mb-16 last:mb-0">
@@ -132,10 +132,10 @@ export default function HomePage() {
                   <span className="h-8 w-1 bg-primary" />
                   <div>
                     <h3 className="font-display text-2xl font-bold tracking-tight uppercase">
-                      {gp.name}
+                      {gp.name} Cheats
                     </h3>
                     <p className="font-mono text-[10px] tracking-[0.25em] text-[rgb(242_240_235_/_0.35)] uppercase">
-                      {gp.productCount} modules · from ${gp.startingPrice.toFixed(2)}
+                      {gp.productCount} cheats · from ${gp.startingPrice.toFixed(2)}/mo
                     </p>
                   </div>
                 </div>
@@ -146,7 +146,7 @@ export default function HomePage() {
                   className="rounded-none border-[rgb(242_240_235_/_0.15)] font-mono text-[10px] tracking-[0.15em] uppercase"
                 >
                   <Link href={`/games/${gp.slug}`}>
-                    Full collection
+                    All {gp.shortName} cheats
                     <ArrowUpRight className="ml-1.5 size-3.5" />
                   </Link>
                 </Button>
@@ -170,9 +170,9 @@ export default function HomePage() {
       <section className="container-site py-24">
         <SectionHeading
           index="03"
-          label="Marketplace"
-          title="Utility Systems"
-          description="Standalone infrastructure tools that pair with any collection."
+          label="Products"
+          title="Utility Tools &amp; Hacks"
+          description="Account tools, spoofers, skin changers, and DMA utilities that pair with your cheats."
         />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product, i) => {
@@ -199,7 +199,7 @@ export default function HomePage() {
                   category={categories[product.slug] ?? "UTILITY"}
                   price={product.price}
                   href={`/products/${product.slug}`}
-                  channel="Release"
+                  channel="Stable"
                   compatibility="Win 10/11"
                   categoryColor="#00e5ff"
                 />
@@ -228,35 +228,35 @@ export default function HomePage() {
         <div className="container-site">
           <SectionHeading
             index="04"
-            label="Technical Specifications"
-            title="Acquisition Protocol"
-            description="Four steps from selection to deployment."
+            label="How it works"
+            title="How to buy cheats"
+            description="From picking your ESP or aimbot tier to launching in-game."
           />
           <div className="grid gap-px border border-[rgb(242_240_235_/_0.1)] bg-[rgb(242_240_235_/_0.1)] sm:grid-cols-2 lg:grid-cols-4">
             {[
               {
                 num: "01",
                 icon: Boxes,
-                title: "Select Module",
-                body: "Browse collections. Compare Xray, Pro, and Private specification sheets.",
+                title: "Choose a cheat",
+                body: "Pick The Isle or Naraka. Compare Xray ESP, Pro aim assist, and Private aimbot.",
               },
               {
                 num: "02",
                 icon: Gauge,
-                title: "Authorize Payment",
-                body: "Secure checkout through payment partners. Monthly or lifetime licensing.",
+                title: "Checkout secure",
+                body: "Pay monthly or lifetime. Cards, crypto, and regional methods supported.",
               },
               {
                 num: "03",
                 icon: Radio,
-                title: "Receive License",
-                body: "Key and setup documentation transmitted to email and account dashboard.",
+                title: "Get your key",
+                body: "License and setup guide sent to email and your account dashboard.",
               },
               {
                 num: "04",
                 icon: Zap,
-                title: "Deploy System",
-                body: "Follow the written protocol. Support included with every acquisition.",
+                title: "Launch & play",
+                body: "Follow the guide. Support included — Private customers get a direct channel.",
               },
             ].map(({ num, icon: Icon, title, body }) => (
               <div key={num} className="relative bg-[#0e0e0e] p-6">
@@ -276,27 +276,27 @@ export default function HomePage() {
       <section className="container-site py-24">
         <SectionHeading
           index="05"
-          label="Advantages"
-          title="System Advantages"
-          description="Built for operators who require stability and transparent status."
+          label="Why ArisZay"
+          title="Why buy cheats here"
+          description="Built for players who want clear status, fast delivery, and real support."
         />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             {
-              title: "Live Status",
-              body: "Each module displays real-time availability. Updated after every relevant game patch.",
+              title: "Live cheat status",
+              body: "Each ESP and aimbot page shows current availability — updated after game patches.",
             },
             {
-              title: "Instant Delivery",
-              body: "License and setup guide transmitted immediately after payment confirmation.",
+              title: "Instant delivery",
+              body: "License key and setup guide sent right after payment confirmation.",
             },
             {
-              title: "Support Channel",
-              body: "Written guides included. Private tier operators receive a dedicated channel.",
+              title: "Setup support",
+              body: "Guides included with every cheat. Private aimbot buyers get a direct support channel.",
             },
             {
-              title: "Secure Checkout",
-              body: "Payments handled by established partners — cards, crypto, and regional methods.",
+              title: "Secure checkout",
+              body: "Cards, crypto, and regional payment methods through trusted partners.",
             },
           ].map((item, i) => (
             <div key={item.title} className="ind-panel p-6">
@@ -320,8 +320,8 @@ export default function HomePage() {
           <div className="mb-10 flex items-end justify-between gap-4">
             <SectionHeading
               index="06"
-              label="Latest Updates"
-              title="System Briefings"
+              label="Guides"
+              title="Cheat guides &amp; updates"
               className="mb-0"
             />
             <Button
@@ -331,7 +331,7 @@ export default function HomePage() {
               className="shrink-0 rounded-none border-[rgb(242_240_235_/_0.15)] font-mono text-[10px] tracking-[0.15em] uppercase"
             >
               <Link href="/blog">
-                All updates
+                All guides
                 <ArrowUpRight className="ml-1 size-3.5" />
               </Link>
             </Button>
@@ -358,7 +358,7 @@ export default function HomePage() {
                     size="sm"
                     className="rounded-none border-[rgb(242_240_235_/_0.12)] font-display text-xs tracking-wider uppercase"
                   >
-                    <Link href={`/blog/${post.slug}`}>Read briefing</Link>
+                    <Link href={`/blog/${post.slug}`}>Read guide</Link>
                   </Button>
                 </div>
               </article>
@@ -371,16 +371,16 @@ export default function HomePage() {
       <section id="faq" className="container-site scroll-mt-24 py-24">
         <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
           <div>
-            <SectionHeading index="07" label="FAQ" title="Operations FAQ" />
+            <SectionHeading index="07" label="FAQ" title="Cheat FAQ" />
             <div className="max-w-3xl">
               <FaqAccordion items={faqs} />
             </div>
           </div>
           <aside className="ind-panel h-fit p-6">
-            <p className="tech-label mb-3">Support Channel</p>
-            <h3 className="font-display text-2xl font-bold uppercase">Need assistance?</h3>
+            <p className="tech-label mb-3">Support</p>
+            <h3 className="font-display text-2xl font-bold uppercase">Need help?</h3>
             <p className="mt-3 text-sm leading-relaxed text-[rgb(242_240_235_/_0.45)]">
-              Review the FAQ or open a product specification sheet for setup and compatibility data.
+              Check the FAQ or open a cheat product page for ESP features, aim settings, and system requirements.
             </p>
             <p className="mt-4 font-mono text-[10px] tracking-wider text-[rgb(242_240_235_/_0.3)] uppercase">
               Typical response · &lt; 24h
@@ -401,14 +401,14 @@ export default function HomePage() {
       <section className="border-t border-[rgb(242_240_235_/_0.08)] py-20">
         <div className="container-site">
           <div className="ind-panel mx-auto max-w-2xl p-8 text-center sm:p-12">
-            <p className="tech-label mb-3">Transmission</p>
+            <p className="tech-label mb-3">Newsletter</p>
             <h2 className="font-display text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">
-              Stay ahead of patches
+              Cheat updates &amp; patch news
             </h2>
             <p className="mt-3 text-sm text-[rgb(242_240_235_/_0.45)]">
-              Receive status updates when modules revise or new collections launch.
+              Get notified when ESP or aimbot status changes and when new cheats launch.
             </p>
-            <NewsletterForm emailPlaceholder="operator@email.com" subscribeLabel="Subscribe" />
+            <NewsletterForm emailPlaceholder="you@email.com" subscribeLabel="Subscribe" />
           </div>
         </div>
       </section>

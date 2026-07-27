@@ -61,18 +61,19 @@ const systemRequirementsByTier: Record<
 const descriptions: Record<GameSlug, Record<CheatTier, string>> = {
   isle: {
     xray:
-      "Essential ESP for The Isle Evrima. See every dinosaur and player through terrain, track health bars, distances, and loot values — all through a lightweight external overlay.",
+      "The Isle Evrima ESP hack — see dinosaurs and players through terrain, track health, distance, and loot with a lightweight external overlay.",
     pro:
-      "Aim Assist + Full ESP for competitive dominance. Includes everything in Xray plus a full aim assist suite, trigger bot, advanced player filtering, and multi-box ESP types.",
+      "The Isle aim assist cheat with full ESP. Includes Xray features plus aim assist, trigger bot, player filters, and multi-box ESP.",
     private:
-      "Full aimbot, radar, and private-grade everything. Every feature from Xray and Pro, plus full aimbot with custom hitbox selection, drone ESP, 2D radar, stream-safe mode, and direct support channel access.",
+      "The Isle private aimbot with radar and full ESP. Every Xray and Pro feature, plus aimbot hitbox control, drone ESP, 2D radar, and stream-safe mode.",
   },
   naraka: {
     xray:
-      "Overlay tools for Naraka: Bladepoint focused on situational awareness and positioning.",
-    pro: "Competitive toolkit with aim assistance, trigger tools, and hostile filters.",
+      "Naraka: Bladepoint ESP hack — see players through walls, track distance and health, and read the fight before you engage.",
+    pro:
+      "Naraka aim assist cheat with full ESP. Includes aim help, trigger tools, player filters, and competitive awareness features.",
     private:
-      "Complete suite for Naraka with aimbot controls, radar, and stream-capture exclusion.",
+      "Naraka private aimbot with radar, full ESP, stream-safe mode, and advanced aim controls for every match.",
   },
 };
 

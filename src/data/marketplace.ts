@@ -19,21 +19,21 @@ export type TierConfig = {
 export const tierConfig: Record<string, TierConfig> = {
   xray: {
     label: "XRAY",
-    subtitle: "CORE ESP",
+    subtitle: "ESP HACK",
     color: "#00e5ff",
     badgeClass: "border-[rgb(0_229_255_/_0.35)] bg-[rgb(0_229_255_/_0.08)] text-[#00e5ff]",
     glowColor: "rgba(0,229,255,0.12)",
   },
   pro: {
     label: "PRO",
-    subtitle: "AIM ASSIST",
+    subtitle: "AIM HACK",
     color: "#c8ff00",
     badgeClass: "border-[rgb(200_255_0_/_0.35)] bg-[rgb(200_255_0_/_0.08)] text-[#c8ff00]",
     glowColor: "rgba(200,255,0,0.12)",
   },
   private: {
     label: "PRIVATE",
-    subtitle: "FULL AIMBOT",
+    subtitle: "AIMBOT",
     color: "#ff5c00",
     badgeClass: "border-[rgb(255_92_0_/_0.4)] bg-[rgb(255_92_0_/_0.08)] text-[#ff5c00]",
     glowColor: "rgba(255,92,0,0.12)",

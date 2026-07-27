@@ -30,11 +30,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!game || !validTiers.includes(tier as CheatTier)) return {};
   const cheat = getCheatByGameAndTier(game.slug, tier as CheatTier);
   if (!cheat) return {};
+  const tierSeo: Record<CheatTier, string> = {
+    xray: "ESP Hack",
+    pro: "Aim Assist Cheat",
+    private: "Private Aimbot",
+  };
+  const seoLabel = tierSeo[tier as CheatTier];
   return {
-    title: `${cheat.name} — ${game.name} ${tier.charAt(0).toUpperCase() + tier.slice(1)} Cheats`,
+    title: `${cheat.name} — ${game.name} ${seoLabel}`,
     description: cheat.description,
     alternates: { canonical: `/cheats/${game.cheatsSlug}/${tier}` },
-    openGraph: { title: cheat.name, description: cheat.description },
+    openGraph: { title: `${cheat.name} | ${game.name} ${seoLabel}`, description: cheat.description },
   };
 }
 
@@ -92,10 +98,10 @@ export default async function CheatDetailPage({ params }: PageProps) {
         <p className="max-w-2xl text-lg leading-relaxed text-white/60 mb-6">{cheat.description}</p>
         <div className="flex flex-wrap gap-3">
           <Button asChild size="lg" className="rounded-xl">
-            <Link href={checkoutUrl}>Get {cheat.name}<ArrowRight className="ml-1.5 size-4" /></Link>
+            <Link href={checkoutUrl}>Buy {cheat.name}<ArrowRight className="ml-1.5 size-4" /></Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="rounded-xl">
-            <Link href={`/cheats/${game.cheatsSlug}`}>View All {game.shortName} Tiers</Link>
+            <Link href={`/cheats/${game.cheatsSlug}`}>View All {game.shortName} Cheats</Link>
           </Button>
         </div>
       </section>
@@ -126,7 +132,7 @@ export default async function CheatDetailPage({ params }: PageProps) {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-bold text-white mb-2">Get {cheat.name}</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">Buy {cheat.name}</h2>
         <p className="text-white/50 mb-6 text-sm">Monthly &amp; Lifetime options available · Instant delivery after purchase.</p>
         <div className="grid gap-4 sm:grid-cols-2 max-w-xl">
           {cheat.price.monthly != null && (
@@ -149,7 +155,7 @@ export default async function CheatDetailPage({ params }: PageProps) {
       </section>
 
       <section className="mb-12">
-        <h2 className="text-2xl font-bold text-white mb-6">How to Get Started</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">How to buy this cheat</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {howToSteps.map((step) => (
             <div key={step.num} className="rounded-2xl border border-white/10 bg-[#0d1117] p-5">
@@ -160,7 +166,7 @@ export default async function CheatDetailPage({ params }: PageProps) {
           ))}
         </div>
         <div className="mt-5">
-          <Button asChild className="rounded-xl"><Link href={checkoutUrl}>Get Started<ArrowRight className="ml-1.5 size-4" /></Link></Button>
+          <Button asChild className="rounded-xl"><Link href={checkoutUrl}>Buy this cheat<ArrowRight className="ml-1.5 size-4" /></Link></Button>
         </div>
       </section>
 
@@ -193,7 +199,7 @@ export default async function CheatDetailPage({ params }: PageProps) {
         <SectionHeading title="Compare All Tiers" description="See exactly what each tier includes." />
         <FeatureComparisonTable gameSlug={game.slug} activeColumn={cheat.tier} />
         <div className="mt-6">
-          <Button asChild className="rounded-xl"><Link href={checkoutUrl}>View Pricing &amp; Get Your Tier<ArrowRight className="ml-1.5 size-4" /></Link></Button>
+          <Button asChild className="rounded-xl"><Link href={checkoutUrl}>Buy this cheat<ArrowRight className="ml-1.5 size-4" /></Link></Button>
         </div>
       </section>
 
@@ -219,7 +225,7 @@ export default async function CheatDetailPage({ params }: PageProps) {
             {cheat.price.monthly != null ? `$${cheat.price.monthly.toFixed(2)}/mo` : `$${cheat.price.lifetime?.toFixed(2)}`}
           </p>
           <Button asChild size="sm" className="rounded-xl">
-            <Link href={checkoutUrl}>Get {tierLabels[cheat.tier as CheatTier]}<ArrowRight className="ml-1.5 size-4" /></Link>
+            <Link href={checkoutUrl}>Buy {tierLabels[cheat.tier as CheatTier]}<ArrowRight className="ml-1.5 size-4" /></Link>
           </Button>
         </div>
       </div>

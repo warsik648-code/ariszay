@@ -26,9 +26,9 @@ const gameDetails: Record<
     lastUpdated: "2026",
     overview: [
       "The Isle is an open-world survival game set in a persistent multiplayer world where players take the role of dinosaurs competing to survive and grow.",
-      "ArisZay provides external enhancement modules for The Isle Evrima. Every unit shows a current availability status updated within hours of game patches.",
+      "ArisZay sells The Isle cheats for Evrima — ESP, aim assist, and private aimbot. Every cheat page shows current availability updated after patches.",
     ],
-    notice: "Module availability may change with game updates. Always check the status indicator before purchasing.",
+    notice: "Cheat availability may change with game updates. Always check the status badge before purchasing.",
   },
   naraka: {
     genre: "Battle royale / melee combat",
@@ -37,9 +37,9 @@ const gameDetails: Record<
     lastUpdated: "2026",
     overview: [
       "Naraka: Bladepoint is a melee-focused battle royale where players compete using martial arts, ranged weapons, and grappling mechanics.",
-      "ArisZay's Naraka modules display real-time availability and are revised to match each game build.",
+      "ArisZay Naraka cheats — ESP, aim assist, and private aimbot — show live availability and stay updated for current builds.",
     ],
-    notice: "Naraka receives frequent updates. Always verify current module status before purchase.",
+    notice: "Naraka receives frequent updates. Always verify cheat status before purchase.",
   },
 };
 
@@ -54,8 +54,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const game = getGame(slug);
   if (!game) return {};
   return {
-    title: `${game.name} Collection — Technology Modules`,
-    description: `Browse all ${game.name} enhancement modules. Compare Xray, Pro, and Private. Check availability status.`,
+    title: `${game.name} Cheats — ESP, Aim Assist & Aimbot`,
+    description: `Buy ${game.name} cheats: Xray ESP, Pro aim assist, and Private aimbot. Compare features, check status, and checkout securely.`,
     alternates: { canonical: `/games/${game.slug}` },
   };
 }
@@ -77,7 +77,7 @@ export default async function GameCollectionPage({ params }: PageProps) {
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
-          { name: `${game.name} Collection`, path: `/games/${game.slug}` },
+          { name: `${game.name} Cheats`, path: `/games/${game.slug}` },
         ])}
       />
 
@@ -98,9 +98,9 @@ export default async function GameCollectionPage({ params }: PageProps) {
 
           <div className="grid gap-10 lg:grid-cols-[1fr_300px]">
             <div>
-              <span className="tech-label text-primary mb-3 block">Technology Collection</span>
+              <span className="tech-label text-primary mb-3 block">Game Cheats</span>
               <h1 className="font-display text-5xl font-extrabold tracking-tight text-[#f2f0eb] uppercase sm:text-7xl">
-                {game.name}
+                {game.name} Cheats
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-[rgb(242_240_235_/_0.5)]">
                 {game.description}
@@ -108,9 +108,9 @@ export default async function GameCollectionPage({ params }: PageProps) {
 
               <div className="mt-8 grid max-w-lg grid-cols-3 gap-px border border-[rgb(242_240_235_/_0.1)] bg-[rgb(242_240_235_/_0.1)]">
                 {[
-                  { k: "Modules", v: String(gp.productCount) },
+                  { k: "Cheats", v: String(gp.productCount) },
                   { k: "From", v: `$${gp.startingPrice.toFixed(2)}` },
-                  { k: "Rev", v: details?.lastUpdated ?? "2026" },
+                  { k: "Updated", v: details?.lastUpdated ?? "2026" },
                 ].map(({ k, v }) => (
                   <div key={k} className="bg-[#0a0a0a]/90 px-3 py-3">
                     <p className="tech-label mb-1">{k}</p>
@@ -125,7 +125,7 @@ export default async function GameCollectionPage({ params }: PageProps) {
                   className="h-11 rounded-none bg-primary px-6 font-display text-sm font-bold tracking-[0.15em] text-primary-foreground uppercase hover:bg-[#d4ff33]"
                 >
                   <Link href={`/cheats/${game.cheatsSlug}/private`}>
-                    Acquire Private
+                    Buy Private Aimbot
                     <ArrowUpRight className="ml-2 size-4" />
                   </Link>
                 </Button>
@@ -134,14 +134,14 @@ export default async function GameCollectionPage({ params }: PageProps) {
                   variant="outline"
                   className="h-11 rounded-none border-[rgb(242_240_235_/_0.2)] px-6 font-display text-sm tracking-[0.15em] uppercase"
                 >
-                  <Link href={`/cheats/${game.cheatsSlug}`}>Compare Modules</Link>
+                  <Link href={`/cheats/${game.cheatsSlug}`}>Compare Cheats</Link>
                 </Button>
               </div>
             </div>
 
             {details && (
               <div className="ind-panel h-fit p-5">
-                <p className="tech-label mb-4">Facility Data</p>
+                <p className="tech-label mb-4">Game Info</p>
                 <dl className="space-y-4 text-sm">
                   {[
                     { icon: Gamepad2, label: "Genre", value: details.genre },
@@ -185,9 +185,9 @@ export default async function GameCollectionPage({ params }: PageProps) {
       <section className="container-site py-16">
         <SectionHeading
           index="01"
-          label="Modules"
-          title={`${game.name} Modules`}
-          description={`All ${gp.productCount} enhancement units. Filter by tier or sort by price.`}
+          label="Cheat Tiers"
+          title={`${game.name} Cheats`}
+          description={`All ${gp.productCount} cheat products — ESP, aim assist, and aimbot. Filter by tier or sort by price.`}
         />
         <GameProductGrid cheats={gp.cheats} games={[game]} showGameFilter={false} />
       </section>
@@ -195,9 +195,9 @@ export default async function GameCollectionPage({ params }: PageProps) {
       <section className="container-site border-t border-[rgb(242_240_235_/_0.08)] py-16">
         <SectionHeading
           index="02"
-          label="Comparison"
-          title="Specification Matrix"
-          description="Every feature across all tiers — side by side."
+          label="Compare"
+          title="ESP vs Aim Assist vs Aimbot"
+          description="Feature comparison across Xray, Pro, and Private cheat tiers."
         />
         <FeatureComparisonTable gameSlug={game.slug} />
         <div className="mt-6 flex flex-wrap gap-3">
@@ -209,7 +209,7 @@ export default async function GameCollectionPage({ params }: PageProps) {
               className="rounded-none border-[rgb(242_240_235_/_0.15)] font-display text-xs tracking-wider uppercase"
             >
               <Link href={`/cheats/${game.cheatsSlug}/${cheat.tier}`}>
-                {cheat.name} specs
+                {cheat.name} details
                 <ArrowUpRight className="ml-1.5 size-3.5" />
               </Link>
             </Button>
@@ -219,7 +219,7 @@ export default async function GameCollectionPage({ params }: PageProps) {
 
       {relatedPosts.length > 0 && (
         <section className="container-site border-t border-[rgb(242_240_235_/_0.08)] py-16">
-          <SectionHeading index="03" label="Briefings" title={`${game.shortName} Updates`} />
+          <SectionHeading index="03" label="Guides" title={`${game.shortName} Cheat Guides`} />
           <div className="grid gap-4 sm:grid-cols-3">
             {relatedPosts.map((post) => (
               <article key={post.slug} className="ind-panel ind-panel-hover flex flex-col p-5">
@@ -256,10 +256,10 @@ export default async function GameCollectionPage({ params }: PageProps) {
           <div className="space-y-2">
             <Headphones className="size-5 text-primary" />
             <h2 className="font-display text-2xl font-bold uppercase">
-              Questions about {game.name}?
+              Questions about {game.name} cheats?
             </h2>
             <p className="max-w-lg text-sm text-[rgb(242_240_235_/_0.45)]">
-              Setup guides ship with every license. Check the FAQ or open a module specification sheet.
+              Setup guides ship with every license. Check the FAQ or open a cheat page for ESP features and aim settings.
             </p>
           </div>
           <div className="flex flex-col gap-2 md:items-end md:justify-center">
@@ -268,7 +268,7 @@ export default async function GameCollectionPage({ params }: PageProps) {
               className="rounded-none bg-primary font-display text-xs font-bold tracking-wider text-primary-foreground uppercase"
             >
               <Link href={`/cheats/${game.cheatsSlug}`}>
-                View all modules
+                View all cheats
                 <ArrowUpRight className="ml-1.5 size-4" />
               </Link>
             </Button>

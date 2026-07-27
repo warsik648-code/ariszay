@@ -42,17 +42,14 @@ export function SiteHeader() {
             Aris<span className="text-primary">Zay</span>
           </span>
           <span className="hidden font-mono text-[9px] tracking-[0.25em] text-[rgb(242_240_235_/_0.35)] uppercase sm:inline">
-            SYS.01
+            Cheats
           </span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
           <div className="group relative">
-            <button
-              type="button"
-              className="tech-label hover:text-primary transition-colors"
-            >
-              Collections
+            <button type="button" className="tech-label hover:text-primary transition-colors">
+              Cheats
             </button>
             <div className="invisible absolute top-full left-0 z-50 min-w-52 border border-[rgb(242_240_235_/_0.12)] bg-[#111] pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
               {games.map((game) => (
@@ -61,14 +58,14 @@ export function SiteHeader() {
                   href={`/games/${game.slug}`}
                   className="block border-t border-[rgb(242_240_235_/_0.06)] px-4 py-3 font-display text-sm font-semibold tracking-wide uppercase text-[#f2f0eb]/80 hover:bg-[rgb(200_255_0_/_0.06)] hover:text-primary"
                 >
-                  {game.name}
+                  {game.name} Cheats
                 </Link>
               ))}
             </div>
           </div>
           <div className="group relative">
             <button type="button" className="tech-label hover:text-primary transition-colors">
-              Modules
+              Products
             </button>
             <div className="invisible absolute top-full left-0 z-50 min-w-52 border border-[rgb(242_240_235_/_0.12)] bg-[#111] pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
               {products.map((product) => (
@@ -83,7 +80,7 @@ export function SiteHeader() {
             </div>
           </div>
           <Link href="/blog" className="tech-label hover:text-primary transition-colors">
-            Updates
+            Blog
           </Link>
           <Link href="/#faq" className="tech-label hover:text-primary transition-colors">
             Support
@@ -115,7 +112,7 @@ export function SiteHeader() {
                 </SheetTitle>
               </SheetHeader>
               <div className="mt-8 flex flex-col gap-1">
-                <p className="tech-label mb-2">Collections</p>
+                <p className="tech-label mb-2">Cheats</p>
                 {games.map((game) => (
                   <Link
                     key={game.slug}
@@ -123,10 +120,10 @@ export function SiteHeader() {
                     onClick={() => setOpen(false)}
                     className="font-display py-2 text-lg font-semibold uppercase tracking-wide"
                   >
-                    {game.name}
+                    {game.name} Cheats
                   </Link>
                 ))}
-                <p className="tech-label mt-6 mb-2">Modules</p>
+                <p className="tech-label mt-6 mb-2">Products</p>
                 {products.map((product) => (
                   <Link
                     key={product.slug}
@@ -138,7 +135,7 @@ export function SiteHeader() {
                   </Link>
                 ))}
                 <Link href="/blog" onClick={() => setOpen(false)} className="tech-label mt-6 py-2">
-                  Updates
+                  Blog
                 </Link>
                 <Link href="/#faq" onClick={() => setOpen(false)} className="tech-label py-2">
                   Support
