@@ -73,6 +73,10 @@ export default async function CheatDetailPage({ params }: PageProps) {
   ];
 
   const sysReq = cheat.systemRequirements;
+  const gameplaySrc =
+    cheat.game === "isle" && cheat.tier === "xray"
+      ? "/videos/isle-xray-gameplay.mp4"
+      : null;
 
   return (
     <div className="container-site py-10 pb-28 md:pb-16">
@@ -117,18 +121,43 @@ export default async function CheatDetailPage({ params }: PageProps) {
       </section>
 
       <section className="mb-12 overflow-hidden rounded-2xl border border-white/10">
-        <div className="flex aspect-[16/9] items-center justify-center bg-[#0d1117]">
-          <div className="text-center">
-            <p className="font-mono text-xs tracking-[0.2em] text-white/30 uppercase">Preview</p>
-            <p className="mt-2 text-lg font-semibold text-white/60">{cheat.name}</p>
-            <p className="mt-1 text-sm text-white/30">Screenshots — add via admin panel</p>
-          </div>
-        </div>
-        <div className="flex gap-2 overflow-x-auto bg-black/20 p-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-14 w-24 shrink-0 rounded-xl border border-white/10 bg-white/5" aria-hidden />
-          ))}
-        </div>
+        {gameplaySrc ? (
+          <>
+            <div className="relative bg-black">
+              <video
+                className="aspect-video w-full bg-black object-contain"
+                controls
+                playsInline
+                preload="metadata"
+                aria-label={`${cheat.name} gameplay preview`}
+              >
+                <source src={gameplaySrc} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div className="flex items-center justify-between gap-3 border-t border-white/10 bg-[#0d1117] px-4 py-3">
+              <p className="font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">
+                Gameplay
+              </p>
+              <p className="text-xs text-white/50">{cheat.name} ESP in-game</p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex aspect-video items-center justify-center bg-[#0d1117]">
+              <div className="text-center">
+                <p className="font-mono text-xs tracking-[0.2em] text-white/30 uppercase">Preview</p>
+                <p className="mt-2 text-lg font-semibold text-white/60">{cheat.name}</p>
+                <p className="mt-1 text-sm text-white/30">Screenshots — add via admin panel</p>
+              </div>
+            </div>
+            <div className="flex gap-2 overflow-x-auto bg-black/20 p-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="h-14 w-24 shrink-0 rounded-xl border border-white/10 bg-white/5" aria-hidden />
+              ))}
+            </div>
+          </>
+        )}
       </section>
 
       <section className="mb-12">
