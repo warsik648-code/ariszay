@@ -367,7 +367,18 @@ function CheckoutPageInner() {
           {error && (
             <div className="flex items-start gap-2 border border-red-500/20 bg-red-500/10 p-4">
               <AlertCircle className="mt-0.5 size-4 shrink-0 text-red-400" />
-              <p className="text-sm text-red-400">{error}</p>
+              <div className="space-y-1 text-sm text-red-400">
+                <p>{error}</p>
+                {fieldErrors.items?.[0] && fieldErrors.items[0] !== error && (
+                  <p>{fieldErrors.items[0]}</p>
+                )}
+                {fieldErrors.agreeToTerms?.[0] && fieldErrors.agreeToTerms[0] !== error && (
+                  <p>{fieldErrors.agreeToTerms[0]}</p>
+                )}
+                {fieldErrors.couponCode?.[0] && (
+                  <p>{fieldErrors.couponCode[0]}</p>
+                )}
+              </div>
             </div>
           )}
 
